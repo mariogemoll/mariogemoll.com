@@ -82,6 +82,8 @@ def make_htaccess(generated_pages, copied_dirs, homepage_id):
         f.write("RewriteEngine On\n")
         for id, secret_id, _ in generated_pages:
             f.write(f"RewriteRule ^{id}$ /{secret_id}.html [L]\n")
+        for id, secret_id, _ in generated_pages:
+            f.write(f"RewriteRule ^{id}/$ /{id} [R=301,L]\n")
         for dir, random_id in copied_dirs:
             f.write(f"RewriteRule ^{dir}/(.*)$ /{random_id}/$1 [L]\n")
 
