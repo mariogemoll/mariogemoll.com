@@ -14,7 +14,7 @@ jobs:
       with:
         python-version: "3.13"
 
-    - name: Install dependencies
+    - name: Install Python dependencies
       run: |
         pip install -r requirements-build.txt
         pip install -r requirements-check.txt
@@ -30,3 +30,9 @@ jobs:
 
     - name: Run mypy
       run: mypy .
+
+    - name: Install markdownlint
+      run: npm install markdownlint-cli
+
+    - name: Run markdownlint
+      run: npx markdownlint 'content/*.md'
