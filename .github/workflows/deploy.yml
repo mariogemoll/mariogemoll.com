@@ -14,4 +14,20 @@ jobs:
       - name: Copy index.html to build directory
         run: cp index.html build/
 
-      - run: ls -lah build
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Test SSH connection
+        run: |
+          echo "Testing SSH connection..."
+          # Show the format of the key (should be a private key)
+          head -n 1 ~/.ssh/deploy_key
+          # Check if the key is properly formatted
+          echo "Verifying key format:"
+          ssh-keygen -l -f ~/.ssh/deploy_key || echo "Key format may be invalid"
+          # Try SSH connection with verbose output
+          ssh -i ~/.ssh/deploy_key -v "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" echo "Connection successful"
