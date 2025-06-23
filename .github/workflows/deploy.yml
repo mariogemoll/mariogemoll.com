@@ -11,12 +11,14 @@ jobs:
         run: mkdir -p build
 
       - name: Copy index.html to build directory
+        if: success()
         run: cp index.html build/
 
       - name: List build directory content
         run: ls -la build/
 
       - name: Set up SSH key
+        if: success()
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
@@ -24,12 +26,15 @@ jobs:
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
         
       - name: Create a temporary directory on the server
+        if: success()
         run: |
           ssh -i ~/.ssh/deploy_key "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "mkdir -p /tmp/httpdocs.new"
 
       - name: Copy the build directory to the server using scp
+        if: success()
         run: scp -i ~/.ssh/deploy_key -r build/* "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/httpdocs.new/"
     
       - name: Remove the temporary directory
+        if: success()
         run: |
           ssh -i ~/.ssh/deploy_key "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "rm -rf /tmp/httpdocs.new"
