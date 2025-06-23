@@ -10,15 +10,11 @@ from markdown import markdown
 
 def random_string(length=12):
     chars = string.ascii_lowercase + string.digits  # a-z and 0-9
-    return ''.join(random.choices(chars, k=length))
+    return "".join(random.choices(chars, k=length))
 
 
 def immediate_subdirs(root_dir):
-    return [
-        name
-        for name in os.listdir(root_dir)
-        if os.path.isdir(os.path.join(root_dir, name))
-    ]
+    return [name for name in os.listdir(root_dir) if os.path.isdir(os.path.join(root_dir, name))]
 
 
 def copy_assets():
@@ -49,10 +45,7 @@ def make_page(page_template, html_content):
     assert len(h1_tags) == 1, "No <h1> found in the content"
     title = h1_tags[0].text.strip()
 
-    output = page_template.render(
-        title=title,
-        content=html_content
-    )
+    output = page_template.render(title=title, content=html_content)
     return output, title
 
 

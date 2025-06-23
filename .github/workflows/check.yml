@@ -1,0 +1,32 @@
+name: Style checks etc.
+
+on: [push, pull_request]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.13"
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements-build.txt
+        pip install -r requirements-check.txt
+
+    - name: Run flake8
+      run: flake8 .
+
+    - name: Run isort (check only)
+      run: isort . --check-only --diff
+
+    - name: Run black (check only)
+      run: black --check --diff .
+
+    - name: Run mypy
+      run: mypy .
