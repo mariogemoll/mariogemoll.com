@@ -14,9 +14,6 @@ jobs:
         if: success()
         run: cp index.html build/
 
-      - name: List build directory content
-        run: ls -la build/
-
       - name: Set up SSH key
         if: success()
         run: |
