@@ -16,19 +16,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Create build directory
-        run: mkdir -p build
-
-      - name: Copy index.html to build directory
-        if: success()
-        run: cp index.html build/
-
-      - name: Rename index.html to a random name and create .htaccess to use it as DirectoryIndex
-        if: success()
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.13"
+  
+      - name: Install dependencies
         run: |
-          RANDOM_NAME=$(openssl rand -hex 8)
-          mv build/index.html build/$RANDOM_NAME.html
-          echo "DirectoryIndex $RANDOM_NAME.html" > build/.htaccess
+          pip install -r requirements-build.txt
+
+      - name: Build the website
+        run: python makesite.py
 
       - name: Set up SSH key
         if: success()
