@@ -1,5 +1,4 @@
 name: Deploy the website
-run-name: ${{ github.actor }} is updating the website
 on: [push]
 jobs:
   Deploy:
