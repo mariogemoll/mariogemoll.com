@@ -25,16 +25,28 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
         
-      - name: Create a temporary directory on the server
+      - name: Create temporary directories on the server
         if: success()
         run: |
+          ssh -i ~/.ssh/deploy_key "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "mkdir -p /tmp/httpdocs.bak"
           ssh -i ~/.ssh/deploy_key "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "mkdir -p /tmp/httpdocs.new"
 
       - name: Copy the build directory to the server using scp
         if: success()
         run: scp -i ~/.ssh/deploy_key -r build/* "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/httpdocs.new/"
-    
-      - name: Remove the temporary directory
+
+      - name: Back up the current website
         if: success()
         run: |
+          ssh -i ~/.ssh/deploy_key "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "mv /mariogemoll.com/httpdocs/* /tmp/httpdocs.bak/"
+
+      - name: Move new files to the live directory
+        if: success()
+        run: |
+          ssh -i ~/.ssh/deploy_key "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "mv /tmp/httpdocs.new/* /mariogemoll.com/httpdocs/"
+
+      - name: Remove the temporary directories
+        if: success()
+        run: |
+          ssh -i ~/.ssh/deploy_key "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "rm -rf /tmp/httpdocs.bak"
           ssh -i ~/.ssh/deploy_key "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "rm -rf /tmp/httpdocs.new"
