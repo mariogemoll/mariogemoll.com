@@ -55,19 +55,10 @@ function copyAssets(): [string, string][] {
   return copiedDirs;
 }
 
-interface PageTemplateLocals {
-  title: string;
-  content: string;
-}
-
-interface HomeTemplateLocals {
-  pages: [string, string][];
-}
-
 /**
  * Create an HTML page using the page template and content
  */
-function makePage(pageTemplate: (locals: PageTemplateLocals) => string, htmlContent: string): [string, string] {
+function makePage(pageTemplate: pug.compileTemplate, htmlContent: string): [string, string] {
   const $ = cheerio.load(htmlContent);
   const h1Tags = $('h1');
   if (h1Tags.length > 1) {
@@ -85,7 +76,7 @@ function makePage(pageTemplate: (locals: PageTemplateLocals) => string, htmlCont
 /**
  * Generate pages from markdown files
  */
-function makePages(pageTemplate: (locals: PageTemplateLocals) => string): [string, string, string][] {
+function makePages(pageTemplate: pug.compileTemplate): [string, string, string][] {
   const pages = fs.readdirSync('content')
     .filter(f => f.endsWith('.md'))
     .map(f => f.slice(0, -3));
@@ -104,8 +95,8 @@ function makePages(pageTemplate: (locals: PageTemplateLocals) => string): [strin
  * Generate the homepage
  */
 function makeHomepage(
-  homeTemplate: (locals: HomeTemplateLocals) => string,
-  pageTemplate: (locals: PageTemplateLocals) => string,
+  homeTemplate: pug.compileTemplate,
+  pageTemplate: pug.compileTemplate,
   generatedPages: [string, string, string][]
 ): string {
   const pages = generatedPages.map(([id, , title]) => [id, title] as [string, string]);
@@ -151,8 +142,8 @@ export function run(): void {
       fsExtra.removeSync(filePath);
     }
   }
-  const pageTemplate = pug.compileFile('templates/page.pug') as (locals: PageTemplateLocals) => string;
-  const homeTemplate = pug.compileFile('templates/home.pug') as (locals: HomeTemplateLocals) => string;
+  const pageTemplate = pug.compileFile('templates/page.pug');
+  const homeTemplate = pug.compileFile('templates/home.pug');
   const generatedPages = makePages(pageTemplate);
   const homepageId = makeHomepage(homeTemplate, pageTemplate, generatedPages);
   const copiedDirs = copyAssets();

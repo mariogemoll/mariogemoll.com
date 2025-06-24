@@ -19,6 +19,7 @@ export default tseslint.config(
     rules: {
       semi: ['error', 'always'],
       indent: ['error', 2],
+      'max-len': ['error', { code: 100, tabWidth: 2, ignoreUrls: true }],
       'quotes': ['error', 'single', { avoidEscape: true }],
       'object-curly-spacing': ['error', 'always'],
       'space-before-function-paren': ['error', 'never'],
