@@ -31,8 +31,11 @@ jobs:
     - name: Run mypy
       run: mypy .
 
-    - name: Install markdownlint
-      run: npm install markdownlint-cli
+    - name: Install JS dependencies
+      run: npm i
 
     - name: Run markdownlint
       run: npx markdownlint 'content/*.md'
+    
+    - name: Run ESLint
+      run: npx eslint src

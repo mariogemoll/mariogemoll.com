@@ -1,9 +1,29 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
     <title>{{ title }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css">
   </head>
   <body>
     {{ content | safe }}
-  </body>
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']],
+          packages: {'[+]': ['base']},
+          parseErrors: true,
+        },
+        options: {
+          renderActions: {
+            findScript: [10, (doc) => {
+              console.log('MathJax findScript action');
+              console.log(doc)
+            }, '', false]
+          }
+        }
+      };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </html>
