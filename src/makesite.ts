@@ -1,11 +1,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { fileURLToPath, pathToFileURL } from 'url';
 
 import * as cheerio from 'cheerio';
 import fsExtra from 'fs-extra';
 import MarkdownIt from 'markdown-it';
 import mathjax3 from 'markdown-it-mathjax3';
 import pug from 'pug';
+
+type PageContentParams = [ string, string[], string[] ];
 
 const markdown = new MarkdownIt({
   html: true,
@@ -36,28 +39,54 @@ function immediateSubdirs(rootDir: string): string[] {
  * Copy assets from content directory to build directory
  */
 function copyAssets(): [string, string][] {
-  const copiedDirs: [string, string][] = [];
-  for (const dir of immediateSubdirs('content')) {
-    const randomId = randomString();
-    const srcDir = path.join('content', dir);
-    const dstDir = path.join('build', randomId);
-    fs.mkdirSync(dstDir, { recursive: true });
-    for (const filename of fs.readdirSync(srcDir)) {
-      const srcFile = path.join(srcDir, filename);
-      const dstFile = path.join(dstDir, filename);
-      if (fs.statSync(srcFile).isFile()) {
-        fsExtra.copySync(srcFile, dstFile);
+  // Map: originalId => { randomId, srcFiles }
+  const mapping = new Map<string, { randomId: string, srcFiles: string[] }>();
+
+  // Helper to gather files from a root dir
+  function gather(dirRoot: string): void {
+    for (const dir of immediateSubdirs(dirRoot)) {
+      if (!mapping.has(dir)) {
+        mapping.set(dir, { randomId: randomString(), srcFiles: [] });
+      }
+      const obj = mapping.get(dir);
+      if (!obj) {
+        throw new Error(`Mapping for directory ${dir} not found`);
+      }
+      const srcDir = path.join(dirRoot, dir);
+      for (const filename of fs.readdirSync(srcDir)) {
+        const srcFile = path.join(srcDir, filename);
+        if (fs.statSync(srcFile).isFile()) {
+          obj.srcFiles.push(srcFile);
+        }
       }
     }
-    copiedDirs.push([dir, randomId]);
   }
-  return copiedDirs;
+
+  gather('content');
+  gather('dist/frontend');
+
+  // Create all needed directories and copy files
+  for (const [, { randomId, srcFiles }] of mapping.entries()) {
+    const dstDir = path.join('build', randomId);
+    fs.mkdirSync(dstDir, { recursive: true });
+    for (const src of srcFiles) {
+      const filename = path.basename(src);
+      fsExtra.copySync(src, path.join(dstDir, filename));
+    }
+  }
+
+  // Return mapping as [originalId, randomId][]
+  return Array.from(mapping.entries()).map(([id, { randomId }]) => [id, randomId]);
 }
 
 /**
  * Create an HTML page using the page template and content
  */
-function makePage(pageTemplate: pug.compileTemplate, htmlContent: string): [string, string] {
+function makePage(
+  pageTemplate: pug.compileTemplate,
+  htmlContent: string,
+  cssUrls: string[],
+  jsUrls: string[]): [string, string] {
   const $ = cheerio.load(htmlContent);
   const h1Tags = $('h1');
   if (h1Tags.length > 1) {
@@ -67,29 +96,68 @@ function makePage(pageTemplate: pug.compileTemplate, htmlContent: string): [stri
     throw new Error('No <h1> found in the content');
   }
   const title = h1Tags.first().text().trim();
-  const output = pageTemplate({ title, content: htmlContent });
+  const output = pageTemplate({ title, content: htmlContent, cssUrls, jsUrls });
 
   return [output, title];
 }
 
-/**
- * Generate pages from markdown files
- */
-function makePages(pageTemplate: pug.compileTemplate): [string, string, string][] {
+async function makePages(pageTemplate: pug.compileTemplate): Promise<[string, string, string][]> {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+
   const pages = fs.readdirSync('content')
     .filter(f => f.endsWith('.md'))
     .map(f => f.slice(0, -3));
   const generatedPages: [string, string, string][] = [];
+  let pageHtmlContent = '';
+  let cssFiles: string[] = [];
+  let jsFiles: string[] = [];
   for (const id of pages) {
-    const mdContent = fs.readFileSync(`content/${id}.md`, 'utf-8');
-    const pageHtmlContent = markdown.render(mdContent);
-    const [output, title] = makePage(pageTemplate, pageHtmlContent);
+    const jsPath = path.join(__dirname, 'content', `${id}.js`);
+    if (fs.existsSync(jsPath)) {
+      const importedModule: unknown = await import(pathToFileURL(jsPath).href);
+      if (
+        importedModule !== undefined &&
+        importedModule !== null &&
+        typeof importedModule === 'object' &&
+        'generatePage' in importedModule &&
+        typeof (importedModule as { generatePage?: unknown }).generatePage === 'function'
+      ) {
+        const module = importedModule as { generatePage: () => Promise<PageContentParams> };
+        [pageHtmlContent, cssFiles, jsFiles] = await module.generatePage();
+      } else {
+        throw new Error(`Module for page ${id} does not export a generatePage function`);
+      }
+    } else {
+      const mdContent = fs.readFileSync(`content/${id}.md`, 'utf-8');
+      pageHtmlContent = markdown.render(mdContent);
+    }
     const secretId = randomString();
+    const [output, title] = makePage(pageTemplate, pageHtmlContent, cssFiles, jsFiles);
     fs.writeFileSync(`build/${secretId}.html`, output);
     generatedPages.push([id, secretId, title]);
   }
   return generatedPages;
 }
+
+// /**
+//  * Generate pages from markdown files
+//  */
+// function makePages(pageTemplate: pug.compileTemplate): [string, string, string][] {
+//   const pages = fs.readdirSync('content')
+//     .filter(f => f.endsWith('.md'))
+//     .map(f => f.slice(0, -3));
+//   const generatedPages: [string, string, string][] = [];
+//   for (const id of pages) {
+//     const mdContent = fs.readFileSync(`content/${id}.md`, 'utf-8');
+//     const pageHtmlContent = markdown.render(mdContent);
+//     const [output, title] = makePage(pageTemplate, pageHtmlContent);
+//     const secretId = randomString();
+//     fs.writeFileSync(`build/${secretId}.html`, output);
+//     generatedPages.push([id, secretId, title]);
+//   }
+//   return generatedPages;
+// }
 
 /**
  * Generate the homepage
@@ -101,7 +169,7 @@ function makeHomepage(
 ): string {
   const pages = generatedPages.map(([id, , title]) => [id, title] as [string, string]);
   const homeHtml = homeTemplate({ pages });
-  const [output] = makePage(pageTemplate, homeHtml);
+  const [output] = makePage(pageTemplate, homeHtml, [], []);
   const randomId = randomString();
   fs.writeFileSync(`build/${randomId}.html`, output);
   return randomId;
@@ -132,7 +200,7 @@ function makeHtaccess(
 /**
  * Main function to run the site generator
  */
-export function run(): void {
+export async function run(): Promise<void> {
   if (!fs.existsSync('build')) {
     fs.mkdirSync('build');
   }
@@ -144,11 +212,14 @@ export function run(): void {
   }
   const pageTemplate = pug.compileFile('templates/page.pug');
   const homeTemplate = pug.compileFile('templates/home.pug');
-  const generatedPages = makePages(pageTemplate);
+  const generatedPages = await makePages(pageTemplate);
   const homepageId = makeHomepage(homeTemplate, pageTemplate, generatedPages);
   const copiedDirs = copyAssets();
   makeHtaccess(generatedPages, copiedDirs, homepageId);
   console.log('Site generated successfully!');
 }
 
-run();
+run().catch((err: unknown) => {
+  console.error('Error generating site:', err);
+  process.exit(1);
+});

@@ -3,6 +3,11 @@ html
   head
     meta(charset="UTF-8")
     title= title
+    link(rel="stylesheet", href="/misc/style.css")
+    each url in cssUrls
+      link(rel="stylesheet", href=url)
+    each url in jsUrls
+      script(src=url, type="module")
   body
     != content
     script.

@@ -14,8 +14,11 @@ jobs:
     - name: Install JS dependencies
       run: npm i
 
-    - name: Run markdownlint
-      run: npx markdownlint 'content/*.md'
-    
+    - name: Run markdownlint-cli2
+      run: npx markdownlint-cli2 content/*.md    
+
     - name: Run ESLint
       run: npx eslint src
+    
+    - name: Run Stylelint
+      run: npx stylelint 'content/**/*.css'

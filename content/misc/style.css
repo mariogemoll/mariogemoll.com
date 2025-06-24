@@ -1,0 +1,21 @@
+html {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
+}
+
+body {
+  text-align: center;
+}
+
+p, h1, h2, ul {
+  width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+  line-height: 1.7rem;
+}
+
+/* stylelint-disable selector-class-pattern */
+.MathJax[display="true"] {
+  margin: 40px auto !important
+}
