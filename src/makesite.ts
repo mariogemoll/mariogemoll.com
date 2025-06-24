@@ -85,8 +85,9 @@ function makePages(pageTemplate: pug.compileTemplate): [string, string, string][
     const mdContent = fs.readFileSync(`content/${id}.md`, 'utf-8');
     const pageHtmlContent = markdown.render(mdContent);
     const [output, title] = makePage(pageTemplate, pageHtmlContent);
-    fs.writeFileSync(`build/${id}.html`, output);
-    generatedPages.push([id, id, title]);
+    const secretId = randomString();
+    fs.writeFileSync(`build/${secretId}.html`, output);
+    generatedPages.push([id, secretId, title]);
   }
   return generatedPages;
 }
