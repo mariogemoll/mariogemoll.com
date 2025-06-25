@@ -9,7 +9,6 @@ import pug from 'pug';
 
 const markdown = new MarkdownIt({
   html: true,
-  breaks: true,
   linkify: true
 }).use(mathjax3);
 
