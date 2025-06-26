@@ -172,8 +172,10 @@ constant during backpropagation. Pretty neat!
 ## Dataset explanation
 
 <section id="dataset-explanation">
-    <svg class="alpha-space" width="128" height="128" viewBox="0 0 128 128"></svg>
+<div class="box">
+    <svg class="alpha-space" width="200" height="200" viewBox="0 0 200 200"></svg>
     <canvas class="pic" width="32" height="32"></canvas>
-    <p>Size: <span id="dataset-explanation-size">0</span></p>
-    <p>Hue: <span id="dataset-explanation-hue">0</span></p>
+    <p class="dataset-explanation-size">Size: <span>0</span></p>
+    <p class="dataset-explanation-hue">Hue: <span>0</span></p>
+</div>
 </section>
