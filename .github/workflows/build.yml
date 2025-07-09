@@ -28,5 +28,21 @@ jobs:
       working-directory: builder
       run: npm i
 
+    - name: Run markdownlint-cli2
+      working-directory: builder
+      run: npx markdownlint-cli2 ../content/*.md
+
+    - name: "Frontend: Run ESLint"
+      working-directory: frontend
+      run: npx eslint src
+
+    - name: "Site builder: Run ESLint"
+      working-directory: builder
+      run: npx eslint src
+
+    - name: Run Stylelint
+      working-directory: builder
+      run: npx stylelint '../content/**/*.css'
+
     - name: Build the website
       run: ./makesite.sh
