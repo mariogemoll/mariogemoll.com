@@ -1,33 +1,23 @@
-import importPlugin from 'eslint-plugin-import';
-import eslint from '@eslint/js';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import tseslint from 'typescript-eslint';
 
+import basicConfig from './basic.eslint.config.js';
+
 export default tseslint.config(
-  eslint.configs.recommended,
+  basicConfig,
   tseslint.configs.strictTypeChecked,
   tseslint.configs.stylisticTypeChecked,
   {
     languageOptions: {
       parserOptions: {
         projectService: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
+        tsconfigRootDir: import.meta.dirname
+      }
     },
     plugins: {
-      import: importPlugin
+      'simple-import-sort': simpleImportSort
     },
     rules: {
-      semi: ['error', 'always'],
-      indent: ['error', 2],
-      'max-len': ['error', { code: 100, tabWidth: 2, ignoreUrls: true }],
-      'quotes': ['error', 'single', { avoidEscape: true }],
-      'object-curly-spacing': ['error', 'always'],
-      'space-before-function-paren': ['error', 'never'],
-      'array-bracket-spacing': ['error', 'never'],
-      'eol-last': ['error', 'always'],
-      'no-trailing-spaces': 'error',
-      'linebreak-style': ['error', 'unix'],
-      'comma-dangle': ['error', 'never'],
       '@typescript-eslint/explicit-function-return-type': ['error', { allowExpressions: false }],
       '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/explicit-module-boundary-types': 'error',
@@ -42,23 +32,9 @@ export default tseslint.config(
           'signature',
           'field',
           'constructor',
-          'method',
+          'method'
         ]
-      }],
-      'import/order': ['error', {
-        groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index']],
-        'newlines-between': 'always',
-        alphabetize: { order: 'asc', caseInsensitive: true },
-      }],
-      'import/no-default-export': 'error',
-      'import/no-relative-packages': 'error',
-
-      'no-duplicate-imports': 'error',
-      'prefer-const': 'error',
-      'no-var': 'error',
-      'eqeqeq': ['error', 'always'],
-      'curly': ['error', 'all'],
-      'yoda': ['error', 'never']
+      }]
     }
   }
 );

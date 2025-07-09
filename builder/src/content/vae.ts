@@ -1,8 +1,7 @@
-import path from 'path';
-
 import fsExtra from 'fs-extra';
 import MarkdownIt from 'markdown-it';
 import mathjax3 from 'markdown-it-mathjax3';
+import path from 'path';
 
 import type { PageContentParams } from '../types.js';
 

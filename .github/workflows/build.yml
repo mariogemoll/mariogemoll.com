@@ -34,11 +34,15 @@ jobs:
 
     - name: "Frontend: Run ESLint"
       working-directory: frontend
-      run: npx eslint src
+      run: |
+        npx eslint -c basic.eslint.config.js basic.eslint.config.js eslint.config.js
+        npx eslint src
 
     - name: "Site builder: Run ESLint"
       working-directory: builder
-      run: npx eslint src
+      run: |
+        npx eslint -c basic.eslint.config.js basic.eslint.config.js eslint.config.js
+        npx eslint src
 
     - name: Run Stylelint
       working-directory: builder
