@@ -8,6 +8,8 @@ html
       link(rel="stylesheet", href=url)
     script(src="https://cdnjs.cloudflare.com/ajax/libs/pica/9.0.1/pica.min.js")
     each url in jsUrls
+      script(src=url)
+    each url in jsModuleUrls
       script(src=url, type="module")
   body
     != content

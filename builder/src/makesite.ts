@@ -8,16 +8,13 @@ import MarkdownIt from 'markdown-it';
 import mathjax3 from 'markdown-it-mathjax3';
 import pug from 'pug';
 
-type PageContentParams = [ string, string[], string[] ];
+import type { PageContentParams } from './types.js';
 
 const markdown = new MarkdownIt({
   html: true,
   linkify: true
 }).use(mathjax3);
 
-/**
- * Generate a random string of specified length
- */
 function randomString(length = 12): string {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
@@ -27,17 +24,11 @@ function randomString(length = 12): string {
   return result;
 }
 
-/**
- * Get immediate subdirectories of a directory
- */
 function immediateSubdirs(rootDir: string): string[] {
   return fs.readdirSync(rootDir)
     .filter(name => fs.statSync(path.join(rootDir, name)).isDirectory());
 }
 
-/**
- * Copy assets from content directory to build directory
- */
 function copyAssets(): [string, string][] {
   // Map: originalId => { randomId, srcFiles }
   const mapping = new Map<string, { randomId: string, srcFiles: string[] }>();
@@ -62,12 +53,12 @@ function copyAssets(): [string, string][] {
     }
   }
 
-  gather('content');
-  gather('dist/frontend');
+  gather('../content');
+  gather('../frontend/dist');
 
   // Create all needed directories and copy files
   for (const [, { randomId, srcFiles }] of mapping.entries()) {
-    const dstDir = path.join('build', randomId);
+    const dstDir = path.join('../build', randomId);
     fs.mkdirSync(dstDir, { recursive: true });
     for (const src of srcFiles) {
       const filename = path.basename(src);
@@ -79,14 +70,13 @@ function copyAssets(): [string, string][] {
   return Array.from(mapping.entries()).map(([id, { randomId }]) => [id, randomId]);
 }
 
-/**
- * Create an HTML page using the page template and content
- */
 function makePage(
   pageTemplate: pug.compileTemplate,
   htmlContent: string,
   cssUrls: string[],
-  jsUrls: string[]): [string, string] {
+  jsUrls: string[],
+  jsModuleUrls: string[]
+): [string, string] {
   const $ = cheerio.load(htmlContent);
   const h1Tags = $('h1');
   if (h1Tags.length > 1) {
@@ -96,7 +86,7 @@ function makePage(
     throw new Error('No <h1> found in the content');
   }
   const title = h1Tags.first().text().trim();
-  const output = pageTemplate({ title, content: htmlContent, cssUrls, jsUrls });
+  const output = pageTemplate({ title, content: htmlContent, cssUrls, jsUrls, jsModuleUrls });
 
   return [output, title];
 }
@@ -105,15 +95,19 @@ async function makePages(pageTemplate: pug.compileTemplate): Promise<[string, st
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
 
-  const pages = fs.readdirSync('content')
+  const pageJsPath = path.join(__dirname, 'content');
+  const contentPath = path.join(__dirname, '..', '..', 'content');
+
+  const pages = fs.readdirSync('../content')
     .filter(f => f.endsWith('.md'))
     .map(f => f.slice(0, -3));
   const generatedPages: [string, string, string][] = [];
   let pageHtmlContent = '';
-  let cssFiles: string[] = [];
-  let jsFiles: string[] = [];
+  let cssUrls: string[] = [];
+  let jsUrls: string[] = [];
+  let jsModuleUrls: string[] = [];
   for (const id of pages) {
-    const jsPath = path.join(__dirname, 'content', `${id}.js`);
+    const jsPath = path.join(pageJsPath, `${id}.js`);
     if (fs.existsSync(jsPath)) {
       const importedModule: unknown = await import(pathToFileURL(jsPath).href);
       if (
@@ -123,45 +117,26 @@ async function makePages(pageTemplate: pug.compileTemplate): Promise<[string, st
         'generatePage' in importedModule &&
         typeof (importedModule as { generatePage?: unknown }).generatePage === 'function'
       ) {
-        const module = importedModule as { generatePage: () => Promise<PageContentParams> };
-        [pageHtmlContent, cssFiles, jsFiles] = await module.generatePage();
+        const module = importedModule as {
+          generatePage: (contentPath: string) => Promise<PageContentParams>
+        };
+        [pageHtmlContent, cssUrls, jsUrls, jsModuleUrls] = await module.generatePage(contentPath);
       } else {
         throw new Error(`Module for page ${id} does not export a generatePage function`);
       }
     } else {
-      const mdContent = fs.readFileSync(`content/${id}.md`, 'utf-8');
+      const mdPath = path.join(contentPath, `${id}.md`);
+      const mdContent = fs.readFileSync(mdPath, 'utf-8');
       pageHtmlContent = markdown.render(mdContent);
     }
     const secretId = randomString();
-    const [output, title] = makePage(pageTemplate, pageHtmlContent, cssFiles, jsFiles);
-    fs.writeFileSync(`build/${secretId}.html`, output);
+    const [output, title] = makePage(pageTemplate, pageHtmlContent, cssUrls, jsUrls, jsModuleUrls);
+    fs.writeFileSync(`../build/${secretId}.html`, output);
     generatedPages.push([id, secretId, title]);
   }
   return generatedPages;
 }
 
-// /**
-//  * Generate pages from markdown files
-//  */
-// function makePages(pageTemplate: pug.compileTemplate): [string, string, string][] {
-//   const pages = fs.readdirSync('content')
-//     .filter(f => f.endsWith('.md'))
-//     .map(f => f.slice(0, -3));
-//   const generatedPages: [string, string, string][] = [];
-//   for (const id of pages) {
-//     const mdContent = fs.readFileSync(`content/${id}.md`, 'utf-8');
-//     const pageHtmlContent = markdown.render(mdContent);
-//     const [output, title] = makePage(pageTemplate, pageHtmlContent);
-//     const secretId = randomString();
-//     fs.writeFileSync(`build/${secretId}.html`, output);
-//     generatedPages.push([id, secretId, title]);
-//   }
-//   return generatedPages;
-// }
-
-/**
- * Generate the homepage
- */
 function makeHomepage(
   homeTemplate: pug.compileTemplate,
   pageTemplate: pug.compileTemplate,
@@ -169,15 +144,12 @@ function makeHomepage(
 ): string {
   const pages = generatedPages.map(([id, , title]) => [id, title] as [string, string]);
   const homeHtml = homeTemplate({ pages });
-  const [output] = makePage(pageTemplate, homeHtml, [], []);
+  const [output] = makePage(pageTemplate, homeHtml, [], [], []);
   const randomId = randomString();
-  fs.writeFileSync(`build/${randomId}.html`, output);
+  fs.writeFileSync(`../build/${randomId}.html`, output);
   return randomId;
 }
 
-/**
- * Create .htaccess file for URL rewriting
- */
 function makeHtaccess(
   generatedPages: [string, string, string][],
   copiedDirs: [string, string][],
@@ -194,24 +166,21 @@ function makeHtaccess(
   for (const [dir, randomId] of copiedDirs) {
     htaccessContent += `RewriteRule ^${dir}/(.*)$ /${randomId}/$1 [L]\n`;
   }
-  fs.writeFileSync('build/.htaccess', htaccessContent);
+  fs.writeFileSync('../build/.htaccess', htaccessContent);
 }
 
-/**
- * Main function to run the site generator
- */
 export async function run(): Promise<void> {
-  if (!fs.existsSync('build')) {
-    fs.mkdirSync('build');
+  if (!fs.existsSync('../build')) {
+    fs.mkdirSync('../build');
   }
-  if (fs.existsSync('build')) {
-    for (const file of fs.readdirSync('build')) {
-      const filePath = path.join('build', file);
+  if (fs.existsSync('../build')) {
+    for (const file of fs.readdirSync('../build')) {
+      const filePath = path.join('../build', file);
       fsExtra.removeSync(filePath);
     }
   }
-  const pageTemplate = pug.compileFile('templates/page.pug');
-  const homeTemplate = pug.compileFile('templates/home.pug');
+  const pageTemplate = pug.compileFile('../templates/page.pug');
+  const homeTemplate = pug.compileFile('../templates/home.pug');
   const generatedPages = await makePages(pageTemplate);
   const homepageId = makeHomepage(homeTemplate, pageTemplate, generatedPages);
   const copiedDirs = copyAssets();

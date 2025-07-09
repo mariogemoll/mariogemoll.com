@@ -11,14 +11,35 @@ jobs:
       with:
         node-version: 22.x
 
-    - name: Install JS dependencies
+    - name: Set up SSH key for submodule
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.GH_SSH_KEY_VAE }}" > ~/.ssh/id_ed25519
+        chmod 600 ~/.ssh/id_ed25519
+
+    - name: Initialize submodule
+      run: git submodule update --init
+
+    - name: "Frontend: Install dependencies"
+      working-directory: frontend
+      run: npm i
+
+    - name: "Site builder: Install dependencies"
+      working-directory: builder
       run: npm i
 
     - name: Run markdownlint-cli2
-      run: npx markdownlint-cli2 content/*.md    
+      working-directory: builder
+      run: npx markdownlint-cli2 ../content/*.md
 
-    - name: Run ESLint
+    - name: "Frontend: Run ESLint"
+      working-directory: frontend
       run: npx eslint src
     
+    - name: "Site builder: Run ESLint"
+      working-directory: builder
+      run: npx eslint src
+
     - name: Run Stylelint
-      run: npx stylelint 'content/**/*.css'
+      working-directory: builder
+      run: npx stylelint '../content/**/*.css'

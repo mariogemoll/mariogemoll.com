@@ -1,5 +1,6 @@
-/.python-version
+.python-version
+node_modules
+package-lock.json
 /build
-/dist
-/node_modules
-/package-lock.json
+/builder/dist
+/frontend/dist

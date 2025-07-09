@@ -171,11 +171,12 @@ constant during backpropagation. Pretty neat!
 
 ## Dataset explanation
 
-<section id="dataset-explanation">
-<div class="box">
-    <svg class="alpha-space" width="200" height="200" viewBox="0 0 200 200"></svg>
-    <canvas class="pic" width="32" height="32"></canvas>
-    <p class="dataset-explanation-size">Size: <span>0</span></p>
-    <p class="dataset-explanation-hue">Hue: <span>0</span></p>
-</div>
-</section>
+<div id="datasetexplanation-widget" class="widget">[[ datasetexplanation-widget ]]</div>
+
+## Mapping
+
+<div id="mapping-widget" class="widget">[[ mapping-widget ]]</div>
+
+## Decoding
+
+<div id="decoding-widget" class="widget">[[ decoding-widget ]]</div>

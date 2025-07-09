@@ -1,0 +1,3 @@
+[submodule "vae"]
+	path = vae
+	url = git@github.com:mariogemoll/vae-wip.git
