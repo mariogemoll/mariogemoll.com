@@ -61,6 +61,7 @@ async function page(): Promise<void> {
     decode,
     pica,
     '/vae/face.png',
+    [[0.6, 0.9], [0.4, 0.7]],
     alphaGrid,
     zGrid,
     el(document, '#mapping-widget') as HTMLDivElement
