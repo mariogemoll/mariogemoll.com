@@ -49,4 +49,4 @@ jobs:
       run: npx stylelint '../content/**/*.css'
 
     - name: Build the website
-      run: ./makesite.sh
+      run: scripts/makesite.sh

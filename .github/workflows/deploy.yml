@@ -38,7 +38,7 @@ jobs:
       run: npm i
 
     - name: Build the website
-      run: ./makesite.sh
+      run: scripts/makesite.sh
 
     - name: Set up SSH key
       if: success()
