@@ -3,6 +3,7 @@ import type { OrtFunction } from 'src/widgets/types/ortfunction.js';
 
 import { hueRange, sizeRange } from '../widgets/constants.js';
 import { setUpDatasetExplanation } from '../widgets/datasetexplanation.js';
+import { setUpDatasetVisualization } from '../widgets/datasetvisualization.js';
 import { setUpDecoding } from '../widgets/decoding.js';
 import { encodeGrid, makeStandardGrid } from '../widgets/grid.js';
 import { setUpMapping } from '../widgets/mapping.js';
@@ -15,6 +16,19 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     ort: typeof import('onnxruntime-web');
   }
+}
+
+async function fetchFile(url: string): Promise<Response> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+  }
+  return response;
+}
+
+async function fetchBytes(url: string): Promise<Uint8Array> {
+  const response = await fetchFile(url);
+  return response.bytes();
 }
 
 async function setUpModel(): Promise<[encode: OrtFunction, decode: OrtFunction]> {
@@ -47,8 +61,27 @@ async function page(): Promise<void> {
     pica,
     '/vae/face.png',
     alphaGrid,
-    el(document, '#datasetexplanation-widget > div') as HTMLDivElement);
+    el(document, '#datasetexplanation-widget > div') as HTMLDivElement
+  );
 
+  const [trainsetCoords, valsetCoords, trainsetImages, valsetImages] = await Promise.all([
+    fetchFile('/trainset_coords.json')
+      .then(response => response.json()) as Promise<{ x: number[]; y: number[] }>,
+    fetchFile('/valset_coords.json')
+      .then(response => response.json()) as Promise<{ x: number[]; y: number[] }>,
+    fetchBytes('/trainset_images.bin'),
+    fetchBytes('/valset_images.bin')
+  ]);
+
+  setUpDatasetVisualization(
+    el(document, '#datasetvisualization-widget') as HTMLDivElement,
+    trainsetCoords.x,
+    trainsetCoords.y,
+    valsetCoords.x,
+    valsetCoords.y,
+    trainsetImages,
+    valsetImages
+  );
 
   const [encode, decode] = await setUpModel();
 

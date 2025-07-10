@@ -173,6 +173,10 @@ constant during backpropagation. Pretty neat!
 
 <div id="datasetexplanation-widget" class="widget">[[ datasetexplanation-widget ]]</div>
 
+## Dataset visualization
+
+<div id="datasetvisualization-widget" class="widget">[[ datasetvisualization-widget ]]</div>
+
 ## Mapping
 
 <div id="mapping-widget" class="widget">[[ mapping-widget ]]</div>
