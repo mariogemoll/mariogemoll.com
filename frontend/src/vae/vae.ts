@@ -61,7 +61,7 @@ async function page(): Promise<void> {
     pica,
     '/vae/face.png',
     alphaGrid,
-    el(document, '#datasetexplanation-widget > div') as HTMLDivElement
+    el(document, '#datasetexplanation-widget') as HTMLDivElement
   );
 
   const [trainsetCoords, valsetCoords, trainsetImages, valsetImages] = await Promise.all([
