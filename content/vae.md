@@ -152,8 +152,8 @@ remaining technical challenge — and it’s an essential one in the VAE framewo
 reparameterization trick.
 
 Recall that we’re taking a sample $z^*$ from a Gaussian distribution $q(z|x_i) = \mathcal{N}(\mu,
-\sigma^2)$, where $\mu$ and $\sigma$ are the outputs of the encoder neural network. This latent
-variable $z$ is then passed into the decoder.
+\sigma^2)$, where $\mu$ and $\sigma^2$ (for technical reasons actually $\log \sigma^2$) are the
+outputs of the encoder neural network. This latent variable $z$ is then passed into the decoder.
 
 During backpropagation, in order to update the encoder’s parameters, we would need to propagate
 gradients through the sampling step — that is, through the operation "sample from $q(z|x_i)$".
@@ -165,9 +165,9 @@ transformation:
 $$ z^* = \mu + \sigma \cdot \epsilon \qquad \epsilon \sim \mathcal{N}(0, 1) $$
 
 This is called the reparameterization trick. It separates the randomness ($\epsilon$) from the
-parameters ($\mu$, $\sigma$), allowing us to compute gradients with respect to $\mu$
-and $\sigma$ as usual. Since $\epsilon$ is independent of the encoder parameters, it is treated as a
-constant during backpropagation. Pretty neat!
+parameters ($\mu$, $\sigma^2$), allowing us to compute gradients with respect to $\mu$
+and $\sigma^2$ as usual. Since $\epsilon$ is independent of the encoder parameters, it is treated as
+a constant during backpropagation.
 
 ## Dataset explanation
 
