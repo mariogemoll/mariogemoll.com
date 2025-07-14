@@ -108,6 +108,7 @@ async function page(): Promise<void> {
 
 window.addEventListener('load', () => {
   page().catch((error: unknown) => {
-    console.error('Error during page load:', error);
+    console.error(error);
+    alert(`Error during page setup: ${error instanceof Error ? error.message : String(error)}`);
   });
 });
