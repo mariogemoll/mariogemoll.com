@@ -336,7 +336,7 @@ above:
 vae = VAE()
 optimizer = torch.optim.Adam(vae.parameters(), lr=1e-3)
 for epoch in range(num_epochs):
-    for x in BatchIterator(trainset, batch_size=batch_size)
+    for x in BatchIterator(trainset, batch_size=batch_size):
         enc_mu, enc_logvar, dec_mu = vae(x)
         loss = -approximate_elbo(x, dec_mu, enc_mu, enc_logvar).mean()
         optimizer.zero_grad()
@@ -350,6 +350,10 @@ for epoch in range(num_epochs):
 
 <div id="mapping-widget" class="widget">[[ mapping-widget ]]</div>
 
+<div id="evolution-widget" class="widget">[[ evolution-widget ]]</div>
+
 ## Decoding
 
 <div id="decoding-widget" class="widget">[[ decoding-widget ]]</div>
+
+<div id="modelcomparison-widget" class="widget">[[ modelcomparison-widget ]]</div>

@@ -5,10 +5,13 @@ import { hueRange, sizeRange } from '../widgets/constants.js';
 import { setUpDatasetExplanation } from '../widgets/datasetexplanation.js';
 import { setUpDatasetVisualization } from '../widgets/datasetvisualization.js';
 import { setUpDecoding } from '../widgets/decoding.js';
+import { setUpEvolution } from '../widgets/evolution.js';
 import { encodeGrid, makeStandardGrid } from '../widgets/grid.js';
+import { loadLosses } from '../widgets/lossdata.js';
 import { setUpMapping } from '../widgets/mapping.js';
+import { setUpModelComparison } from '../widgets/modelcomparison.js';
 import { Semaphore } from '../widgets/semaphore.js';
-import { el, loadImage } from '../widgets/util.js';
+import { el, expandFloats, loadImage } from '../widgets/util.js';
 
 declare global {
   interface Window {
@@ -53,9 +56,38 @@ async function setUpModel(): Promise<[encode: OrtFunction, decode: OrtFunction]>
 
 async function page(): Promise<void> {
 
-  const pica = window.pica();
-
   const alphaGrid = makeStandardGrid(sizeRange, hueRange);
+
+  const gridDataBufRes = await fetchFile('/grids.bin');
+  const gridDataBuf = await gridDataBufRes.arrayBuffer();
+  const [, , gridData] = expandFloats(gridDataBuf);
+
+  const lossesBufRes = await fetchFile('/losses.bin');
+  const lossesBuf = await lossesBufRes.arrayBuffer();
+
+  const [minLoss, maxLoss, trainLosses, valLosses] = loadLosses(lossesBuf);
+
+  const gridDataSliceSize = 100 * 10 * 10 * 2;
+
+  const modelIdx = 5;
+
+  setUpEvolution(
+    el(document, '#evolution-widget') as HTMLDivElement,
+    trainLosses[modelIdx],
+    valLosses[modelIdx],
+    gridData.slice(gridDataSliceSize * modelIdx, gridDataSliceSize * (modelIdx + 1))
+  );
+
+  setUpModelComparison(
+    minLoss,
+    maxLoss,
+    trainLosses,
+    valLosses,
+    gridData,
+    el(document, '#modelcomparison-widget') as HTMLDivElement
+  );
+
+  const pica = window.pica();
 
   await setUpDatasetExplanation(
     pica,

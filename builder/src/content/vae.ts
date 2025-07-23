@@ -22,7 +22,14 @@ export async function generatePage(contentPath: string): Promise<PageContentPara
 
   let mdContent = await fsExtra.readFile(path.join(contentPath, 'vae.md'), 'utf-8');
 
-  for (const label of ['datasetexplanation', 'datasetvisualization', 'mapping', 'decoding']) {
+  for (const label of [
+    'datasetexplanation',
+    'datasetvisualization',
+    'mapping',
+    'evolution',
+    'decoding',
+    'modelcomparison'
+  ]) {
     const html = '<div class="placeholder" ' +
       'style="width: 700px; height: 300px; background-color: #eee"></div>';
     mdContent = mdContent.replace(`[[ ${label}-widget ]]`, html);
