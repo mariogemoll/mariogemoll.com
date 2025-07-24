@@ -21,6 +21,8 @@ declare global {
   }
 }
 
+const modelIdx = 8;
+
 async function fetchFile(url: string): Promise<Response> {
   const response = await fetch(url);
   if (!response.ok) {
@@ -35,8 +37,12 @@ async function fetchBytes(url: string): Promise<Uint8Array> {
 }
 
 async function setUpModel(): Promise<[encode: OrtFunction, decode: OrtFunction]> {
-  const encoderSession = await window.ort.InferenceSession.create('/encoder.onnx');
-  const decoderSession = await window.ort.InferenceSession.create('/decoder.onnx');
+  const encoderSession = await window.ort.InferenceSession.create(
+    `/vae/vae_${modelIdx.toString()}_encoder.onnx`
+  );
+  const decoderSession = await window.ort.InferenceSession.create(
+    `/vae/vae_${modelIdx.toString()}_decoder.onnx`
+  );
 
   const encoderLock = new Semaphore(1);
   const decoderLock = new Semaphore(1);
@@ -58,18 +64,17 @@ async function page(): Promise<void> {
 
   const alphaGrid = makeStandardGrid(sizeRange, hueRange);
 
-  const gridDataBufRes = await fetchFile('/grids.bin');
+  const gridDataBufRes = await fetchFile('/vae/grids.bin');
   const gridDataBuf = await gridDataBufRes.arrayBuffer();
   const [, , gridData] = expandFloats(gridDataBuf);
 
-  const lossesBufRes = await fetchFile('/losses.bin');
+  const lossesBufRes = await fetchFile('/vae/losses.bin');
   const lossesBuf = await lossesBufRes.arrayBuffer();
 
   const [minLoss, maxLoss, trainLosses, valLosses] = loadLosses(lossesBuf);
 
   const gridDataSliceSize = 100 * 10 * 10 * 2;
 
-  const modelIdx = 5;
 
   setUpEvolution(
     el(document, '#evolution-widget') as HTMLDivElement,
@@ -97,12 +102,12 @@ async function page(): Promise<void> {
   );
 
   const [trainsetCoords, valsetCoords, trainsetImages, valsetImages] = await Promise.all([
-    fetchFile('/trainset_coords.json')
+    fetchFile('/vae/trainset_coords.json')
       .then(response => response.json()) as Promise<{ x: number[]; y: number[] }>,
-    fetchFile('/valset_coords.json')
+    fetchFile('/vae/valset_coords.json')
       .then(response => response.json()) as Promise<{ x: number[]; y: number[] }>,
-    fetchBytes('/trainset_images.bin'),
-    fetchBytes('/valset_images.bin')
+    fetchBytes('/vae/trainset_images.bin'),
+    fetchBytes('/vae/valset_images.bin')
   ]);
 
   setUpDatasetVisualization(
