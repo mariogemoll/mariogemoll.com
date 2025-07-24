@@ -28,7 +28,7 @@ function immediateSubdirs(rootDir: string): string[] {
     .filter(name => fs.statSync(path.join(rootDir, name)).isDirectory());
 }
 
-function copyAssets(): [string, string][] {
+function copyAssets(): Map<string, string> {
   // Map: originalId => { randomId, srcFiles }
   const mapping = new Map<string, { randomId: string, srcFiles: string[] }>();
 
@@ -65,8 +65,9 @@ function copyAssets(): [string, string][] {
     }
   }
 
-  // Return mapping as [originalId, randomId][]
-  return Array.from(mapping.entries()).map(([id, { randomId }]) => [id, randomId]);
+  return new Map(
+    Array.from(mapping.entries()).map(([id, { randomId }]) => [id, randomId])
+  );
 }
 
 function makePage(
@@ -90,7 +91,9 @@ function makePage(
   return [output, title];
 }
 
-async function makePages(pageTemplate: pug.compileTemplate): Promise<[string, string, string][]> {
+async function makePages(
+  pageTemplate: pug.compileTemplate
+): Promise<Map<string, [string, string]>> {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
 
@@ -100,7 +103,7 @@ async function makePages(pageTemplate: pug.compileTemplate): Promise<[string, st
   const pages = fs.readdirSync('../content')
     .filter(f => f.endsWith('.md'))
     .map(f => f.slice(0, -3));
-  const generatedPages: [string, string, string][] = [];
+  const generatedPages = new Map<string, [string, string]>();
   let pageHtmlContent = '';
   let cssUrls: string[] = [];
   let jsUrls: string[] = [];
@@ -131,7 +134,7 @@ async function makePages(pageTemplate: pug.compileTemplate): Promise<[string, st
     const secretId = randomString();
     const [output, title] = makePage(pageTemplate, pageHtmlContent, cssUrls, jsUrls, jsModuleUrls);
     fs.writeFileSync(`../build/${secretId}.html`, output);
-    generatedPages.push([id, secretId, title]);
+    generatedPages.set(id, [secretId, title]);
   }
   return generatedPages;
 }
@@ -139,9 +142,9 @@ async function makePages(pageTemplate: pug.compileTemplate): Promise<[string, st
 function makeHomepage(
   homeTemplate: pug.compileTemplate,
   pageTemplate: pug.compileTemplate,
-  generatedPages: [string, string, string][]
+  generatedPages: Map<string, [string, string]>
 ): string {
-  const pages = generatedPages.map(([id, , title]) => [id, title] as [string, string]);
+  const pages = Array.from(generatedPages.entries()).map(([id, [, title]]) => [id, title]);
   const homeHtml = homeTemplate({ pages });
   const [output] = makePage(pageTemplate, homeHtml, [], [], []);
   const randomId = randomString();
@@ -150,16 +153,16 @@ function makeHomepage(
 }
 
 function makeHtaccess(
-  generatedPages: [string, string, string][],
-  copiedDirs: [string, string][],
+  generatedPages: Map<string, [string, string]>,
+  copiedDirs: Map<string, string>,
   homepageId: string
 ): void {
   let htaccessContent = `DirectoryIndex ${homepageId}.html\n\n`;
   htaccessContent += 'RewriteEngine On\n';
-  for (const [id, secretId] of generatedPages.map(([id, secretId]) => [id, secretId])) {
+  for (const [id, [secretId]] of generatedPages.entries()) {
     htaccessContent += `RewriteRule ^${id}$ /${secretId}.html [L]\n`;
   }
-  for (const [id] of generatedPages.map(([id]) => [id])) {
+  for (const id of generatedPages.keys()) {
     htaccessContent += `RewriteRule ^${id}/$ /${id} [R=301,L]\n`;
   }
   for (const [dir, randomId] of copiedDirs) {
@@ -184,6 +187,27 @@ export async function run(): Promise<void> {
   const homepageId = makeHomepage(homeTemplate, pageTemplate, generatedPages);
   const copiedDirs = copyAssets();
   makeHtaccess(generatedPages, copiedDirs, homepageId);
+
+  const allIds = new Set([...generatedPages.keys(), ...copiedDirs.keys()]);
+  // Order alphabetically
+  const sortedIds = Array.from(allIds).sort();
+
+  for (const id of sortedIds) {
+    console.log(id);
+    const pagesEntry = generatedPages.get(id);
+    if (pagesEntry !== undefined) {
+      const [secretId, title] = pagesEntry;
+      console.log(`${secretId}.html (${title})`);
+    }
+    const copiesEntry = copiedDirs.get(id);
+    if (copiesEntry !== undefined) {
+      console.log(copiesEntry);
+    }
+    console.log();
+  }
+
+  console.log(`Home: ${homepageId}.html`);
+  console.log();
   console.log('Site generated successfully!');
 }
 
