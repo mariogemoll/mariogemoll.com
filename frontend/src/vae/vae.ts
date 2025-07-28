@@ -21,7 +21,7 @@ declare global {
   }
 }
 
-const modelIdx = 8;
+const initiallySelectedModel = 8;
 
 async function fetchFile(url: string): Promise<Response> {
   const response = await fetch(url);
@@ -36,7 +36,7 @@ async function fetchBytes(url: string): Promise<Uint8Array> {
   return response.bytes();
 }
 
-async function setUpModel(): Promise<[encode: OrtFunction, decode: OrtFunction]> {
+async function setUpModel(modelIdx: number): Promise<[encode: OrtFunction, decode: OrtFunction]> {
   const encoderSession = await window.ort.InferenceSession.create(
     `/vae/vae_${modelIdx.toString()}_encoder.onnx`
   );
@@ -60,7 +60,10 @@ async function setUpModel(): Promise<[encode: OrtFunction, decode: OrtFunction]>
   return [encode, decode];
 }
 
-async function page(): Promise<void> {
+function showPlaceholder(box: HTMLDivElement): void {
+  box.innerHTML = '<div class="placeholder" style="width: 700px; height: 300px;">Loading...</div>';
+}
+async function page(initialModelIdx: number): Promise<void> {
 
   const alphaGrid = makeStandardGrid(sizeRange, hueRange);
 
@@ -75,22 +78,12 @@ async function page(): Promise<void> {
 
   const gridDataSliceSize = 100 * 10 * 10 * 2;
 
-
-  setUpEvolution(
-    el(document, '#evolution-widget') as HTMLDivElement,
-    trainLosses[modelIdx],
-    valLosses[modelIdx],
-    gridData.slice(gridDataSliceSize * modelIdx, gridDataSliceSize * (modelIdx + 1))
-  );
-
-  setUpModelComparison(
-    minLoss,
-    maxLoss,
-    trainLosses,
-    valLosses,
-    gridData,
-    el(document, '#modelcomparison-widget') as HTMLDivElement
-  );
+  const evolutionBox = el(document, '#evolution-widget') as HTMLDivElement;
+  const modelComparisonBox = el(document, '#modelcomparison-widget') as HTMLDivElement;
+  const datasetVisualizationBox = el(document, '#datasetvisualization-widget') as HTMLDivElement;
+  const datasetExplanationBox = el(document, '#datasetexplanation-widget') as HTMLDivElement;
+  const mappingBox = el(document, '#mapping-widget') as HTMLDivElement;
+  const decodingBox = el(document, '#decoding-widget') as HTMLDivElement;
 
   const pica = window.pica();
 
@@ -98,7 +91,7 @@ async function page(): Promise<void> {
     pica,
     '/vae/face.png',
     alphaGrid,
-    el(document, '#datasetexplanation-widget') as HTMLDivElement
+    datasetExplanationBox
   );
 
   const [trainsetCoords, valsetCoords, trainsetImages, valsetImages] = await Promise.all([
@@ -111,7 +104,7 @@ async function page(): Promise<void> {
   ]);
 
   setUpDatasetVisualization(
-    el(document, '#datasetvisualization-widget') as HTMLDivElement,
+    datasetVisualizationBox,
     trainsetCoords.x,
     trainsetCoords.y,
     valsetCoords.x,
@@ -120,31 +113,71 @@ async function page(): Promise<void> {
     valsetImages
   );
 
-  const [encode, decode] = await setUpModel();
 
-  const img = await loadImage('/vae/face.png');
-  const zGrid = await encodeGrid(window.ort, pica, img, encode, alphaGrid);
+  async function showModelSpecificWidgets(modelIdx: number): Promise<void> {
+    showPlaceholder(mappingBox);
+    showPlaceholder(decodingBox);
+    showPlaceholder(evolutionBox);
+    showPlaceholder(modelComparisonBox);
+    const [encode, decode] = await setUpModel(modelIdx);
 
-  await setUpMapping(
-    window.ort,
-    encode,
-    decode,
-    pica,
-    '/vae/face.png',
-    [[0.6, 0.9], [0.4, 0.7]],
-    alphaGrid,
-    zGrid,
-    el(document, '#mapping-widget') as HTMLDivElement
-  );
+    const img = await loadImage('/vae/face.png');
+    const zGrid = await encodeGrid(window.ort, pica, img, encode, alphaGrid);
 
-  setUpDecoding(
-    window.ort, decode, zGrid, el(document, '#decoding-widget') as HTMLDivElement
-  );
+    await setUpMapping(
+      window.ort,
+      encode,
+      decode,
+      pica,
+      '/vae/face.png',
+      [[0.6, 0.9], [0.4, 0.7]],
+      alphaGrid,
+      zGrid,
+      mappingBox
+    );
 
+    setUpDecoding(
+      window.ort, decode, zGrid, decodingBox
+    );
+
+    setUpEvolution(
+      evolutionBox,
+      trainLosses[modelIdx],
+      valLosses[modelIdx],
+      gridData.slice(gridDataSliceSize * modelIdx, gridDataSliceSize * (modelIdx + 1))
+    );
+
+    let changingModel = false;
+    setUpModelComparison(
+      minLoss,
+      maxLoss,
+      trainLosses,
+      valLosses,
+      gridData,
+      modelComparisonBox,
+      modelIdx,
+      (modelIndex) => {
+        if (changingModel) {
+          console.warn('Model change already in progress, ignoring click');
+          return;
+        }
+        changingModel = true;
+        showModelSpecificWidgets(modelIndex).then(() => {
+          changingModel = false;
+        }).catch((error: unknown) => {
+          console.error(error);
+          const errorMsg = error instanceof Error ? error.message : String(error);
+          alert(`An error occurred while trying to change the model: ${errorMsg}`);
+          changingModel = false;
+        });
+      });
+  }
+
+  await showModelSpecificWidgets(initialModelIdx);
 }
 
 window.addEventListener('load', () => {
-  page().catch((error: unknown) => {
+  page(initiallySelectedModel).catch((error: unknown) => {
     console.error(error);
     alert(`Error during page setup: ${error instanceof Error ? error.message : String(error)}`);
   });
