@@ -21,17 +21,20 @@ export async function generatePage(contentPath: string): Promise<PageContentPara
   }).use(mathjax3);
 
   let mdContent = await fsExtra.readFile(path.join(contentPath, 'vae.md'), 'utf-8');
+  const widgetLabelsAndHeights: [string, number][] = [
+    ['datasetexplanation', 300],
+    ['datasetvisualization', 300],
+    ['mapping', 300],
+    ['evolution', 340],
+    ['decoding', 300],
+    ['modelcomparison', 340]
+  ];
 
-  for (const label of [
-    'datasetexplanation',
-    'datasetvisualization',
-    'mapping',
-    'evolution',
-    'decoding',
-    'modelcomparison'
-  ]) {
-    const html = '<div class="placeholder" ' +
-      'style="width: 700px; height: 300px; background-color: #eee"></div>';
+  for (const [label, height] of widgetLabelsAndHeights) {
+    const html = `<div id="${label}-widget" class="widget" style="height: ${height.toString()}px">
+          <div class="placeholder"
+            style="width: 700px; height: ${height.toString()}px; background-color: #eee"></div>
+        </div>`;
     mdContent = mdContent.replace(`[[ ${label}-widget ]]`, html);
   }
 

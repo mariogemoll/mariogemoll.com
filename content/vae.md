@@ -183,12 +183,12 @@ dataset generated from two variables: The size of a photo of a face (generated b
 on the image, and the hue (as in the HSV color model) of the background color. Drag the dot around
 on the 2D grid in the following widget to see example images for different size and hue values:
 
-<div id="datasetexplanation-widget" class="widget">[[ datasetexplanation-widget ]]</div>
+[[ datasetexplanation-widget ]]
 
 We generate a dataset of 2000 images. A rectangle of about 20% of the overall 2D area is defined as
 the validation set:
 
-<div id="datasetvisualization-widget" class="widget">[[ datasetvisualization-widget ]]</div>
+[[ datasetvisualization-widget ]]
 
 ## Model
 
@@ -348,12 +348,12 @@ for epoch in range(num_epochs):
 
 <!-- TODO: Show some simple reconstructions -->
 
-<div id="mapping-widget" class="widget">[[ mapping-widget ]]</div>
+[[ mapping-widget ]]
 
-<div id="evolution-widget" class="widget">[[ evolution-widget ]]</div>
+[[ evolution-widget ]]
 
 ## Decoding
 
-<div id="decoding-widget" class="widget">[[ decoding-widget ]]</div>
+[[ decoding-widget ]]
 
-<div id="modelcomparison-widget" class="widget">[[ modelcomparison-widget ]]</div>
+[[ modelcomparison-widget ]]
