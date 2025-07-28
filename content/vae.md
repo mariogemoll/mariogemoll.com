@@ -344,9 +344,11 @@ for epoch in range(num_epochs):
         optimizer.step()
 ```
 
-## Latent space exploration
+## Sampling
 
-<!-- TODO: Show some simple reconstructions -->
+[[ sampling-widget ]]
+
+## Latent space exploration
 
 [[ mapping-widget ]]
 

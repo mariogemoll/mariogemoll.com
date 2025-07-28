@@ -10,6 +10,7 @@ import { encodeGrid, makeStandardGrid } from '../widgets/grid.js';
 import { loadLosses } from '../widgets/lossdata.js';
 import { setUpMapping } from '../widgets/mapping.js';
 import { setUpModelComparison } from '../widgets/modelcomparison.js';
+import { setUpSampling } from '../widgets/sampling.js';
 import { Semaphore } from '../widgets/semaphore.js';
 import { el, expandFloats, loadImage } from '../widgets/util.js';
 
@@ -82,6 +83,7 @@ async function page(initialModelIdx: number): Promise<void> {
   const modelComparisonBox = el(document, '#modelcomparison-widget') as HTMLDivElement;
   const datasetVisualizationBox = el(document, '#datasetvisualization-widget') as HTMLDivElement;
   const datasetExplanationBox = el(document, '#datasetexplanation-widget') as HTMLDivElement;
+  const samplingBox = el(document, '#sampling-widget') as HTMLDivElement;
   const mappingBox = el(document, '#mapping-widget') as HTMLDivElement;
   const decodingBox = el(document, '#decoding-widget') as HTMLDivElement;
 
@@ -115,6 +117,7 @@ async function page(initialModelIdx: number): Promise<void> {
 
 
   async function showModelSpecificWidgets(modelIdx: number): Promise<void> {
+    showPlaceholder(samplingBox);
     showPlaceholder(mappingBox);
     showPlaceholder(decodingBox);
     showPlaceholder(evolutionBox);
@@ -123,6 +126,8 @@ async function page(initialModelIdx: number): Promise<void> {
 
     const img = await loadImage('/vae/face.png');
     const zGrid = await encodeGrid(window.ort, pica, img, encode, alphaGrid);
+
+    await setUpSampling(window.ort, decode, samplingBox);
 
     await setUpMapping(
       window.ort,

@@ -24,6 +24,7 @@ export async function generatePage(contentPath: string): Promise<PageContentPara
   const widgetLabelsAndHeights: [string, number][] = [
     ['datasetexplanation', 300],
     ['datasetvisualization', 300],
+    ['sampling', 300],
     ['mapping', 300],
     ['evolution', 340],
     ['decoding', 300],
