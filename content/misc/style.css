@@ -15,6 +15,11 @@ p, h1, h2, ul, pre {
   line-height: 1.7rem;
 }
 
+code {
+  font-size: 12px;
+  line-height: 20px;
+}
+
 /* stylelint-disable selector-class-pattern */
 .MathJax[display="true"] {
   margin: 40px auto !important
