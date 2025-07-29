@@ -1,5 +1,5 @@
 import type * as ort from 'onnxruntime-web';
-import type { OrtFunction } from 'src/widgets/types/ortfunction.js';
+import type OrtFunction from 'src/widgets/types/ortfunction.js';
 
 import { hueRange, sizeRange } from '../widgets/constants.js';
 import { setUpDatasetExplanation } from '../widgets/datasetexplanation.js';
