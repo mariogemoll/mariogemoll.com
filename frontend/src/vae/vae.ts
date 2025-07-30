@@ -3,7 +3,9 @@ import type OrtFunction from 'src/widgets/types/ortfunction.js';
 
 import { hueRange, sizeRange } from '../widgets/constants.js';
 import { setUpDatasetExplanation } from '../widgets/datasetexplanation.js';
-import { setUpDatasetVisualization } from '../widgets/datasetvisualization.js';
+import {
+  setUpDatasetVisualizationWithPreview
+} from '../widgets/datasetvisualizationwithpreview.js';
 import { setUpDecoding } from '../widgets/decoding.js';
 import { setUpEvolution } from '../widgets/evolution.js';
 import { encodeGrid, makeStandardGrid } from '../widgets/grid.js';
@@ -30,11 +32,6 @@ async function fetchFile(url: string): Promise<Response> {
     throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
   }
   return response;
-}
-
-async function fetchBytes(url: string): Promise<Uint8Array> {
-  const response = await fetchFile(url);
-  return response.bytes();
 }
 
 async function setUpModel(modelIdx: number): Promise<[encode: OrtFunction, decode: OrtFunction]> {
@@ -64,6 +61,7 @@ async function setUpModel(modelIdx: number): Promise<[encode: OrtFunction, decod
 function showPlaceholder(box: HTMLDivElement): void {
   box.innerHTML = '<div class="placeholder" style="width: 700px; height: 300px;">Loading...</div>';
 }
+
 async function page(initialModelIdx: number): Promise<void> {
 
   const alphaGrid = makeStandardGrid(sizeRange, hueRange);
@@ -96,25 +94,25 @@ async function page(initialModelIdx: number): Promise<void> {
     alphaGrid
   );
 
-  const [trainsetCoords, valsetCoords, trainsetImages, valsetImages] = await Promise.all([
+  const [trainsetCoords, valsetCoords] = await Promise.all([
     fetchFile('/vae/trainset_coords.json')
       .then(response => response.json()) as Promise<{ x: number[]; y: number[] }>,
     fetchFile('/vae/valset_coords.json')
-      .then(response => response.json()) as Promise<{ x: number[]; y: number[] }>,
-    fetchBytes('/vae/trainset_images.bin'),
-    fetchBytes('/vae/valset_images.bin')
+      .then(response => response.json()) as Promise<{ x: number[]; y: number[] }>
   ]);
 
-  setUpDatasetVisualization(
+  const faceImg = await loadImage('/vae/face.png');
+
+  setUpDatasetVisualizationWithPreview(
     datasetVisualizationBox,
     trainsetCoords.x,
     trainsetCoords.y,
     valsetCoords.x,
     valsetCoords.y,
-    trainsetImages,
-    valsetImages
+    pica,
+    faceImg,
+    '/vae'
   );
-
 
   async function showModelSpecificWidgets(modelIdx: number): Promise<void> {
     showPlaceholder(samplingBox);
@@ -175,7 +173,8 @@ async function page(initialModelIdx: number): Promise<void> {
           alert(`An error occurred while trying to change the model: ${errorMsg}`);
           changingModel = false;
         });
-      });
+      }
+    );
   }
 
   await showModelSpecificWidgets(initialModelIdx);
