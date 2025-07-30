@@ -92,8 +92,8 @@ async function page(initialModelIdx: number): Promise<void> {
   await setUpDatasetExplanation(
     pica,
     '/vae/face.png',
-    alphaGrid,
-    datasetExplanationBox
+    datasetExplanationBox,
+    alphaGrid
   );
 
   const [trainsetCoords, valsetCoords, trainsetImages, valsetImages] = await Promise.all([
@@ -131,14 +131,14 @@ async function page(initialModelIdx: number): Promise<void> {
 
     await setUpMapping(
       window.ort,
+      pica,
       encode,
       decode,
-      pica,
       '/vae/face.png',
-      [[0.6, 0.9], [0.4, 0.7]],
+      mappingBox,
       alphaGrid,
       zGrid,
-      mappingBox
+      [[0.6, 0.9], [0.4, 0.7]]
     );
 
     setUpDecoding(
@@ -154,12 +154,12 @@ async function page(initialModelIdx: number): Promise<void> {
 
     let changingModel = false;
     setUpModelComparison(
+      modelComparisonBox,
       minLoss,
       maxLoss,
       trainLosses,
       valLosses,
       gridData,
-      modelComparisonBox,
       modelIdx,
       (modelIndex) => {
         if (changingModel) {
