@@ -344,6 +344,10 @@ for epoch in range(num_epochs):
         optimizer.step()
 ```
 
+If you want to train the model yourself, you can use a prepared
+[notebook](https://github.com/mariogemoll/vae/blob/main/notebooks/vae.ipynb), for example on
+[Colab](https://colab.research.google.com/github/mariogemoll/vae/blob/main/notebooks/vae.ipynb).
+
 ## Sampling
 
 Only the decoder of the model is needed to sample new images. Z values are sampled from the Gaussian
@@ -393,7 +397,8 @@ values. Again, the grid for the coordinates created by the training data is show
 
 ## Model comparison
 
-When multiple instances of the model with the architecture described above are trained, the loss
+When multiple instances of the model with the architecture described above are
+[trained](https://github.com/mariogemoll/vae/blob/main/notebooks/train_multiple.ipynb), the loss
 converges on more or less the same value, however the latent spaces have different "shapes". You can
 click on the plots on the right to load different models for all the widgets above.
 
