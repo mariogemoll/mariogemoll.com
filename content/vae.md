@@ -6,6 +6,8 @@ $$
 \newcommand{\integral}[2]{\int #1 \, #2}
 $$
 
+## Theory
+
 To train a VAE, we try to maximize the log likelihood of all the training examples:
 
 $$ \log \prod_{i=1}^n p(x_i) = \sum_{i=1}^n \log p(x_i) $$
