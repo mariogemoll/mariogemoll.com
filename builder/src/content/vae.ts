@@ -44,7 +44,10 @@ export async function generatePage(contentPath: string): Promise<PageContentPara
     'https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/default.min.css',
     '/vae/vae.css'
   ];
-  const jsUrls = ['https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js'];
+  const jsUrls = [
+    'https://cdnjs.cloudflare.com/ajax/libs/pica/9.0.1/pica.min.js',
+    'https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js'
+  ];
   const jsModuleUrls = ['/vae/vae.js'];
   return [html, cssFiles, jsUrls, jsModuleUrls];
 }
