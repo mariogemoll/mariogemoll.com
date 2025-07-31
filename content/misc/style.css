@@ -15,6 +15,22 @@ p, h1, h2, ul, pre {
   line-height: 1.7rem;
 }
 
+h1 {
+  margin-top: 60px;
+}
+
+header a {
+  text-decoration: none;
+  color: #aaa;
+}
+
+header h2 {
+  font-size: 12px;
+  line-height: 20px;
+  margin-top: 20px;
+  border-bottom: 1px solid #aaa;
+}
+
 code {
   font-size: 12px;
   line-height: 20px;

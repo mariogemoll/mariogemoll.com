@@ -92,6 +92,7 @@ function makePage(
 }
 
 async function makePages(
+  contentTemplate: pug.compileTemplate,
   pageTemplate: pug.compileTemplate
 ): Promise<Map<string, [string, string]>> {
   const __filename = fileURLToPath(import.meta.url);
@@ -132,7 +133,9 @@ async function makePages(
       pageHtmlContent = markdown.render(mdContent);
     }
     const secretId = randomString();
-    const [output, title] = makePage(pageTemplate, pageHtmlContent, cssUrls, jsUrls, jsModuleUrls);
+    // Add header
+    const wrappedHtml = contentTemplate({ content: pageHtmlContent });
+    const [output, title] = makePage(pageTemplate, wrappedHtml, cssUrls, jsUrls, jsModuleUrls);
     fs.writeFileSync(`../build/${secretId}.html`, output);
     generatedPages.set(id, [secretId, title]);
   }
@@ -146,7 +149,7 @@ function makeHomepage(
 ): string {
   const pages = Array.from(generatedPages.entries()).map(([id, [, title]]) => [id, title]);
   const homeHtml = homeTemplate({ pages });
-  const [output] = makePage(pageTemplate, homeHtml, [], [], []);
+  const [output] = makePage(pageTemplate, homeHtml, ['/misc/home.css'], [], []);
   const randomId = randomString();
   fs.writeFileSync(`../build/${randomId}.html`, output);
   return randomId;
@@ -181,9 +184,10 @@ export async function run(): Promise<void> {
       fsExtra.removeSync(filePath);
     }
   }
+  const contentTemplate = pug.compileFile('../templates/content.pug');
   const pageTemplate = pug.compileFile('../templates/page.pug');
   const homeTemplate = pug.compileFile('../templates/home.pug');
-  const generatedPages = await makePages(pageTemplate);
+  const generatedPages = await makePages(contentTemplate, pageTemplate);
   const homepageId = makeHomepage(homeTemplate, pageTemplate, generatedPages);
   const copiedDirs = copyAssets();
   makeHtaccess(generatedPages, copiedDirs, homepageId);
