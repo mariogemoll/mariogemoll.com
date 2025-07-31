@@ -1,16 +1,16 @@
 # Variational Autoencoders
 
-$$
-\newcommand{\KL}[2]{\mathrm{D_{KL}}\left(#1 \,\|\, #2\right)}
-\newcommand{\E}[2]{\mathbb{E}_{#1}\left[#2\right]}
-\newcommand{\integral}[2]{\int #1 \, #2}
-$$
-
 ## Theory
 
 To train a VAE, we try to maximize the log likelihood of all the training examples:
 
-$$ \log \prod_{i=1}^n p(x_i) = \sum_{i=1}^n \log p(x_i) $$
+$$
+\newcommand{\KL}[2]{\mathrm{D_{KL}}\left(#1 \,\|\, #2\right)}
+\newcommand{\E}[2]{\mathbb{E}_{#1}\left[#2\right]}
+\newcommand{\integral}[2]{\int #1 \, #2}
+
+\log \prod_{i=1}^n p(x_i) = \sum_{i=1}^n \log p(x_i)
+$$
 
 (To be clear, the subscript $i$ here denotes the number of the training example, not a coordinate in
 the vector $x$.)
