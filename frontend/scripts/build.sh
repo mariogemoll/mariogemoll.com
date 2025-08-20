@@ -15,3 +15,7 @@ COMMIT_HASH=$(git rev-parse HEAD)
 
 npx esbuild src/vae/vae.ts --bundle --format=esm --outfile=dist/vae/vae.js --minify --sourcemap \
   --source-root=https://github.com/mariogemoll/mariogemoll.com/tree/$COMMIT_HASH/frontend/src/vae \
+
+npx esbuild src/attention-is-all-you-need/attention-is-all-you-need.ts --bundle --format=esm \
+  --outfile=dist/attention-is-all-you-need/attention-is-all-you-need.js --minify --sourcemap \
+  --source-root=https://github.com/mariogemoll/mariogemoll.com/tree/$COMMIT_HASH/frontend/src/attention-is-all-you-need \
