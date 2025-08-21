@@ -8,11 +8,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22.x
-      - name: Set up SSH key for submodule
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.GH_SSH_KEY_VAE }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
       - name: Initialize submodule
         run: git submodule update --init
       - name: "Frontend: Install dependencies"
