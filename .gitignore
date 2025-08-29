@@ -2,5 +2,6 @@
 node_modules
 package-lock.json
 /build
+/build_info/directory_mapping.tsv
 /builder/dist
 /frontend/dist

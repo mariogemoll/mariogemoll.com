@@ -176,6 +176,15 @@ function makeHtaccess(
   fs.writeFileSync('../build/.htaccess', htaccessContent);
 }
 
+function writeMappingTSV(copiedDirs: Map<string, string>, dstPath: string): void {
+  let tsvContent = '';
+  for (const [originalName, randomId] of copiedDirs.entries()) {
+    tsvContent += `${originalName}\t${randomId}\n`;
+  }
+
+  fs.writeFileSync(dstPath, tsvContent);
+}
+
 export async function run(): Promise<void> {
   if (!fs.existsSync('../build')) {
     fs.mkdirSync('../build');
@@ -193,6 +202,8 @@ export async function run(): Promise<void> {
   const homepageId = makeHomepage(homeTemplate, pageTemplate, generatedPages);
   const copiedDirs = copyAssets();
   makeHtaccess(generatedPages, copiedDirs, homepageId);
+
+  writeMappingTSV(copiedDirs, '../build_info/directory_mapping.tsv');
 
   const allIds = new Set([...generatedPages.keys(), ...copiedDirs.keys()]);
   // Order alphabetically

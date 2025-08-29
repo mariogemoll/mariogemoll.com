@@ -1,0 +1,7 @@
+parallel-corpus-viewer/commoncrawl.de-en.annidx	9596492	de5ffe5a8147a4f573b7a62c54f3b20421998a0700214434a1482d6a442beded	Index file containing the index (32bit le uint) of the annotation for each sentence pair
+parallel-corpus-viewer/commoncrawl.de-en.annotation	35544656	5908507404e2ec5a20eacefd8d43077a020725c82da736c122d448ee89a41fe5	Annotation TSV file from training-parallel-commoncrawl.tgz (in WMT14 dataset)
+parallel-corpus-viewer/commoncrawl.de-en.annotation.idx	1170136	ceb026a2f504f778a4b864aef817ae609509353b6de21a47f15d33b57351d600	Index file containing the end position (32bit le uint) of each line in commoncrawl.de-en.annotation
+parallel-corpus-viewer/commoncrawl.de-en.de	340513464	f76ee3ac42a6e9eda86e850fb86719a95fa17df79c69b99f82337bc1d03af393	German text file From training-parallel-commoncrawl.tgz (in WMT14 dataset)
+parallel-corpus-viewer/commoncrawl.de-en.de.idx	9596492	eb3cce5822032122e0632b3ba202ca22d30305cbee464ca7a4e44be27c04821c	Index file containing the end position (32bit le uint) of each line in commoncrawl.de-en.de
+parallel-corpus-viewer/commoncrawl.de-en.en	314178160	3a7f14a8c0b0ddd83118489c4545270f8fa416ee7a5d39e79edbc44b02eda979	English text file from training-parallel-commoncrawl.tgz (in WMT14 dataset)
+parallel-corpus-viewer/commoncrawl.de-en.en.idx	9596492	668ca62e6fe0ec3d3d3d0e10274429196117464a3cdc47ff55f35fa4ccc655d2	Index file containing the end position (32bit le uint) of each line in commoncrawl.de-en.en
