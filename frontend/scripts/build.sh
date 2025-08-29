@@ -15,3 +15,7 @@ COMMIT_HASH=$(git rev-parse HEAD)
 
 npx esbuild src/vae/vae.ts --bundle --format=esm --outfile=dist/vae/vae.js --minify --sourcemap \
   --source-root=https://github.com/mariogemoll/mariogemoll.com/tree/$COMMIT_HASH/frontend/src/vae \
+
+npx esbuild src/parallel-corpus-viewer/parallel-corpus-viewer.ts --bundle --format=esm \
+  --outfile=dist/parallel-corpus-viewer/parallel-corpus-viewer.js --minify --sourcemap \
+  --source-root=https://github.com/mariogemoll/mariogemoll.com/tree/$COMMIT_HASH/frontend/src/parallel-corpus-viewer

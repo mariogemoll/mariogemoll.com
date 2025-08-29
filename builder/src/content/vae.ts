@@ -42,6 +42,7 @@ export async function generatePage(contentPath: string): Promise<PageContentPara
   const html = md.render(mdContent);
   const cssFiles = [
     'https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/default.min.css',
+    '/misc/centered.css',
     '/vae/vae.css'
   ];
   const jsUrls = [

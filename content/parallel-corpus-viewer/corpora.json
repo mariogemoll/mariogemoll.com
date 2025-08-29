@@ -1,0 +1,17 @@
+{
+    "commoncrawl-deen": {
+        "name": "Common Crawl DE-EN",
+        "numPairs": 2399123,
+        "srcLabel": "DE",
+        "tgtLabel": "EN",
+        "srcLabelLong": "German",
+        "tgtLabelLong": "English",
+        "srcTextFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.en",
+        "srcIndexFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.en.idx",
+        "tgtTextFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.de",
+        "tgtIndexFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.de.idx",
+        "annotationsTextFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.annotation",
+        "annotationsIndexFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.annotation.idx",
+        "annotationsForLinesFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.annidx"
+    }
+}

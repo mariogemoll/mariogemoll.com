@@ -5,7 +5,8 @@ export default {
   default: true,
   config: {
     MD013: { line_length: 100 },
-    MD033: false
+    MD033: false,
+    MD041: false
   },
   customRules: [mathBlockFormat, htmlValidate]
 };

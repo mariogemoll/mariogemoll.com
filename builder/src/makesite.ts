@@ -149,7 +149,9 @@ function makeHomepage(
 ): string {
   const pages = Array.from(generatedPages.entries()).map(([id, [, title]]) => [id, title]);
   const homeHtml = homeTemplate({ pages });
-  const [output] = makePage(pageTemplate, homeHtml, ['/misc/home.css'], [], []);
+  const [output] = makePage(
+    pageTemplate, homeHtml, ['/misc/centered.css', '/misc/home.css'], [], []
+  );
   const randomId = randomString();
   fs.writeFileSync(`../build/${randomId}.html`, output);
   return randomId;
