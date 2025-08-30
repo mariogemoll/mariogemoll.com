@@ -27,6 +27,13 @@ interface CommonCrawlAnnotation {
   numLines: number;
 }
 
+interface CommonCrawlSegment {
+  startLineIdx: number;
+  srcSourceUrl: string;
+  tgtSourceUrl: string;
+  pairs: { src: string; tgt: string }[];
+}
+
 function el(parent: Document | Element, query: string): Element {
   const element = parent.querySelector(query);
   if (!element) {
@@ -61,19 +68,28 @@ async function getCommonCrawlAnnotations(
   return lines.map(parseCommonCrawlAnnotationLine);
 }
 
-interface CommonCrawlSegment {
-  startLineIdx: number;
-  srcSourceUrl: string;
-  tgtSourceUrl: string;
-  pairs: { src: string; tgt: string }[];
+function getSrcAndTgtLines(
+  srcIndexFileUrl: string, srcTextFileUrl: string, tgtIndexFileUrl: string, tgtTextFileUrl: string,
+  startIdx: number, numLines: number
+): Promise<[string[], string[]]> {
+  return Promise.all([
+    getLines(srcIndexFileUrl, srcTextFileUrl, startIdx, numLines),
+    getLines(tgtIndexFileUrl, tgtTextFileUrl, startIdx, numLines)
+  ]);
 }
 
 async function getCommonCrawlLines(
   urls: CommonCrawlInfo, startIdx: number, numLines: number
 ): Promise<CommonCrawlSegment[]> {
-  const srcLines = await getLines(urls.srcIndexFileUrl, urls.srcTextFileUrl, startIdx, numLines);
-  const tgtLines = await getLines(urls.tgtIndexFileUrl, urls.tgtTextFileUrl, startIdx, numLines);
-  const annotationData = await getCommonCrawlAnnotations(urls, startIdx, numLines);
+  const [srcAndTgtLines, annotationData] = await Promise.all([
+    getSrcAndTgtLines(
+      urls.srcIndexFileUrl, urls.srcTextFileUrl,
+      urls.tgtIndexFileUrl, urls.tgtTextFileUrl,
+      startIdx, numLines
+    ),
+    getCommonCrawlAnnotations(urls, startIdx, numLines)
+  ]);
+  const [srcLines, tgtLines] = srcAndTgtLines;
 
   const segments: CommonCrawlSegment[] = [];
   let currentSegment: CommonCrawlSegment = {
@@ -118,7 +134,42 @@ function addSourceLink(parent: HTMLElement, url: string): void {
   parent.appendChild(a);
 }
 
-function displayParallelLines(
+function addTableRow(
+  tbody: HTMLTableSectionElement,
+  idx: number,
+  pair: { src: string; tgt: string },
+  isOdd: boolean,
+  isHighlighted: boolean
+): HTMLTableRowElement {
+  const row = document.createElement('tr');
+  if (isHighlighted) {
+    row.className = 'highlight-row';
+  } else if (isOdd) {
+    row.className = 'odd-segment';
+  }
+  row.id = `line-${(idx + 1).toString()}`;
+
+  // Line number
+  const lineNumCell = document.createElement('td');
+  lineNumCell.className = 'line-num';
+  lineNumCell.textContent = (idx + 1).toString();
+
+  // src text
+  const deCell = document.createElement('td');
+  deCell.textContent = pair.tgt;
+
+  // tgt text
+  const enCell = document.createElement('td');
+  enCell.textContent = pair.src;
+
+  row.appendChild(lineNumCell);
+  row.appendChild(deCell);
+  row.appendChild(enCell);
+  tbody.appendChild(row);
+  return row;
+}
+
+function addCommonCrawlSegments(
   tbody: HTMLTableSectionElement, srcLabelShort: string, tgtLabelShort: string,
   startLineIdx: number, segments: CommonCrawlSegment[], highlightIdx: number | undefined
 ): HTMLTableRowElement | undefined {
@@ -129,7 +180,8 @@ function displayParallelLines(
     const segment = segments[segmentIdx];
     const metadataRow = document.createElement('tr');
     metadataRow.classList.add('metadata');
-    if (segmentIdx % 2 === 1) {
+    const isOdd = segmentIdx % 2 === 1;
+    if (isOdd) {
       metadataRow.classList.add('odd-segment');
     }
     const metadataCell = document.createElement('td');
@@ -151,40 +203,36 @@ function displayParallelLines(
     tbody.appendChild(metadataRow);
 
     for (const pair of segment.pairs) {
-      const row = document.createElement('tr');
-      if (segmentIdx % 2 === 1) {
-        row.className = 'odd-segment';
-      }
-      row.id = `line-${(idx + 1).toString()}`;
-
-      // Check if this row should be highlighted
-      if (highlightIdx === idx) {
-        row.className = 'highlight-row';
+      const isHighlighted = highlightIdx === idx;
+      const row = addTableRow(tbody, idx, pair, isOdd, isHighlighted);
+      if (isHighlighted) {
         highlightRow = row;
       }
-
-      // Line number
-      const lineNumCell = document.createElement('td');
-      lineNumCell.className = 'line-num';
-      lineNumCell.textContent = (idx + 1).toString();
-
-      // German text
-      const deCell = document.createElement('td');
-      deCell.className = 'de-text';
-      deCell.textContent = pair.tgt;
-
-      // English text
-      const enCell = document.createElement('td');
-      enCell.className = 'en-text';
-      enCell.textContent = pair.src;
-
-      row.appendChild(lineNumCell);
-      row.appendChild(deCell);
-      row.appendChild(enCell);
-      tbody.appendChild(row);
       idx++;
     }
 
+  }
+
+  return highlightRow;
+}
+
+function addPairs(
+  tbody: HTMLTableSectionElement,
+  startLineIdx: number,
+  pairs: { src: string; tgt: string }[],
+  highlightIdx: number | undefined
+): HTMLTableRowElement | undefined {
+  tbody.innerHTML = '';
+  let idx = startLineIdx;
+  let highlightRow: HTMLTableRowElement | undefined = undefined;
+
+  for (const pair of pairs) {
+    const isHighlighted = highlightIdx === idx;
+    const row = addTableRow(tbody, idx, pair, false, isHighlighted);
+    if (isHighlighted) {
+      highlightRow = row;
+    }
+    idx++;
   }
 
   return highlightRow;
@@ -307,12 +355,21 @@ async function page(): Promise<void> {
   let highlightRow;
   if (corpus === 'commoncrawl-deen') {
     const ccSegments = await getCommonCrawlLines(corpusInfo as CommonCrawlInfo, startIdx, numPairs);
-    highlightRow = displayParallelLines(
+    highlightRow = addCommonCrawlSegments(
       tbody, corpusInfo.srcLabel, corpusInfo.tgtLabel, startIdx, ccSegments,
       highlight === undefined ? undefined : highlight - 1
     );
   } else {
-    throw new Error(`Unknown corpus: ${corpus}`);
+    const [srcLines, tgtLines] = await getSrcAndTgtLines(
+      corpusInfo.srcIndexFileUrl, corpusInfo.srcTextFileUrl,
+      corpusInfo.tgtIndexFileUrl, corpusInfo.tgtTextFileUrl,
+      startIdx, numPairs
+    );
+    const pairs = srcLines.map((src, i) => ({ src, tgt: tgtLines[i] }));
+    highlightRow = addPairs(
+      tbody, startIdx, pairs,
+      highlight === undefined ? undefined : highlight - 1
+    );
   }
   if (highlightRow !== undefined) {
     highlightRow.scrollIntoView({ behavior: 'auto', block: 'center' });

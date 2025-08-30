@@ -13,5 +13,41 @@
         "annotationsTextFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.annotation",
         "annotationsIndexFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.annotation.idx",
         "annotationsForLinesFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.annidx"
+    },
+    "europarl-v7-deen": {
+        "name": "Europarl v7 DE-EN",
+        "numPairs": 1920209,
+        "srcLabel": "DE",
+        "tgtLabel": "EN",
+        "srcLabelLong": "German",
+        "tgtLabelLong": "English",
+        "srcTextFileUrl": "parallel-corpus-viewer/europarl-v7.de-en.en",
+        "srcIndexFileUrl": "parallel-corpus-viewer/europarl-v7.de-en.en.idx",
+        "tgtTextFileUrl": "parallel-corpus-viewer/europarl-v7.de-en.de",
+        "tgtIndexFileUrl": "parallel-corpus-viewer/europarl-v7.de-en.de.idx"
+    },
+    "news-commentary-v9-deen": {
+        "name": "News Commentary v9 DE-EN",
+        "numPairs": 201288,
+        "srcLabel": "DE",
+        "tgtLabel": "EN",
+        "srcLabelLong": "German",
+        "tgtLabelLong": "English",
+        "srcTextFileUrl": "parallel-corpus-viewer/news-commentary-v9.de-en.en",
+        "srcIndexFileUrl": "parallel-corpus-viewer/news-commentary-v9.de-en.en.idx",
+        "tgtTextFileUrl": "parallel-corpus-viewer/news-commentary-v9.de-en.de",
+        "tgtIndexFileUrl": "parallel-corpus-viewer/news-commentary-v9.de-en.de.idx"
+    },
+    "newstest2013-deen": {
+        "name": "Newstest 2013 DE-EN",
+        "numPairs": 3000,
+        "srcLabel": "DE",
+        "tgtLabel": "EN",
+        "srcLabelLong": "German",
+        "tgtLabelLong": "English",
+        "srcTextFileUrl": "parallel-corpus-viewer/newstest2013.de",
+        "srcIndexFileUrl": "parallel-corpus-viewer/newstest2013.de.idx",
+        "tgtTextFileUrl": "parallel-corpus-viewer/newstest2013.en",
+        "tgtIndexFileUrl": "parallel-corpus-viewer/newstest2013.en.idx"
     }
 }

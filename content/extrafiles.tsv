@@ -5,3 +5,15 @@ parallel-corpus-viewer/commoncrawl.de-en.de	340513464	f76ee3ac42a6e9eda86e850fb8
 parallel-corpus-viewer/commoncrawl.de-en.de.idx	9596492	eb3cce5822032122e0632b3ba202ca22d30305cbee464ca7a4e44be27c04821c	Index file containing the end position (32bit le uint) of each line in commoncrawl.de-en.de
 parallel-corpus-viewer/commoncrawl.de-en.en	314178160	3a7f14a8c0b0ddd83118489c4545270f8fa416ee7a5d39e79edbc44b02eda979	English text file from training-parallel-commoncrawl.tgz (in WMT14 dataset)
 parallel-corpus-viewer/commoncrawl.de-en.en.idx	9596492	668ca62e6fe0ec3d3d3d0e10274429196117464a3cdc47ff55f35fa4ccc655d2	Index file containing the end position (32bit le uint) of each line in commoncrawl.de-en.en
+parallel-corpus-viewer/europarl-v7.de-en.de	328463491	f1d5252256ed0977f88c2dc332c0366d8b1bd4714d5a4b7bb6b1d77a534797f7	German text file from training-parallel-europarl-v7.tgz (in WMT14 dataset)
+parallel-corpus-viewer/europarl-v7.de-en.de.idx	7680836	a08249a00a624132027fe9fadc7b63746880f37d96be08b78eb14a7c6fa1798a	Index file containing the end position (32bit le uint) of each line in europarl-v7.de-en.de
+parallel-corpus-viewer/europarl-v7.de-en.en	287250069	e766c009a28452d88417e3ed2ff5f5da867a650558ebad0cd0b02b14d51ac3a0	English text file from training-parallel-europarl-v7.tgz (in WMT14 dataset)
+parallel-corpus-viewer/europarl-v7.de-en.en.idx	7680836	1ad7b68f69316d3426f02e96ca7b6d9d6b0db49e2f5d2bf9fda07ce5c3ca2814	Index file containing the end position (32bit le uint) of each line in europarl-v7.de-en.en
+parallel-corpus-viewer/news-commentary-v9.de-en.de	33872418	1d8589f8ad1733d5718b0c80595a4941358e553c8081c86c99bae6c4e095759c	German text file from training-parallel-nc-v9.tgz (in WMT14 dataset)
+parallel-corpus-viewer/news-commentary-v9.de-en.de.idx	805152	c0fbf9c5e91695d6de4dc17a050a7f9da32bfb5b5ac64bf6df773981abaf7f4e	Index file containing the end position (32bit le uint) of each line in news-commentary-v9.de-en.de
+parallel-corpus-viewer/news-commentary-v9.de-en.en	27824721	b049aa5d0a0a837c6d5a6a2178565dae549eeb9eb37ff117d5a6b8bef3050bf2	English text file from training-parallel-nc-v9.tgz (in WMT14 dataset)
+parallel-corpus-viewer/news-commentary-v9.de-en.en.idx	805152	c7433c819dd81067eaf33024491aee54f4a19140de49fc44eab33bb6dc985043	Index file containing the end position (32bit le uint) of each line in news-commentary-v9.de-en.en
+parallel-corpus-viewer/newstest2013.de	385433	d7ea35ab91ff3709e03ad9cb6bf5b4f2cc775cd2d72efd5254c4aec5e69663ca	German text file from dev.tgz (WMT14 dataset)
+parallel-corpus-viewer/newstest2013.de.idx	12000	963f4622cd226c57a453c14a10c63d936a34d70abe1ea954f2524d5464df8d72	Index file containing the end position (32bit le uint) of each line in newstest2013.de
+parallel-corpus-viewer/newstest2013.en	332974	ace268a1d9724ca76f6d8e5c720ffdc08f01bdce45630ed8b269dc7918e1c16e	English text file from dev.tgz (WMT14 dataset)
+parallel-corpus-viewer/newstest2013.en.idx	12000	5bad9ae16acce3874726c3890225dcfda79eba1e4b5407be51686e67512f8515	Index file containing the end position (32bit le uint) of each line in newstest2013.en
