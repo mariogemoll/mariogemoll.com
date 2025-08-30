@@ -17,3 +17,10 @@ parallel-corpus-viewer/newstest2013.de	385433	d7ea35ab91ff3709e03ad9cb6bf5b4f2cc
 parallel-corpus-viewer/newstest2013.de.idx	12000	963f4622cd226c57a453c14a10c63d936a34d70abe1ea954f2524d5464df8d72	Index file containing the end position (32bit le uint) of each line in newstest2013.de
 parallel-corpus-viewer/newstest2013.en	332974	ace268a1d9724ca76f6d8e5c720ffdc08f01bdce45630ed8b269dc7918e1c16e	English text file from dev.tgz (WMT14 dataset)
 parallel-corpus-viewer/newstest2013.en.idx	12000	5bad9ae16acce3874726c3890225dcfda79eba1e4b5407be51686e67512f8515	Index file containing the end position (32bit le uint) of each line in newstest2013.en
+parallel-corpus-viewer/newstest2014.de-en.de	399406	ae5d110486bc33d7175e9e28c7d0051eb3e5fcd2166dd93371089852c091a20e	German text file generated from newstest2014-deen-src.de.sgm of test-full.tgz (WMT14 dataset)
+parallel-corpus-viewer/newstest2014.de-en.de.idx	12012	d07578210ff34ee08e22443d10087642bdd1e74fcb24f65ee6bcdb35b667794c	Index file containing the end position (32bit le uint) of each line in newstest2014.de-en.de
+parallel-corpus-viewer/newstest2014.de-en.en	359902	1e10b7cb106e08ab9b3a4ed85f5c866bd9391d2659626e68a6e0904d5b1aebcf	English text file generated from newstest2014-deen-ref.en.sgm of test-full.tgz (WMT14 dataset)
+parallel-corpus-viewer/newstest2014.de-en.en.idx	12012	e801a53a61ee2111ba6dab4fe495cc5a5f6da83c45198ffb42426853333221aa	Index file containing the end position (32bit le uint) of each line in newstest2014.de-en.en
+parallel-corpus-viewer/newstest2014.de-en.metadata.tsv	4364	0ed8cbf2050c948fdccb8a83db66677730c4bc16ec2d21fa134a5262fe302cd9	Metadata TSV file generated from the de/en SGM files of test-full.tgz (WMT14 dataset)
+parallel-corpus-viewer/newstest2014.de-en.metadata.tsv.idx	656	5b8104885c9c211348774d6a8774b7cfa2958e302b1a83d0eb7cb160aedb319f	Index file containing the end position (32bit le uint) of each line in newstest2014.de-en.metadata.tsv
+parallel-corpus-viewer/newstest2014.de-en.metadatamapping.bin	12012	be20971993b73143e3600de21dbdd627a2ef2882709f74ddd95158be81f5db58	Index file containing the index (32bit le uint) of the metadata entry for each sentence pair

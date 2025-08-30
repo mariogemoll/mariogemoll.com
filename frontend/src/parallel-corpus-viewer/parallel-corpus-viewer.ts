@@ -1,38 +1,8 @@
-import { getStartAndEndPos } from './indexed-files';
-import { getLines } from './indexed-text-files';
-
-interface ParallelCorpusInfo {
-  name: string;
-  numPairs: number;
-  srcLabel: string;
-  tgtLabel: string;
-  srcLabelLong: string;
-  tgtLabelLong: string;
-  srcTextFileUrl: string;
-  srcIndexFileUrl: string;
-  tgtTextFileUrl: string;
-  tgtIndexFileUrl: string;
-}
-
-type CommonCrawlInfo = ParallelCorpusInfo & {
-  annotationsTextFileUrl: string;
-  annotationsIndexFileUrl: string;
-  annotationsForLinesFileUrl: string;
-};
-
-interface CommonCrawlAnnotation {
-  srcSourceUrl: string;
-  tgtSourceUrl: string;
-  startLineIdx: number;
-  numLines: number;
-}
-
-interface CommonCrawlSegment {
-  startLineIdx: number;
-  srcSourceUrl: string;
-  tgtSourceUrl: string;
-  pairs: { src: string; tgt: string }[];
-}
+import {
+  getCommonCrawlSegments, getCorporaInfo,getNewstestLines, getSrcAndTgtLines
+} from './data-retrieval';
+import { addCommonCrawlSegments, addNewstestSegments,addPairs } from './table';
+import type { ParallelCorpusInfo, ParallelCorpusWithMetadataInfo } from './types';
 
 function el(parent: Document | Element, query: string): Element {
   const element = parent.querySelector(query);
@@ -40,202 +10,6 @@ function el(parent: Document | Element, query: string): Element {
     throw new Error(`Element for query ${query} not found`);
   }
   return element;
-}
-
-function parseCommonCrawlAnnotationLine(line: string): CommonCrawlAnnotation {
-  const parts = line.split('\t');
-  if (parts.length !== 4) {
-    throw new Error(`Invalid annotation line: ${line}`);
-  }
-  return {
-    srcSourceUrl: parts[0],
-    tgtSourceUrl: parts[1],
-    startLineIdx: parseInt(parts[2], 10),
-    numLines: parseInt(parts[3], 10)
-  };
-}
-
-async function getCommonCrawlAnnotations(
-  urls: CommonCrawlInfo, startIdx: number, numLines: number
-): Promise<CommonCrawlAnnotation[]> {
-  const [annoStart, annoEnd] = await getStartAndEndPos(
-    urls.annotationsForLinesFileUrl, startIdx, numLines
-  );
-
-  const lines = await getLines(
-    urls.annotationsIndexFileUrl, urls.annotationsTextFileUrl, annoStart, annoEnd + 1
-  );
-  return lines.map(parseCommonCrawlAnnotationLine);
-}
-
-function getSrcAndTgtLines(
-  srcIndexFileUrl: string, srcTextFileUrl: string, tgtIndexFileUrl: string, tgtTextFileUrl: string,
-  startIdx: number, numLines: number
-): Promise<[string[], string[]]> {
-  return Promise.all([
-    getLines(srcIndexFileUrl, srcTextFileUrl, startIdx, numLines),
-    getLines(tgtIndexFileUrl, tgtTextFileUrl, startIdx, numLines)
-  ]);
-}
-
-async function getCommonCrawlLines(
-  urls: CommonCrawlInfo, startIdx: number, numLines: number
-): Promise<CommonCrawlSegment[]> {
-  const [srcAndTgtLines, annotationData] = await Promise.all([
-    getSrcAndTgtLines(
-      urls.srcIndexFileUrl, urls.srcTextFileUrl,
-      urls.tgtIndexFileUrl, urls.tgtTextFileUrl,
-      startIdx, numLines
-    ),
-    getCommonCrawlAnnotations(urls, startIdx, numLines)
-  ]);
-  const [srcLines, tgtLines] = srcAndTgtLines;
-
-  const segments: CommonCrawlSegment[] = [];
-  let currentSegment: CommonCrawlSegment = {
-    startLineIdx: annotationData[0].startLineIdx,
-    srcSourceUrl: annotationData[0].srcSourceUrl,
-    tgtSourceUrl: annotationData[0].tgtSourceUrl,
-    pairs: []
-  };
-  segments.push(currentSegment);
-
-  let currentAnnotationDataIdx = 0;
-  for (let i = 0; i < numLines; i++) {
-    const lineIdx = startIdx + i;
-    let currentAnnotation = annotationData[currentAnnotationDataIdx];
-    if (lineIdx > currentAnnotation.startLineIdx + currentAnnotation.numLines - 1) {
-      currentAnnotationDataIdx += 1;
-      currentAnnotation = annotationData[currentAnnotationDataIdx];
-      if (lineIdx !== currentAnnotation.startLineIdx) {
-        throw new Error('invalid line number in annotation');
-      }
-      currentSegment = {
-        startLineIdx: currentAnnotation.startLineIdx,
-        srcSourceUrl: currentAnnotation.srcSourceUrl,
-        tgtSourceUrl: currentAnnotation.tgtSourceUrl,
-        pairs: []
-      };
-      segments.push(currentSegment);
-    }
-    const srcLine = srcLines[lineIdx - startIdx];
-    const tgtLine = tgtLines[lineIdx - startIdx];
-    currentSegment.pairs.push({ src: srcLine, tgt: tgtLine });
-  }
-
-  return segments;
-
-}
-
-function addSourceLink(parent: HTMLElement, url: string): void {
-  const a = document.createElement('a');
-  a.href = url;
-  a.innerText = url.length > 80 ? (url.slice(0, 80) + '…') : url;
-  parent.appendChild(a);
-}
-
-function addTableRow(
-  tbody: HTMLTableSectionElement,
-  idx: number,
-  pair: { src: string; tgt: string },
-  isOdd: boolean,
-  isHighlighted: boolean
-): HTMLTableRowElement {
-  const row = document.createElement('tr');
-  if (isHighlighted) {
-    row.className = 'highlight-row';
-  } else if (isOdd) {
-    row.className = 'odd-segment';
-  }
-  row.id = `line-${(idx + 1).toString()}`;
-
-  // Line number
-  const lineNumCell = document.createElement('td');
-  lineNumCell.className = 'line-num';
-  lineNumCell.textContent = (idx + 1).toString();
-
-  // src text
-  const deCell = document.createElement('td');
-  deCell.textContent = pair.tgt;
-
-  // tgt text
-  const enCell = document.createElement('td');
-  enCell.textContent = pair.src;
-
-  row.appendChild(lineNumCell);
-  row.appendChild(deCell);
-  row.appendChild(enCell);
-  tbody.appendChild(row);
-  return row;
-}
-
-function addCommonCrawlSegments(
-  tbody: HTMLTableSectionElement, srcLabelShort: string, tgtLabelShort: string,
-  startLineIdx: number, segments: CommonCrawlSegment[], highlightIdx: number | undefined
-): HTMLTableRowElement | undefined {
-  tbody.innerHTML = '';
-  let idx = startLineIdx;
-  let highlightRow: HTMLTableRowElement | undefined = undefined;
-  for (let segmentIdx = 0; segmentIdx < segments.length; segmentIdx++) {
-    const segment = segments[segmentIdx];
-    const metadataRow = document.createElement('tr');
-    metadataRow.classList.add('metadata');
-    const isOdd = segmentIdx % 2 === 1;
-    if (isOdd) {
-      metadataRow.classList.add('odd-segment');
-    }
-    const metadataCell = document.createElement('td');
-    metadataCell.colSpan = 3;
-    metadataRow.appendChild(metadataCell);
-    const startLineNumber = idx + 1;
-    const endLineNumber = startLineNumber + segment.pairs.length - 1;
-    if (startLineNumber === endLineNumber) {
-      metadataCell.innerHTML = `Line ${startLineNumber.toString()}: `;
-    } else {
-      metadataCell.innerHTML = `Lines ${startLineNumber.toString()}` +
-        `\u2013${endLineNumber.toString()}: `;
-    }
-    metadataCell.appendChild(document.createTextNode(`${srcLabelShort} source: `));
-    addSourceLink(metadataCell, segment.srcSourceUrl);
-    metadataCell.appendChild(document.createTextNode(`, ${tgtLabelShort} source: `));
-    addSourceLink(metadataCell, segment.tgtSourceUrl);
-
-    tbody.appendChild(metadataRow);
-
-    for (const pair of segment.pairs) {
-      const isHighlighted = highlightIdx === idx;
-      const row = addTableRow(tbody, idx, pair, isOdd, isHighlighted);
-      if (isHighlighted) {
-        highlightRow = row;
-      }
-      idx++;
-    }
-
-  }
-
-  return highlightRow;
-}
-
-function addPairs(
-  tbody: HTMLTableSectionElement,
-  startLineIdx: number,
-  pairs: { src: string; tgt: string }[],
-  highlightIdx: number | undefined
-): HTMLTableRowElement | undefined {
-  tbody.innerHTML = '';
-  let idx = startLineIdx;
-  let highlightRow: HTMLTableRowElement | undefined = undefined;
-
-  for (const pair of pairs) {
-    const isHighlighted = highlightIdx === idx;
-    const row = addTableRow(tbody, idx, pair, false, isHighlighted);
-    if (isHighlighted) {
-      highlightRow = row;
-    }
-    idx++;
-  }
-
-  return highlightRow;
 }
 
 function getQueryParams(): {
@@ -287,18 +61,6 @@ function getQueryParams(): {
   return { corpus, from, to, highlight };
 }
 
-function loadCorporaInfo(
-  url: string
-): Promise<Record<string, ParallelCorpusInfo | CommonCrawlInfo>> {
-  return fetch(url)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Failed to load corpora: ${response.statusText}`);
-      }
-      return response.json();
-    });
-}
-
 function populateCorpusSelect(
   selectElem: HTMLSelectElement, corpora: Record<string, ParallelCorpusInfo>
 ): void {
@@ -317,7 +79,7 @@ async function page(): Promise<void> {
     return;
   }
 
-  const corpora = await loadCorporaInfo('/parallel-corpus-viewer/corpora.json');
+  const corpora = await getCorporaInfo('/parallel-corpus-viewer/corpora.json');
 
   const corpusSelect = el(document, '#corpus-selection') as HTMLSelectElement;
   populateCorpusSelect(corpusSelect, corpora);
@@ -337,7 +99,6 @@ async function page(): Promise<void> {
   // Update page title
   document.title = corpora[corpus].name;
 
-
   const fromLineInput = el(document, '#from-line') as HTMLInputElement;
   fromLineInput.value = from.toString();
 
@@ -354,9 +115,19 @@ async function page(): Promise<void> {
   const corpusInfo = corpora[corpus];
   let highlightRow;
   if (corpus === 'commoncrawl-deen') {
-    const ccSegments = await getCommonCrawlLines(corpusInfo as CommonCrawlInfo, startIdx, numPairs);
+    const ccSegments = await getCommonCrawlSegments(
+      corpusInfo as ParallelCorpusWithMetadataInfo, startIdx, numPairs
+    );
     highlightRow = addCommonCrawlSegments(
-      tbody, corpusInfo.srcLabel, corpusInfo.tgtLabel, startIdx, ccSegments,
+      corpusInfo.srcLabel, corpusInfo.tgtLabel, tbody, startIdx, ccSegments,
+      highlight === undefined ? undefined : highlight - 1
+    );
+  } else if (corpus === 'newstest2014-deen') {
+    const ntSegments = await getNewstestLines(
+      corpusInfo as ParallelCorpusWithMetadataInfo, startIdx, numPairs
+    );
+    highlightRow = addNewstestSegments(
+      corpusInfo.srcLabel, corpusInfo.tgtLabel, tbody, startIdx, ntSegments,
       highlight === undefined ? undefined : highlight - 1
     );
   } else {
