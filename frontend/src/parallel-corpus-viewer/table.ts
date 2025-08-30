@@ -82,8 +82,8 @@ export function addSegments<T extends Segment>(
     }
     const metadataCell = document.createElement('td');
     metadataCell.colSpan = 3;
-    const startLineNumber = idx + 1;
-    const endLineNumber = startLineNumber + segment.pairs.length - 1;
+    const startLineNumber = segment.startLineIdx + 1;
+    const endLineNumber = startLineNumber + segment.totalNumPairs - 1;
     if (startLineNumber === endLineNumber) {
       metadataCell.innerHTML = `Line ${startLineNumber.toString()}: `;
     } else {

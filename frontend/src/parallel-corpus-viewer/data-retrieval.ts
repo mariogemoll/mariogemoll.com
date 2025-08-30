@@ -1,5 +1,5 @@
 
-import { getStartAndEndPos } from './indexed-files';
+import { getNumber } from './indexed-files';
 import { getLines } from './indexed-text-files';
 import type {
   CommonCrawlAnnotation, CommonCrawlSegment, NewstestDocInfo, NewstestSegment,ParallelCorpusInfo,
@@ -33,8 +33,8 @@ async function getMetadataLines(
   // dataset. Since both the dataset itself as well as the metadata are stored in order, we only
   // need to look at the indices of the first and last pair of the range we're interested in, and
   // retrieve everything between them.
-  const [start, end] = await getStartAndEndPos(
-    metadataMappingFileUrl, startIdx, numLines
+  const [start, end] = await Promise.all(
+    [startIdx, startIdx + numLines - 1].map(pos => getNumber(metadataMappingFileUrl, pos))
   );
   return getLines(metadataIndexFileUrl, metadataFileUrl, start, end + 1);
 }
@@ -108,6 +108,7 @@ export async function getCommonCrawlSegments(
   const segments: CommonCrawlSegment[] = [];
   let currentSegment: CommonCrawlSegment = {
     startLineIdx: annotationData[0].startLineIdx,
+    totalNumPairs: annotationData[0].numLines,
     srcSourceUrl: annotationData[0].srcSourceUrl,
     tgtSourceUrl: annotationData[0].tgtSourceUrl,
     pairs: []
@@ -126,6 +127,7 @@ export async function getCommonCrawlSegments(
       }
       currentSegment = {
         startLineIdx: currentAnnotation.startLineIdx,
+        totalNumPairs: currentAnnotation.numLines,
         srcSourceUrl: currentAnnotation.srcSourceUrl,
         tgtSourceUrl: currentAnnotation.tgtSourceUrl,
         pairs: []
@@ -155,6 +157,7 @@ export async function getNewstestLines(
   const segments: NewstestSegment[] = [];
   let currentSegment: NewstestSegment = {
     startLineIdx: metadata[0].startLineIdx,
+    totalNumPairs: metadata[0].numLines,
     docId: metadata[0].docId,
     pairs: []
   };
@@ -172,6 +175,7 @@ export async function getNewstestLines(
       }
       currentSegment = {
         startLineIdx: currentMetadataEntry.startLineIdx,
+        totalNumPairs: currentMetadataEntry.numLines,
         docId: currentMetadataEntry.docId,
         pairs: []
       };

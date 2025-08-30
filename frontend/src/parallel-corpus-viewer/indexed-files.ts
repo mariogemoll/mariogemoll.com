@@ -6,14 +6,12 @@ async function fetchFile(url: string, init: RequestInit | undefined): Promise<Re
   return response;
 }
 
-export async function getEndPos(
-  indexFileUrl: string,
-  idx: number
-): Promise<number> {
-  const indexFileStart = idx * 4;
-  const indexFileEnd = indexFileStart + 3;
-  const response = await fetchFile(indexFileUrl, {
-    headers: { 'Range': `bytes=${indexFileStart.toString()}-${indexFileEnd.toString()}` }
+// Fetch a 32-bit unsigned integer from a binary file at the given index
+export async function getNumber(fileUrl: string, idx: number): Promise<number> {
+  const start = idx * 4;
+  const end = start + 3;
+  const response = await fetchFile(fileUrl, {
+    headers: { 'Range': `bytes=${start.toString()}-${end.toString()}` }
   });
   const buffer = await response.arrayBuffer();
   const view = new DataView(buffer);
@@ -27,7 +25,7 @@ export async function getStartPos(
   if (idx === 0) {
     return 0;
   } else {
-    const endPosOfPrevEntry = await getEndPos(indexFileUrl, idx - 1);
+    const endPosOfPrevEntry = await getNumber(indexFileUrl, idx - 1);
     return endPosOfPrevEntry + 1;
   }
 }
@@ -39,7 +37,7 @@ export async function getStartAndEndPos(
 ): Promise<[number, number]> {
   return Promise.all([
     getStartPos(indexFileUrl, startIdx),
-    getEndPos(indexFileUrl, startIdx + numEntries - 1)
+    getNumber(indexFileUrl, startIdx + numEntries - 1)
   ]);
 }
 

@@ -33,6 +33,7 @@ export interface NewstestDocInfo {
 
 export interface Segment {
   startLineIdx: number;
+  totalNumPairs: number;
   pairs: { src: string; tgt: string }[];
 }
 
