@@ -113,6 +113,10 @@ tbody td {
   border-top: 1px solid #aaa;
 }
 
+tr:last-child td {
+  border-bottom: 1px solid #ddd;
+}
+
 td:not(.metadata td) {
   border-top: 1px solid #ddd;
 }
