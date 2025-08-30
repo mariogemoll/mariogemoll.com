@@ -28,16 +28,16 @@ function addTableRow(
   lineNumCell.textContent = (idx + 1).toString();
 
   // src text
-  const deCell = document.createElement('td');
-  deCell.textContent = pair.tgt;
+  const srcCell = document.createElement('td');
+  srcCell.textContent = pair.src;
 
   // tgt text
-  const enCell = document.createElement('td');
-  enCell.textContent = pair.src;
+  const tgtCell = document.createElement('td');
+  tgtCell.textContent = pair.tgt;
 
   row.appendChild(lineNumCell);
-  row.appendChild(deCell);
-  row.appendChild(enCell);
+  row.appendChild(srcCell);
+  row.appendChild(tgtCell);
   tbody.appendChild(row);
   return row;
 }

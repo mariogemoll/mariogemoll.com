@@ -6,10 +6,10 @@
         "tgtLabel": "EN",
         "srcLabelLong": "German",
         "tgtLabelLong": "English",
-        "srcTextFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.en",
-        "srcIndexFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.en.idx",
-        "tgtTextFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.de",
-        "tgtIndexFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.de.idx",
+        "srcTextFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.de",
+        "srcIndexFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.de.idx",
+        "tgtTextFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.en",
+        "tgtIndexFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.en.idx",
         "metadataFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.annotation",
         "metadataIndexFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.annotation.idx",
         "metadataMappingFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.annidx"
@@ -21,10 +21,10 @@
         "tgtLabel": "EN",
         "srcLabelLong": "German",
         "tgtLabelLong": "English",
-        "srcTextFileUrl": "parallel-corpus-viewer/europarl-v7.de-en.en",
-        "srcIndexFileUrl": "parallel-corpus-viewer/europarl-v7.de-en.en.idx",
-        "tgtTextFileUrl": "parallel-corpus-viewer/europarl-v7.de-en.de",
-        "tgtIndexFileUrl": "parallel-corpus-viewer/europarl-v7.de-en.de.idx"
+        "srcTextFileUrl": "parallel-corpus-viewer/europarl-v7.de-en.de",
+        "srcIndexFileUrl": "parallel-corpus-viewer/europarl-v7.de-en.de.idx",
+        "tgtTextFileUrl": "parallel-corpus-viewer/europarl-v7.de-en.en",
+        "tgtIndexFileUrl": "parallel-corpus-viewer/europarl-v7.de-en.en.idx"
     },
     "news-commentary-v9-deen": {
         "name": "News Commentary v9 DE-EN",
@@ -33,10 +33,10 @@
         "tgtLabel": "EN",
         "srcLabelLong": "German",
         "tgtLabelLong": "English",
-        "srcTextFileUrl": "parallel-corpus-viewer/news-commentary-v9.de-en.en",
-        "srcIndexFileUrl": "parallel-corpus-viewer/news-commentary-v9.de-en.en.idx",
-        "tgtTextFileUrl": "parallel-corpus-viewer/news-commentary-v9.de-en.de",
-        "tgtIndexFileUrl": "parallel-corpus-viewer/news-commentary-v9.de-en.de.idx"
+        "srcTextFileUrl": "parallel-corpus-viewer/news-commentary-v9.de-en.de",
+        "srcIndexFileUrl": "parallel-corpus-viewer/news-commentary-v9.de-en.de.idx",
+        "tgtTextFileUrl": "parallel-corpus-viewer/news-commentary-v9.de-en.en",
+        "tgtIndexFileUrl": "parallel-corpus-viewer/news-commentary-v9.de-en.en.idx"
     },
     "newstest2013-deen": {
         "name": "Newstest 2013 DE-EN",
