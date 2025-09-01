@@ -12,53 +12,93 @@ function el(parent: Document | Element, query: string): Element {
   return element;
 }
 
+function validateCorpus(
+  corpus: string | null, corpora?: Record<string, ParallelCorpusInfo>
+): string {
+  if (corpus === null || corpus === '') {
+    throw new Error('Missing "corpus" query parameter');
+  }
+  if (corpora && !(corpus in corpora)) {
+    throw new Error(`Corpus "${corpus}" not found in corpora list`);
+  }
+  return corpus;
+}
+
+function validateLineNumber(value: string | null, paramName: string): number {
+  if (value === null) {
+    throw new Error(`Missing "${paramName}" query parameter`);
+  }
+  const num = parseInt(value, 10);
+  if (isNaN(num) || num < 1) {
+    throw new Error(`Invalid "${paramName}" query parameter`);
+  }
+  return num;
+}
+
+function validateLineRange(from: number, to: number, corpusSize?: number): void {
+  if (from > to) {
+    throw new Error('Invalid range: "from" is greater than "to"');
+  }
+  if (to - from > 1000) {
+    throw new Error(`Invalid range: ${from.toString()}\u2013${to.toString()}. Max. 1000 entries.`);
+  }
+  if (corpusSize !== undefined && to > corpusSize) {
+    throw new Error(
+      `Invalid "to" value: ${to.toString()} exceeds corpus size of ${corpusSize.toString()}`
+    );
+  }
+}
+
+function validateHighlight(highlightRaw: string, from: number, to: number): number | undefined {
+  if (highlightRaw === '') {
+    return undefined;
+  }
+  const highlightVal = highlightRaw.slice(1);
+  // Assert it contains only digits
+  if (!/^\d+$/.test(highlightVal)) {
+    throw new Error(`Invalid line number ${highlightRaw} in URL`);
+  }
+  const highlight = parseInt(highlightVal, 10);
+  if (isNaN(highlight) || highlight < 1) {
+    throw new Error(`Invalid line number ${highlightRaw} in URL`);
+  }
+  if (highlight < from || highlight > to) {
+    const rangeStr = `${from.toString()}\u2013${to.toString()}`;
+    throw new Error(
+      `Line number ${highlight.toString()} in URL is outside of range ${rangeStr}`
+    );
+  }
+  return highlight;
+}
+
+function validateFormData(formData: FormData, corpora: Record<string, ParallelCorpusInfo>): void {
+  const corpus = validateCorpus(formData.get('corpus') as string, corpora);
+  const corpusSize = corpora[corpus].numPairs;
+  const from = validateLineNumber(formData.get('from') as string, 'from');
+  const to = validateLineNumber(formData.get('to') as string, 'to');
+  validateLineRange(from, to, corpusSize);
+  // Note: We don't validate highlight here since form submission clears the hash
+}
+
 function getQueryParams(): {
   corpus: string; from: number; to: number, highlight: number | undefined
   } {
   const params = new URLSearchParams(window.location.search);
-  const corpus = params.get('corpus');
-  if (corpus === null || corpus === '') {
-    throw new Error('Missing "corpus" query parameter');
-  }
-  const fromRaw = params.get('from');
-  if (fromRaw === null) {
-    throw new Error('Missing "from" query parameter');
-  }
-  const from = parseInt(fromRaw, 10);
-  if (isNaN(from) || from < 1) {
-    throw new Error('Invalid "from" query parameter');
-  }
-  const toRaw = params.get('to');
-  if (toRaw === null) {
-    throw new Error('Missing "to" query parameter');
-  }
-  const to = parseInt(toRaw, 10);
-  if (isNaN(to) || to < 1) {
-    throw new Error('Invalid "to" query parameter');
-  }
-  if (from > to) {
-    throw new Error('Invalid range: "from" is greater than "to"');
-  }
-  let highlight;
-  const highlightRaw = window.location.hash;
-  if (highlightRaw !== '') {
-    const highlightVal = highlightRaw.slice(1);
-    // Assert it contains only digits
-    if (!/^\d+$/.test(highlightVal)) {
-      throw new Error(`Invalid line number ${highlightRaw} in URL`);
-    }
-    highlight = parseInt(highlightVal, 10);
-    if (isNaN(highlight) || highlight < 1) {
-      throw new Error(`Invalid line number ${highlightRaw} in URL`);
-    }
-    if (highlight < from || highlight > to) {
-      const rangeStr = `${from.toString()}\u2013${to.toString()}`;
-      throw new Error(
-        `Line number ${highlight.toString()} in URL is outside of range ${rangeStr}`
-      );
-    }
-  }
+  const corpus = validateCorpus(params.get('corpus')); // Basic validation without corpora check
+  const from = validateLineNumber(params.get('from'), 'from');
+  const to = validateLineNumber(params.get('to'), 'to');
+  validateLineRange(from, to); // Basic validation without corpus size check
+  const highlight = validateHighlight(window.location.hash, from, to);
   return { corpus, from, to, highlight };
+}
+
+function validateQueryParamsWithCorpora(
+  corpus: string, from: number, to: number,
+  corpora: Record<string, ParallelCorpusInfo>
+): void {
+  validateCorpus(corpus, corpora);
+  const corpusSize = corpora[corpus].numPairs;
+  validateLineRange(from, to, corpusSize);
 }
 
 function populateCorpusSelect(
@@ -85,13 +125,9 @@ async function page(): Promise<void> {
   populateCorpusSelect(corpusSelect, corpora);
 
   const { corpus, from, to, highlight } = getQueryParams();
-  if (to - from > 1000) {
-    throw new Error(`Invalid range: ${from.toString()}\u2013${toString()}. Max. 1000 entries.`);
-  }
 
-  if (!(corpus in corpora)) {
-    throw new Error(`Corpus "${corpus}" not found in corpora list`);
-  }
+  // Validate with corpus information
+  validateQueryParamsWithCorpora(corpus, from, to, corpora);
 
   // Select corpus
   corpusSelect.value = corpus;
@@ -145,22 +181,32 @@ async function page(): Promise<void> {
   if (highlightRow !== undefined) {
     highlightRow.scrollIntoView({ behavior: 'auto', block: 'center' });
   }
+
+  // Add form submit handler to clear hash and validate form data
+  const form = el(document, '#nav') as HTMLFormElement;
+  form.addEventListener('submit', (event) => {
+    try {
+      // Validate form data before submission
+      const formData = new FormData(form);
+      validateFormData(formData, corpora);
+
+      // Clear the hash when the form is submitted to avoid confusion
+      // with the new content that will be loaded
+      if (window.location.hash) {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+    } catch (error) {
+      // Prevent form submission if validation fails
+      event.preventDefault();
+      alert(`Invalid form data: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  });
 }
 
 window.addEventListener('load', () => {
   page().catch((error: unknown) => {
     console.error(error);
     alert(`Error during page setup: ${error instanceof Error ? error.message : String(error)}`);
-  });
-
-  // Add form submit handler to clear hash
-  const form = el(document, '#nav') as HTMLFormElement;
-  form.addEventListener('submit', () => {
-    // Clear the hash when the form is submitted to avoid confusion
-    // with the new content that will be loaded
-    if (window.location.hash) {
-      history.replaceState(null, '', window.location.pathname + window.location.search);
-    }
   });
 });
 
