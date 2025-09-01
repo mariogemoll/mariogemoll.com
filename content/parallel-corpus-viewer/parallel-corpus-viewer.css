@@ -91,6 +91,11 @@ tbody td {
   font-family: monospace;
 }
 
+td:nth-child(2),
+td:nth-child(3) {
+  width: 48%;
+}
+
 .metadata {
   font-weight: bold;
   color: #222;
