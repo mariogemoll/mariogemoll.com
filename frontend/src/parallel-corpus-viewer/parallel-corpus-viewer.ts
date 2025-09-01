@@ -112,6 +112,33 @@ function populateCorpusSelect(
   }
 }
 
+function updateDisclaimerBar(corpus: string, corpora: Record<string, ParallelCorpusInfo>): void {
+  const disclaimerText = el(document, '#disclaimer-text');
+  const corpusInfo = corpora[corpus];
+
+  let disclaimerContent = '<strong>Disclaimer:</strong> ';
+
+  // Get disclaimer content from corpora.json if available
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (corpusInfo.disclaimerContent !== undefined && corpusInfo.disclaimerContent !== null) {
+    // Convert markdown-style links [text](url) to HTML links
+    const contentWithLinks = corpusInfo.disclaimerContent.replace(
+      /\[([^\]]+)\]\(([^)]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener">$1</a>'
+    );
+    disclaimerContent += contentWithLinks;
+  } else {
+    // Fallback to generic disclaimer
+    disclaimerContent += `Dataset: ${corpusInfo.name}. This tool is for research and educational '`;
+    disclaimerContent += 'purposes only. Users are responsible for ensuring their use complies ';
+    disclaimerContent += 'with applicable copyright laws. If you believe that any content shown ';
+    disclaimerContent += 'here infringes your rights or should not be included, please contact me ';
+    disclaimerContent += 'and I will address the issue promptly.';
+  }
+
+  disclaimerText.innerHTML = disclaimerContent;
+}
+
 async function page(): Promise<void> {
   // Redirect if no query params
   if (!window.location.search || window.location.search === '' || window.location.search === '?') {
@@ -181,6 +208,9 @@ async function page(): Promise<void> {
   if (highlightRow !== undefined) {
     highlightRow.scrollIntoView({ behavior: 'auto', block: 'center' });
   }
+
+  // Update disclaimer bar based on corpus
+  updateDisclaimerBar(corpus, corpora);
 
   // Add form submit handler to clear hash and validate form data
   const form = el(document, '#nav') as HTMLFormElement;

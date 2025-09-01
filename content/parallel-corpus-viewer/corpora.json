@@ -12,7 +12,8 @@
         "tgtIndexFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.en.idx",
         "metadataFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.annotation",
         "metadataIndexFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.annotation.idx",
-        "metadataMappingFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.annidx"
+        "metadataMappingFileUrl": "parallel-corpus-viewer/commoncrawl.de-en.annidx",
+        "disclaimerContent": "This viewer displays text from the dataset used in the [WMT14 machine translation task](https://www.statmt.org/wmt14/translation-task.html), specifically the subset derived from [Common Crawl](https://commoncrawl.org/). The data may contain material subject to third-party copyright or other rights. It is provided “as is” for research and educational purposes only. See the [Common Crawl Terms of Use](https://commoncrawl.org/terms-of-use) for details. Users are solely responsible for ensuring compliance with applicable laws when using the content. If you believe that any content shown here infringes your rights or should not be included, please contact me and I will address the issue promptly."
     },
     "europarl-v7-deen": {
         "name": "Europarl v7 DE-EN",
@@ -24,7 +25,8 @@
         "srcTextFileUrl": "parallel-corpus-viewer/europarl-v7.de-en.de",
         "srcIndexFileUrl": "parallel-corpus-viewer/europarl-v7.de-en.de.idx",
         "tgtTextFileUrl": "parallel-corpus-viewer/europarl-v7.de-en.en",
-        "tgtIndexFileUrl": "parallel-corpus-viewer/europarl-v7.de-en.en.idx"
+        "tgtIndexFileUrl": "parallel-corpus-viewer/europarl-v7.de-en.en.idx",
+        "disclaimerContent": "This viewer displays text from the dataset used in the [WMT14 machine translation task](https://www.statmt.org/wmt14/translation-task.html), specifically the portion derived from the [Europarl v7 corpus](https://www.statmt.org/europarl/), which consists of proceedings of the European Parliament. The data is made available for research in natural language processing and machine translation. Content may include material subject to copyright held by the European Parliament or individual speakers. It is provided “as is” without any warranty, and is intended for research and educational purposes only. Users are solely responsible for ensuring compliance with applicable laws when using the content. If you believe that any content shown here infringes your rights or should not be included, please contact me and I will address the issue promptly."
     },
     "news-commentary-v9-deen": {
         "name": "News Commentary v9 DE-EN",
@@ -36,7 +38,8 @@
         "srcTextFileUrl": "parallel-corpus-viewer/news-commentary-v9.de-en.de",
         "srcIndexFileUrl": "parallel-corpus-viewer/news-commentary-v9.de-en.de.idx",
         "tgtTextFileUrl": "parallel-corpus-viewer/news-commentary-v9.de-en.en",
-        "tgtIndexFileUrl": "parallel-corpus-viewer/news-commentary-v9.de-en.en.idx"
+        "tgtIndexFileUrl": "parallel-corpus-viewer/news-commentary-v9.de-en.en.idx",
+        "disclaimerContent": "This viewer displays text from the dataset used in the [WMT14 machine translation task](https://www.statmt.org/wmt14/translation-task.html), specifically the portion derived from the [News Commentary corpus](https://www.statmt.org/wmt14/translation-task.html#download), which consists of translated news commentaries collected for machine translation research. The data is made available for research in natural language processing and machine translation. Content may include material subject to third-party copyright. It is provided “as is” without any warranty, and is intended for research and educational purposes only. Users are solely responsible for ensuring compliance with applicable laws when using the content. If you believe that any content shown here infringes your rights or should not be included, please contact me and I will address the issue promptly."
     },
     "newstest2013-deen": {
         "name": "Newstest 2013 DE-EN",
@@ -48,7 +51,8 @@
         "srcTextFileUrl": "parallel-corpus-viewer/newstest2013.de",
         "srcIndexFileUrl": "parallel-corpus-viewer/newstest2013.de.idx",
         "tgtTextFileUrl": "parallel-corpus-viewer/newstest2013.en",
-        "tgtIndexFileUrl": "parallel-corpus-viewer/newstest2013.en.idx"
+        "tgtIndexFileUrl": "parallel-corpus-viewer/newstest2013.en.idx",
+        "disclaimerContent": "This viewer displays text from the dataset used in the [WMT14 machine translation task](https://www.statmt.org/wmt14/translation-task.html), specifically “newstest2013” portion of the official development set. This set consists of professionally translated news articles prepared for shared task evaluation. It is provided “as is” for research and educational purposes only. Redistribution or use beyond evaluation and research may be subject to restrictions. Users are solely responsible for ensuring compliance with applicable laws when using the content. If you believe that any content shown here infringes your rights or should not be included, please contact me and I will address the issue promptly."
     },
     "newstest2014-deen": {
         "name": "Newstest 2014 DE-EN",
@@ -63,6 +67,7 @@
         "tgtIndexFileUrl": "parallel-corpus-viewer/newstest2014.de-en.en.idx",
         "metadataFileUrl": "parallel-corpus-viewer/newstest2014.de-en.metadata.tsv",
         "metadataIndexFileUrl": "parallel-corpus-viewer/newstest2014.de-en.metadata.tsv.idx",
-        "metadataMappingFileUrl": "parallel-corpus-viewer/newstest2014.de-en.metadatamapping.bin"
+        "metadataMappingFileUrl": "parallel-corpus-viewer/newstest2014.de-en.metadatamapping.bin",
+        "disclaimerContent": "This viewer displays text from the dataset used in the [WMT14 machine translation task](https://www.statmt.org/wmt14/translation-task.html), specifically the official test set (“newstest2014”). This set consists of professionally translated news articles prepared for shared task evaluation. It is provided “as is” for research and educational purposes only. Redistribution or use beyond evaluation and research may be subject to restrictions. Users are solely responsible for ensuring compliance with applicable laws when using the content. If you believe that any content shown here infringes your rights or should not be included, please contact me and I will address the issue promptly."
     }
 }

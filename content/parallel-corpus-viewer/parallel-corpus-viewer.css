@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  padding: 0;
+  padding: 0 0 50px;
 }
 
 a {
@@ -141,4 +141,23 @@ td:not(.metadata td) {
 .line-number {
   color: #666;
   margin-right: 10px;
+}
+
+#disclaimer-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f8f9fa;
+  border-top: 1px solid #ddd;
+  padding: 8px 16px;
+  font-size: 12px;
+  line-height: 16px;
+  color: #666;
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+#disclaimer-bar p {
+  margin: 0;
 }

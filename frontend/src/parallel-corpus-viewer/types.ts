@@ -10,6 +10,7 @@ export interface ParallelCorpusInfo {
   srcIndexFileUrl: string;
   tgtTextFileUrl: string;
   tgtIndexFileUrl: string;
+  disclaimerContent?: string;
 }
 
 export type ParallelCorpusWithMetadataInfo = ParallelCorpusInfo & {

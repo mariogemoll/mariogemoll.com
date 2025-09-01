@@ -31,3 +31,7 @@
     <tbody id="parallelTableBody">
     </tbody>
 </table>
+
+<div id="disclaimer-bar">
+    <p id="disclaimer-text"></p>
+</div>
