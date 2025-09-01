@@ -152,6 +152,16 @@ window.addEventListener('load', () => {
     console.error(error);
     alert(`Error during page setup: ${error instanceof Error ? error.message : String(error)}`);
   });
+
+  // Add form submit handler to clear hash
+  const form = el(document, '#nav') as HTMLFormElement;
+  form.addEventListener('submit', () => {
+    // Clear the hash when the form is submitted to avoid confusion
+    // with the new content that will be loaded
+    if (window.location.hash) {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  });
 });
 
 window.addEventListener('hashchange', () => {
