@@ -153,3 +153,24 @@ window.addEventListener('load', () => {
     alert(`Error during page setup: ${error instanceof Error ? error.message : String(error)}`);
   });
 });
+
+window.addEventListener('hashchange', () => {
+  // Handle hash changes for scroll into view without reloading the page
+  const hash = window.location.hash;
+  if (hash && hash.length > 1) {
+    const lineNumber = hash.slice(1);
+    // Validate it's a number
+    if (/^\d+$/.test(lineNumber)) {
+      const targetRow = el(document, `#line-${lineNumber}`) as HTMLTableRowElement;
+      // Remove existing highlights
+      const existingHighlight = document.querySelector('tr.highlight-row');
+      if (existingHighlight) {
+        existingHighlight.classList.remove('highlight-row');
+      }
+      // Add highlight to new row
+      targetRow.classList.add('highlight-row');
+      // Scroll to the row
+      targetRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+});

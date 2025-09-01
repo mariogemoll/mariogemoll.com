@@ -25,7 +25,10 @@ function addTableRow(
   // Line number
   const lineNumCell = document.createElement('td');
   lineNumCell.className = 'line-num';
-  lineNumCell.textContent = (idx + 1).toString();
+  const link = document.createElement('a');
+  link.href = `#${(idx + 1).toString()}`;
+  link.textContent = (idx + 1).toString();
+  lineNumCell.appendChild(link);
 
   // src text
   const srcCell = document.createElement('td');

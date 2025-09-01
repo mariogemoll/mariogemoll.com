@@ -125,6 +125,10 @@ td:not(.metadata td) {
   width: 60px;
 }
 
+.line-num a {
+  text-decoration: none;
+}
+
 .line {
   margin: 2px 0;
 }
