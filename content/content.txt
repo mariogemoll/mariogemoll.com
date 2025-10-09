@@ -1,2 +1,1 @@
 vae
-parallel-corpus-viewer
