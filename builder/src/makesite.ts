@@ -101,9 +101,11 @@ async function makePages(
   const pageJsPath = path.join(__dirname, 'content');
   const contentPath = path.join(__dirname, '..', '..', 'content');
 
-  const pages = fs.readdirSync('../content')
-    .filter(f => f.endsWith('.md'))
-    .map(f => f.slice(0, -3));
+  const contentTxtPath = path.join(contentPath, 'content.txt');
+  const pages = fs.readFileSync(contentTxtPath, 'utf-8')
+    .trim()
+    .split('\n')
+    .filter(line => line.trim().length > 0);
   const generatedPages = new Map<string, [string, string]>();
   let pageHtmlContent = '';
   let cssUrls: string[] = [];
