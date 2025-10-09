@@ -166,6 +166,8 @@ function makeHtaccess(
 ): void {
   let htaccessContent = `DirectoryIndex ${homepageId}.html\n\n`;
   htaccessContent += 'RewriteEngine On\n';
+  htaccessContent += 'RewriteCond %{HTTP_HOST} ^www\\.(.*)$ [NC]\n';
+  htaccessContent += 'RewriteRule ^(.*)$ https://%1/$1 [R=301,L]\n';
   for (const [id, [secretId]] of generatedPages.entries()) {
     htaccessContent += `RewriteRule ^${id}$ /${secretId}.html [L]\n`;
   }
