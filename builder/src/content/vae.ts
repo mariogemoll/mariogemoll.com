@@ -49,6 +49,7 @@ export async function generatePage(
   const cssFiles = [
     'https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/default.min.css',
     '/misc/centered.css',
+    '/misc/widgets.css',
     '/vae/vae.css'
   ];
   const jsUrls = [
