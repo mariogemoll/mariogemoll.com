@@ -126,11 +126,11 @@ async function makePages(
   }
 
   const generatedPages = new Map<string, [string, string, string, string, string]>();
-  let pageHtmlContent = '';
-  let cssUrls: string[] = [];
-  let jsUrls: string[] = [];
-  let jsModuleUrls: string[] = [];
   for (const page of pages) {
+    let pageHtmlContent = '';
+    let cssUrls: string[] = [];
+    let jsUrls: string[] = [];
+    let jsModuleUrls: string[] = [];
     const jsPath = path.join(pageJsPath, `${page.id}.js`);
     if (fs.existsSync(jsPath)) {
       const importedModule: unknown = await import(pathToFileURL(jsPath).href);
