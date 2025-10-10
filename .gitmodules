@@ -1,3 +1,6 @@
 [submodule "vae"]
 	path = vae
 	url = https://github.com/mariogemoll/vae.git
+[submodule "normalizing-flows"]
+	path = normalizing-flows
+	url = https://github.com/mariogemoll/normalizing-flows.git
