@@ -7,10 +7,15 @@ p, h1, h2, ul, pre {
   margin-left: auto;
   margin-right: auto;
   text-align: left;
+}
+
+p, h2, ul, pre {
   line-height: 1.7rem;
 }
 
 h1 {
   margin-top: 60px;
   margin-bottom: 100px;
+  font-size: 100px;
+  line-height: 120px;
 }
