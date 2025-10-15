@@ -3,3 +3,7 @@ ul
   each page in pages
     li
       a(href=page[0])= page[1]
+p.feed-links
+  a(href="/rss.xml") RSS
+  | #{' '} | #{' '}
+  a(href="/atom.xml") Atom
