@@ -8,7 +8,7 @@ import pug from 'pug';
 import { fileURLToPath,pathToFileURL } from 'url';
 
 import { PAGE_TITLE_PLACEHOLDER_PATTERN } from './constants.js';
-import { makeAtomFeed, makeRssFeed } from './feeds.js';
+import { makeAtomFeed, makeRssFeed, makeSitemap } from './feeds.js';
 import type { PageContentParams, SiteConfig } from './types.js';
 
 const markdown = new MarkdownIt({
@@ -248,6 +248,7 @@ export async function run(): Promise<void> {
   makeHtaccess(generatedPages, copiedDirs, homepageId);
   makeRssFeed(generatedPages, siteConfig);
   makeAtomFeed(generatedPages, siteConfig);
+  makeSitemap(generatedPages, siteConfig);
 
   writeMappingTSV(copiedDirs, '../build_info/directory_mapping.tsv');
 

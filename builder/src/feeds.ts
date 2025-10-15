@@ -9,6 +9,39 @@ function normalizeUrl(base: string, path: string): string {
   return baseWithoutTrailing + pathWithLeading;
 }
 
+export function makeSitemap(
+  generatedPages: Map<string, [string, string, string, string, string]>,
+  siteConfig: SiteConfig
+): void {
+  const root = create({ version: '1.0', encoding: 'UTF-8' })
+    .ele('urlset', { xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9' });
+
+  // Add homepage
+  root
+    .ele('url')
+    .ele('loc').txt(siteConfig.url).up()
+    .ele('changefreq').txt('weekly').up()
+    .ele('priority').txt('1.0').up()
+    .up();
+
+  // Add all pages
+  for (const [id, [, , , , updated]] of generatedPages.entries()) {
+    const url = normalizeUrl(siteConfig.url, id);
+    const lastmod = new Date(updated).toISOString().split('T')[0]; // YYYY-MM-DD format
+
+    root
+      .ele('url')
+      .ele('loc').txt(url).up()
+      .ele('lastmod').txt(lastmod).up()
+      .ele('changefreq').txt('monthly').up()
+      .ele('priority').txt('0.8').up()
+      .up();
+  }
+
+  const xml = root.end({ prettyPrint: true });
+  fs.writeFileSync('../build/sitemap.xml', xml);
+}
+
 export function makeRssFeed(
   generatedPages: Map<string, [string, string, string, string, string]>,
   siteConfig: SiteConfig
