@@ -8,7 +8,8 @@ import pug from 'pug';
 import { fileURLToPath,pathToFileURL } from 'url';
 
 import { PAGE_TITLE_PLACEHOLDER_PATTERN } from './constants.js';
-import type { PageContentParams } from './types.js';
+import { makeAtomFeed, makeRssFeed } from './feeds.js';
+import type { PageContentParams, SiteConfig } from './types.js';
 
 const markdown = new MarkdownIt({
   html: true,
@@ -94,7 +95,8 @@ function makePage(
 
 async function makePages(
   contentTemplate: pug.compileTemplate,
-  pageTemplate: pug.compileTemplate
+  pageTemplate: pug.compileTemplate,
+  siteConfig: SiteConfig
 ): Promise<Map<string, [string, string, string, string, string]>> {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
@@ -159,7 +161,7 @@ async function makePages(
     }
     const secretId = randomString();
     // Add header
-    const wrappedHtml = contentTemplate({ content: pageHtmlContent });
+    const wrappedHtml = contentTemplate({ content: pageHtmlContent, siteTitle: siteConfig.title });
     const [output] = makePage(pageTemplate, wrappedHtml, cssUrls, jsUrls, jsModuleUrls);
     fs.writeFileSync(`../build/${secretId}.html`, output);
     generatedPages.set(page.id, [
@@ -176,11 +178,12 @@ async function makePages(
 function makeHomepage(
   homeTemplate: pug.compileTemplate,
   pageTemplate: pug.compileTemplate,
-  generatedPages: Map<string, [string, string, string, string, string]>
+  generatedPages: Map<string, [string, string, string, string, string]>,
+  siteConfig: SiteConfig
 ): string {
   const pages = Array.from(generatedPages.entries())
     .map(([id, [, title]]) => [id, title]);
-  const homeHtml = homeTemplate({ pages });
+  const homeHtml = homeTemplate({ pages, siteTitle: siteConfig.title });
   const [output] = makePage(
     pageTemplate, homeHtml, ['/misc/centered.css', '/misc/home.css'], [], []
   );
@@ -229,13 +232,22 @@ export async function run(): Promise<void> {
       fsExtra.removeSync(filePath);
     }
   }
+
+  // Load site configuration
+  const siteConfigPath = path.join('../content', 'site.json');
+  const siteConfig: SiteConfig = JSON.parse(
+    fs.readFileSync(siteConfigPath, 'utf-8')
+  ) as SiteConfig;
+
   const contentTemplate = pug.compileFile('../templates/content.pug');
   const pageTemplate = pug.compileFile('../templates/page.pug');
   const homeTemplate = pug.compileFile('../templates/home.pug');
-  const generatedPages = await makePages(contentTemplate, pageTemplate);
-  const homepageId = makeHomepage(homeTemplate, pageTemplate, generatedPages);
+  const generatedPages = await makePages(contentTemplate, pageTemplate, siteConfig);
+  const homepageId = makeHomepage(homeTemplate, pageTemplate, generatedPages, siteConfig);
   const copiedDirs = copyAssets();
   makeHtaccess(generatedPages, copiedDirs, homepageId);
+  makeRssFeed(generatedPages, siteConfig);
+  makeAtomFeed(generatedPages, siteConfig);
 
   writeMappingTSV(copiedDirs, '../build_info/directory_mapping.tsv');
 
