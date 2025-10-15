@@ -95,7 +95,7 @@ function makePage(
 async function makePages(
   contentTemplate: pug.compileTemplate,
   pageTemplate: pug.compileTemplate
-): Promise<Map<string, [string, string, string]>> {
+): Promise<Map<string, [string, string, string, string, string]>> {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
 
@@ -107,17 +107,23 @@ async function makePages(
     .trim()
     .split('\n');
 
-  // Parse TSV: skip header, extract id, title, description
-  const pages: {id: string; title: string; description: string}[] = [];
+  // Parse TSV: skip header, extract id, title, description, published, updated
+  const pages: {
+    id: string;
+    title: string;
+    description: string;
+    published: string;
+    updated: string;
+  }[] = [];
   for (let i = 1; i < tsvContent.length; i++) {
     const line = tsvContent[i].trim();
     if (line.length > 0) {
-      const [id, title, description] = line.split('\t');
-      pages.push({ id, title, description });
+      const [id, title, description, published, updated] = line.split('\t');
+      pages.push({ id, title, description, published, updated });
     }
   }
 
-  const generatedPages = new Map<string, [string, string, string]>();
+  const generatedPages = new Map<string, [string, string, string, string, string]>();
   let pageHtmlContent = '';
   let cssUrls: string[] = [];
   let jsUrls: string[] = [];
@@ -156,7 +162,13 @@ async function makePages(
     const wrappedHtml = contentTemplate({ content: pageHtmlContent });
     const [output] = makePage(pageTemplate, wrappedHtml, cssUrls, jsUrls, jsModuleUrls);
     fs.writeFileSync(`../build/${secretId}.html`, output);
-    generatedPages.set(page.id, [secretId, page.title, page.description]);
+    generatedPages.set(page.id, [
+      secretId,
+      page.title,
+      page.description,
+      page.published,
+      page.updated
+    ]);
   }
   return generatedPages;
 }
@@ -164,10 +176,10 @@ async function makePages(
 function makeHomepage(
   homeTemplate: pug.compileTemplate,
   pageTemplate: pug.compileTemplate,
-  generatedPages: Map<string, [string, string, string]>
+  generatedPages: Map<string, [string, string, string, string, string]>
 ): string {
   const pages = Array.from(generatedPages.entries())
-    .map(([id, [, title, description]]) => [id, title, description]);
+    .map(([id, [, title]]) => [id, title]);
   const homeHtml = homeTemplate({ pages });
   const [output] = makePage(
     pageTemplate, homeHtml, ['/misc/centered.css', '/misc/home.css'], [], []
@@ -178,7 +190,7 @@ function makeHomepage(
 }
 
 function makeHtaccess(
-  generatedPages: Map<string, [string, string, string]>,
+  generatedPages: Map<string, [string, string, string, string, string]>,
   copiedDirs: Map<string, string>,
   homepageId: string
 ): void {
@@ -235,9 +247,10 @@ export async function run(): Promise<void> {
     console.log(id);
     const pagesEntry = generatedPages.get(id);
     if (pagesEntry !== undefined) {
-      const [secretId, title, description] = pagesEntry;
+      const [secretId, title, description, published, updated] = pagesEntry;
       console.log(`${secretId}.html (${title})`);
       console.log(`Description: ${description}`);
+      console.log(`Published: ${published}, Updated: ${updated}`);
     }
     const copiesEntry = copiedDirs.get(id);
     if (copiesEntry !== undefined) {
