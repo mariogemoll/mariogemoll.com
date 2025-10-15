@@ -222,6 +222,32 @@ function writeMappingTSV(copiedDirs: Map<string, string>, dstPath: string): void
   fs.writeFileSync(dstPath, tsvContent);
 }
 
+function validateBaseUrl(url: string | undefined): string {
+  if (url === undefined || url === '') {
+    throw new Error('BASE_URL environment variable is not set');
+  }
+
+  // Check if it's a valid URL
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+      throw new Error(`BASE_URL must use http or https protocol, got: ${parsed.protocol}`);
+    }
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new Error(`BASE_URL is not a valid URL: ${url}`);
+    }
+    throw error;
+  }
+
+  // Check for trailing slash
+  if (url.endsWith('/')) {
+    throw new Error('BASE_URL must not have a trailing slash');
+  }
+
+  return url;
+}
+
 export async function run(): Promise<void> {
   if (!fs.existsSync('../build')) {
     fs.mkdirSync('../build');
@@ -239,6 +265,9 @@ export async function run(): Promise<void> {
     fs.readFileSync(siteConfigPath, 'utf-8')
   ) as SiteConfig;
 
+  // Validate and get base URL from environment (required)
+  const baseUrl = validateBaseUrl(process.env.BASE_URL);
+
   const contentTemplate = pug.compileFile('../templates/content.pug');
   const pageTemplate = pug.compileFile('../templates/page.pug');
   const homeTemplate = pug.compileFile('../templates/home.pug');
@@ -246,9 +275,9 @@ export async function run(): Promise<void> {
   const homepageId = makeHomepage(homeTemplate, pageTemplate, generatedPages, siteConfig);
   const copiedDirs = copyAssets();
   makeHtaccess(generatedPages, copiedDirs, homepageId);
-  makeRssFeed(generatedPages, siteConfig);
-  makeAtomFeed(generatedPages, siteConfig);
-  makeSitemap(generatedPages, siteConfig);
+  makeRssFeed(generatedPages, siteConfig, baseUrl);
+  makeAtomFeed(generatedPages, siteConfig, baseUrl);
+  makeSitemap(generatedPages, baseUrl);
 
   writeMappingTSV(copiedDirs, '../build_info/directory_mapping.tsv');
 

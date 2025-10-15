@@ -29,6 +29,8 @@ jobs:
         run: npm i
       - name: Build the website
         run: scripts/makesite.sh
+        env:
+          BASE_URL: https://${{ inputs.env }}
       - name: Set up SSH key
         if: success()
         run: |

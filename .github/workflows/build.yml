@@ -34,3 +34,5 @@ jobs:
         run: npx stylelint '../content/**/*.css'
       - name: Build the website
         run: scripts/makesite.sh
+        env:
+          BASE_URL: https://mariogemoll.com

@@ -11,7 +11,7 @@ function normalizeUrl(base: string, path: string): string {
 
 export function makeSitemap(
   generatedPages: Map<string, [string, string, string, string, string]>,
-  siteConfig: SiteConfig
+  baseUrl: string
 ): void {
   const root = create({ version: '1.0', encoding: 'UTF-8' })
     .ele('urlset', { xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9' });
@@ -19,14 +19,14 @@ export function makeSitemap(
   // Add homepage
   root
     .ele('url')
-    .ele('loc').txt(siteConfig.url).up()
+    .ele('loc').txt(`${baseUrl}/`).up()
     .ele('changefreq').txt('weekly').up()
     .ele('priority').txt('1.0').up()
     .up();
 
   // Add all pages
   for (const [id, [, , , , updated]] of generatedPages.entries()) {
-    const url = normalizeUrl(siteConfig.url, id);
+    const url = normalizeUrl(baseUrl, id);
     const lastmod = new Date(updated).toISOString().split('T')[0]; // YYYY-MM-DD format
 
     root
@@ -44,7 +44,8 @@ export function makeSitemap(
 
 export function makeRssFeed(
   generatedPages: Map<string, [string, string, string, string, string]>,
-  siteConfig: SiteConfig
+  siteConfig: SiteConfig,
+  baseUrl: string
 ): void {
   const buildDate = new Date().toUTCString();
 
@@ -58,18 +59,18 @@ export function makeRssFeed(
     .ele('rss', { version: '2.0', 'xmlns:atom': 'http://www.w3.org/2005/Atom' })
     .ele('channel')
     .ele('title').txt(siteConfig.title).up()
-    .ele('link').txt(siteConfig.url).up()
+    .ele('link').txt(`${baseUrl}/`).up()
     .ele('description').txt(siteConfig.description).up()
     .ele('language').txt(siteConfig.language).up()
     .ele('lastBuildDate').txt(buildDate).up()
     .ele('atom:link', {
-      href: normalizeUrl(siteConfig.url, 'rss.xml'),
+      href: normalizeUrl(baseUrl, 'rss.xml'),
       rel: 'self',
       type: 'application/rss+xml'
     }).up();
 
   for (const [id, [, title, description, published]] of sortedPages) {
-    const url = normalizeUrl(siteConfig.url, id);
+    const url = normalizeUrl(baseUrl, id);
     const pubDate = new Date(published).toUTCString();
 
     root
@@ -88,7 +89,8 @@ export function makeRssFeed(
 
 export function makeAtomFeed(
   generatedPages: Map<string, [string, string, string, string, string]>,
-  siteConfig: SiteConfig
+  siteConfig: SiteConfig,
+  baseUrl: string
 ): void {
   const buildDate = new Date().toISOString();
 
@@ -101,16 +103,16 @@ export function makeAtomFeed(
   const root = create({ version: '1.0', encoding: 'UTF-8' })
     .ele('feed', { xmlns: 'http://www.w3.org/2005/Atom' })
     .ele('title').txt(siteConfig.title).up()
-    .ele('link', { href: siteConfig.url }).up()
-    .ele('link', { href: normalizeUrl(siteConfig.url, 'atom.xml'), rel: 'self' }).up()
+    .ele('link', { href: `${baseUrl}/` }).up()
+    .ele('link', { href: normalizeUrl(baseUrl, 'atom.xml'), rel: 'self' }).up()
     .ele('updated').txt(buildDate).up()
-    .ele('id').txt(siteConfig.url).up()
+    .ele('id').txt(`${baseUrl}/`).up()
     .ele('author')
     .ele('name').txt(siteConfig.author).up()
     .up();
 
   for (const [id, [, title, description, published, updated]] of sortedPages) {
-    const url = normalizeUrl(siteConfig.url, id);
+    const url = normalizeUrl(baseUrl, id);
     const publishedIso = new Date(published).toISOString();
     const updatedIso = new Date(updated).toISOString();
 
