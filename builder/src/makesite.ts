@@ -7,6 +7,7 @@ import * as path from 'path';
 import pug from 'pug';
 import { fileURLToPath,pathToFileURL } from 'url';
 
+import { PAGE_TITLE_PLACEHOLDER_PATTERN } from './constants.js';
 import type { PageContentParams } from './types.js';
 
 const markdown = new MarkdownIt({
@@ -94,25 +95,35 @@ function makePage(
 async function makePages(
   contentTemplate: pug.compileTemplate,
   pageTemplate: pug.compileTemplate
-): Promise<Map<string, [string, string]>> {
+): Promise<Map<string, [string, string, string]>> {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
 
   const pageJsPath = path.join(__dirname, 'content');
   const contentPath = path.join(__dirname, '..', '..', 'content');
 
-  const contentTxtPath = path.join(contentPath, 'content.txt');
-  const pages = fs.readFileSync(contentTxtPath, 'utf-8')
+  const contentTsvPath = path.join(contentPath, 'content.tsv');
+  const tsvContent = fs.readFileSync(contentTsvPath, 'utf-8')
     .trim()
-    .split('\n')
-    .filter(line => line.trim().length > 0);
-  const generatedPages = new Map<string, [string, string]>();
+    .split('\n');
+
+  // Parse TSV: skip header, extract id, title, description
+  const pages: {id: string; title: string; description: string}[] = [];
+  for (let i = 1; i < tsvContent.length; i++) {
+    const line = tsvContent[i].trim();
+    if (line.length > 0) {
+      const [id, title, description] = line.split('\t');
+      pages.push({ id, title, description });
+    }
+  }
+
+  const generatedPages = new Map<string, [string, string, string]>();
   let pageHtmlContent = '';
   let cssUrls: string[] = [];
   let jsUrls: string[] = [];
   let jsModuleUrls: string[] = [];
-  for (const id of pages) {
-    const jsPath = path.join(pageJsPath, `${id}.js`);
+  for (const page of pages) {
+    const jsPath = path.join(pageJsPath, `${page.id}.js`);
     if (fs.existsSync(jsPath)) {
       const importedModule: unknown = await import(pathToFileURL(jsPath).href);
       if (
@@ -123,23 +134,29 @@ async function makePages(
         typeof (importedModule as { generatePage?: unknown }).generatePage === 'function'
       ) {
         const module = importedModule as {
-          generatePage: (contentPath: string) => Promise<PageContentParams>
+          generatePage: (
+            contentPath: string,
+            pageTitle: string
+          ) => Promise<PageContentParams>
         };
-        [pageHtmlContent, cssUrls, jsUrls, jsModuleUrls] = await module.generatePage(contentPath);
+        [pageHtmlContent, cssUrls, jsUrls, jsModuleUrls] =
+          await module.generatePage(contentPath, page.title);
       } else {
-        throw new Error(`Module for page ${id} does not export a generatePage function`);
+        throw new Error(`Module for page ${page.id} does not export a generatePage function`);
       }
     } else {
-      const mdPath = path.join(contentPath, `${id}.md`);
-      const mdContent = fs.readFileSync(mdPath, 'utf-8');
+      const mdPath = path.join(contentPath, `${page.id}.md`);
+      let mdContent = fs.readFileSync(mdPath, 'utf-8');
+      // Replace placeholder with actual page title
+      mdContent = mdContent.replace(PAGE_TITLE_PLACEHOLDER_PATTERN, page.title);
       pageHtmlContent = markdown.render(mdContent);
     }
     const secretId = randomString();
     // Add header
     const wrappedHtml = contentTemplate({ content: pageHtmlContent });
-    const [output, title] = makePage(pageTemplate, wrappedHtml, cssUrls, jsUrls, jsModuleUrls);
+    const [output] = makePage(pageTemplate, wrappedHtml, cssUrls, jsUrls, jsModuleUrls);
     fs.writeFileSync(`../build/${secretId}.html`, output);
-    generatedPages.set(id, [secretId, title]);
+    generatedPages.set(page.id, [secretId, page.title, page.description]);
   }
   return generatedPages;
 }
@@ -147,9 +164,10 @@ async function makePages(
 function makeHomepage(
   homeTemplate: pug.compileTemplate,
   pageTemplate: pug.compileTemplate,
-  generatedPages: Map<string, [string, string]>
+  generatedPages: Map<string, [string, string, string]>
 ): string {
-  const pages = Array.from(generatedPages.entries()).map(([id, [, title]]) => [id, title]);
+  const pages = Array.from(generatedPages.entries())
+    .map(([id, [, title, description]]) => [id, title, description]);
   const homeHtml = homeTemplate({ pages });
   const [output] = makePage(
     pageTemplate, homeHtml, ['/misc/centered.css', '/misc/home.css'], [], []
@@ -160,7 +178,7 @@ function makeHomepage(
 }
 
 function makeHtaccess(
-  generatedPages: Map<string, [string, string]>,
+  generatedPages: Map<string, [string, string, string]>,
   copiedDirs: Map<string, string>,
   homepageId: string
 ): void {
@@ -217,8 +235,9 @@ export async function run(): Promise<void> {
     console.log(id);
     const pagesEntry = generatedPages.get(id);
     if (pagesEntry !== undefined) {
-      const [secretId, title] = pagesEntry;
+      const [secretId, title, description] = pagesEntry;
       console.log(`${secretId}.html (${title})`);
+      console.log(`Description: ${description}`);
     }
     const copiesEntry = copiedDirs.get(id);
     if (copiesEntry !== undefined) {

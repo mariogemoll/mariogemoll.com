@@ -1,5 +1,5 @@
 <form id="nav" method="get">
-    <h1>Parallel Corpus Viewer</h1>
+    <h1>[[ page-title ]]</h1>
     <div id="corpus-selection-container">
         Corpus
         <br>

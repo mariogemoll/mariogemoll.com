@@ -1,4 +1,4 @@
-# Variational Autoencoders
+# [[ page-title ]]
 
 ## Theory
 

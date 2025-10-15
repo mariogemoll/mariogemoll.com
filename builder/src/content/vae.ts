@@ -4,9 +4,13 @@ import MarkdownIt from 'markdown-it';
 import mathjax3 from 'markdown-it-mathjax3';
 import path from 'path';
 
+import { PAGE_TITLE_PLACEHOLDER_PATTERN } from '../constants.js';
 import type { PageContentParams } from '../types.js';
 
-export async function generatePage(contentPath: string): Promise<PageContentParams> {
+export async function generatePage(
+  contentPath: string,
+  pageTitle: string
+): Promise<PageContentParams> {
   const md = new MarkdownIt({
     html: true,
     linkify: true,
@@ -21,6 +25,8 @@ export async function generatePage(contentPath: string): Promise<PageContentPara
   }).use(mathjax3);
 
   let mdContent = await fsExtra.readFile(path.join(contentPath, 'vae.md'), 'utf-8');
+  // Replace placeholder with actual page title
+  mdContent = mdContent.replace(PAGE_TITLE_PLACEHOLDER_PATTERN, pageTitle);
   const widgetLabelsAndHeights: [string, number][] = [
     ['datasetexplanation', 300],
     ['datasetvisualization', 300],
