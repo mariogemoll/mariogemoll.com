@@ -6,6 +6,7 @@ import path from 'path';
 
 import { PAGE_TITLE_PLACEHOLDER_PATTERN } from '../constants.js';
 import type { PageContentParams } from '../types.js';
+import { highlightJsCssUrl, onnxRuntimeWebJsUrl, picaJsUrl } from './urls.js';
 
 export async function generatePage(
   contentPath: string,
@@ -47,14 +48,14 @@ export async function generatePage(
 
   const html = md.render(mdContent);
   const cssFiles = [
-    'https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/default.min.css',
+    highlightJsCssUrl,
     '/misc/centered.css',
     '/misc/widgets.css',
     '/vae/vae.css'
   ];
   const jsUrls = [
-    'https://cdnjs.cloudflare.com/ajax/libs/pica/9.0.1/pica.min.js',
-    'https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js'
+    picaJsUrl,
+    onnxRuntimeWebJsUrl
   ];
   const jsModuleUrls = ['/vae/vae.js'];
   return [html, cssFiles, jsUrls, jsModuleUrls];

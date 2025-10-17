@@ -51,3 +51,7 @@ simple, usually just an affine transformation (ie. scale and shift), which makes
 to compute. Note, however, that the function which derives the parameters itself does not need to be
 invertible and can be arbitrarily complex and can be learned during the training process (e.g. a
 convolutional neural net).
+
+To see an actual example, let's try to create a generative model for the 2D moons dataset:
+
+[[ dataset-widget ]]
