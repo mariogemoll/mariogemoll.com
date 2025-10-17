@@ -39,6 +39,10 @@ the name normalizing flow. We also require that the functions are differentiable
 powerful model can then be used for density estimation (i.e. we can state an approximate PDF of the
 data distribution), and also to generate new samples.
 
+To see an actual example, create a generative model for the 2D moons dataset, which looks like this:
+
+[[ dataset-widget ]]
+
 ## Coupling layers
 
 For each layer in the flow, we need a transformation that is invertible and whose
@@ -52,6 +56,41 @@ to compute. Note, however, that the function which derives the parameters itself
 invertible and can be arbitrarily complex and can be learned during the training process (e.g. a
 convolutional neural net).
 
-To see an actual example, let's try to create a generative model for the 2D moons dataset:
+In PyTorch, this looks like this:
 
-[[ dataset-widget ]]
+```python
+class CouplingLayer(nn.Module):
+    def __init__(self, flip):
+        super().__init__()
+        self.flip = flip
+        self.scale_net = MLP()
+        self.shift_net = MLP()
+
+    def forward(self, x):
+        x1, x2 = x.chunk(2, dim=1)
+        if self.flip:
+            x1, x2 = x2, x1
+        s = self.scale_net(x1)
+        s = torch.tanh(s)
+        t = self.shift_net(x1)
+        y1 = x1
+        y2 = torch.exp(s) * x2 + t
+        log_det = s.sum(dim=1)
+        if self.flip:
+            y1, y2 = y2, y1
+        return torch.cat([y1, y2], dim=1), log_det
+
+    def inverse(self, y):
+        y1, y2 = y.chunk(2, dim=1)
+        if self.flip:
+            y1, y2 = y2, y1
+        s = self.scale_net(y1)
+        s = torch.tanh(s)
+        t = self.shift_net(y1)
+        x1 = y1
+        x2 = (y2 - t) * torch.exp(-s)
+        log_det = -s.sum(dim=1)
+        if self.flip:
+            x1, x2 = x2, x1
+        return torch.cat([x1, x2], dim=1), log_det
+```

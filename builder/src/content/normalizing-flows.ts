@@ -6,7 +6,7 @@ import path from 'path';
 
 import { PAGE_TITLE_PLACEHOLDER_PATTERN } from '../constants.js';
 import type { PageContentParams } from '../types.js';
-import { tfJsUrl, tfJsWebGpuBackendUrl } from './urls.js';
+import { highlightJsCssUrl, tfJsUrl, tfJsWebGpuBackendUrl } from './urls.js';
 
 export async function generatePage(
   contentPath: string, pageTitle: string
@@ -28,7 +28,7 @@ export async function generatePage(
   mdContent = mdContent.replace(PAGE_TITLE_PLACEHOLDER_PATTERN, pageTitle);
   const widgetLabelsAndHeights: [string, number, number][] = [
     ['linear-transform', 1200, 300],
-    ['dataset', 400, 300]
+    ['dataset', 400, 450]
   ];
 
   for (const [label, width, height] of widgetLabelsAndHeights) {
@@ -42,6 +42,7 @@ export async function generatePage(
   const html = md.render(mdContent);
 
   const cssFiles = [
+    highlightJsCssUrl,
     '/misc/centered.css',
     '/misc/widgets.css',
     '/normalizing-flows/normalizing-flows.css',
