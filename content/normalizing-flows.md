@@ -41,7 +41,7 @@ data distribution), and also to generate new samples.
 
 To see an actual example, create a generative model for the 2D moons dataset, which looks like this:
 
-[[ dataset-widget ]]
+[[ moons-dataset-widget ]]
 
 ## Coupling layers
 
@@ -94,3 +94,20 @@ class CouplingLayer(nn.Module):
             x1, x2 = x2, x1
         return torch.cat([x1, x2], dim=1), log_det
 ```
+
+In the follwing, we'll use a
+[TensorFlow.js model](https://github.com/mariogemoll/normalizing-flows/blob/main/ts/src/model.ts)
+running in the browser (however, there's also a
+[notebook](https://github.com/mariogemoll/normalizing-flows/blob/main/py/normalizing-flows.ipynb)
+with an equivalent implementation in PyTorch). The model has 8 coupling layers and has already been
+trained, the following widget shows the training loss curve. You can however run the training again
+(this will use the samples from the moons widget above).
+
+<!-- TODO: Loss function derivation -->
+
+[[ training-widget ]]
+
+We can now see how the flow pushes points sampled from the initial Gaussian distribution towards
+the desired target/data distribution:
+
+[[ flow-visualization-widget ]]

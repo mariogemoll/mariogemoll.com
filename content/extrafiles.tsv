@@ -1,3 +1,6 @@
+normalizing-flows/loss-history.bin	1008	0e80d25fc190a129cce7b0e26be3ab290ab7537d798ac05e4e23cb6a0e1e58ce	Binary file containing the training loss history
+normalizing-flows/model.json	26569	8a91524b9865394eaaa97ec7a3e503e70719e8d9ea74ddd7e18286beaeb6a6bd	Model JSON file containing the architecture and weights manifest
+normalizing-flows/model.weights.bin	43072	74c8b0f8c7945496bb464cca822d7be99b586adb8ea6b3ccd1698054f418d562	Binary file containing the model weights
 parallel-corpus-viewer/commoncrawl.de-en.annidx	9596492	de5ffe5a8147a4f573b7a62c54f3b20421998a0700214434a1482d6a442beded	Index file containing the index (32bit le uint) of the annotation for each sentence pair
 parallel-corpus-viewer/commoncrawl.de-en.annotation	35544656	5908507404e2ec5a20eacefd8d43077a020725c82da736c122d448ee89a41fe5	Annotation TSV file from training-parallel-commoncrawl.tgz (in WMT14 dataset)
 parallel-corpus-viewer/commoncrawl.de-en.annotation.idx	1170136	ceb026a2f504f778a4b864aef817ae609509353b6de21a47f15d33b57351d600	Index file containing the end position (32bit le uint) of each line in commoncrawl.de-en.annotation
