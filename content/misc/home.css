@@ -27,11 +27,11 @@ a {
   text-decoration: none;
 }
 
-.feed-links {
+.external-links {
   margin-top: 80px;
-  color: #aaa;
 }
 
+.feed-links,
 .feed-links a {
   color: #aaa;
 }
