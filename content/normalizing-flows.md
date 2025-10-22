@@ -31,7 +31,7 @@ This process can be repeated several times, and if the functions are invertible,
 is also invertible. In particular, a simple probability distribution like a Gaussian can be
 converted into a more complex distribution and vice versa.
 
-<!-- TODO: Flow widget -->
+[[ layers-widget ]]
 
 This is the idea behind normalizing flows: Trying to learn a series of sequential functions which
 transform the data distribution into a simple one, usually a multivariate normal distribution, hence

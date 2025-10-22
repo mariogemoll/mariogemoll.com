@@ -1,9 +1,11 @@
+import { initWidget as initLayersWidget } from './widgets/layers';
 import { initWidget as initLinearTransformWidget } from './widgets/linear-transform';
 import { initPipeline } from './widgets/pipeline';
 import { el } from './widgets/web-ui-common/dom';
 
 window.addEventListener('load', () => {
   initLinearTransformWidget(el(document, '#linear-transform-widget') as HTMLDivElement);
+  initLayersWidget(el(document, '#layers-widget') as HTMLDivElement);
   initPipeline(
     el(document, '#moons-dataset-widget') as HTMLDivElement,
     el(document, '#training-widget') as HTMLDivElement,

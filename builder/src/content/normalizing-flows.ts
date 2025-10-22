@@ -28,6 +28,7 @@ export async function generatePage(
   mdContent = mdContent.replace(PAGE_TITLE_PLACEHOLDER_PATTERN, pageTitle);
   const widgetLabelsAndHeights: [string, number, number][] = [
     ['linear-transform', 1200, 300],
+    ['layers', 800, 320],
     ['moons-dataset', 400, 450],
     ['training', 400, 450],
     ['flow-visualization', 400, 450]
