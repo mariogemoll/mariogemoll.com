@@ -58,7 +58,7 @@ jobs:
       - name: Create hard links for the extra files
         if: success()
         run: |
-          ssh -i ~/.ssh/deploy_key "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "cd /tmp/${{ inputs.env }}.tools && ./linkfiles.sh directory_mapping.tsv /extrafiles /tmp/${{ inputs.env }}.new"
+          ssh -i ~/.ssh/deploy_key "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "cd /tmp/${{ inputs.env }}.tools && ./linkfiles.sh extrafiles.tsv /extrafiles /tmp/${{ inputs.env }}.new directory_mapping.tsv"
       - name: Back up the current website
         if: success()
         run: |

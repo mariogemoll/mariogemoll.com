@@ -1,18 +1,20 @@
 #!/usr/bin/env bash
-# Creates HARD LINKS in DST for files in SRC with optional top-level dir mapping.
-# Mapping TSV: "from<TAB>to" (top-level dir names). No directories are created.
+# Creates HARD LINKS from hash-named files to their original paths based on TSV manifest.
+# TSV format: "path<TAB>size<TAB>hash<TAB>description"
+# Optional directory mapping can remap top-level directories in paths.
 
 set -euo pipefail
 
-usage() { echo "Usage: $0 <MAP_TSV> <SRC_DIR> <DST_DIR>"; exit 2; }
+usage() { echo "Usage: $0 <TSV_FILE> <SRC_DIR> <DST_DIR> [MAP_TSV]"; exit 2; }
 
 # --- args ---
-[[ $# -eq 3 ]] || usage
-map_file="$1"
+[[ $# -ge 3 ]] || usage
+tsv_file="$1"
 src="$(cd "$2" && pwd -P)"
 dst="$(cd "$3" && pwd -P)"
+map_file="${4:-}"
 
-[[ -f "$map_file" ]] || { echo "ERROR: mapping file not found: $map_file" >&2; exit 1; }
+[[ -f "$tsv_file" ]] || { echo "ERROR: TSV file not found: $tsv_file" >&2; exit 1; }
 [[ -d "$src"      ]] || { echo "ERROR: not a directory: $src" >&2; exit 1; }
 [[ -d "$dst"      ]] || { echo "ERROR: not a directory: $dst" >&2; exit 1; }
 [[ "$src" != "$dst" ]] || { echo "ERROR: SRC and DST must differ" >&2; exit 1; }
@@ -20,15 +22,17 @@ dst="$(cd "$3" && pwd -P)"
 # --- read mapping into parallel arrays (bash 3.x friendly) ---
 map_from=()
 map_to=()
-while IFS=$'\t' read -r from to extra; do
-  [ -z "${from:-}" ] && continue
-  [ "${from:0:1}" = "#" ] && continue
-  [ -z "${to:-}" ] && { echo "ERROR: malformed mapping (missing 'to') for '$from'"; exit 1; }
-  from="${from#./}"; from="${from%/}"
-  to="${to#./}";     to="${to%/}"
-  map_from+=("$from")
-  map_to+=("$to")
-done < "$map_file"
+if [[ -n "$map_file" && -f "$map_file" ]]; then
+  while IFS=$'\t' read -r from to extra; do
+    [ -z "${from:-}" ] && continue
+    [ "${from:0:1}" = "#" ] && continue
+    [ -z "${to:-}" ] && { echo "ERROR: malformed mapping (missing 'to') for '$from'" >&2; exit 1; }
+    from="${from#./}"; from="${from%/}"
+    to="${to#./}";     to="${to%/}"
+    map_from+=("$from")
+    map_to+=("$to")
+  done < "$map_file"
+fi
 
 # --- helpers ---
 find_map_idx() {
@@ -39,42 +43,61 @@ find_map_idx() {
   done
   echo "-1"
 }
-parent_dir() { case "$1" in */*) echo "${1%/*}";; *) echo ".";; esac; }
 
-# --- walk source and create hard links ---
-cd "$src"
-find . -type f -print0 | while IFS= read -r -d '' f; do
-  rel="${f#./}"
-
-  case "$rel" in
-    */*) topdir="${rel%%/*}"; rest="${rel#*/}" ;;
-    *)   topdir="";            rest="$rel"      ;;
+apply_mapping() {
+  local path="$1"
+  case "$path" in
+    */*) local topdir="${path%%/*}"; local rest="${path#*/}" ;;
+    *)   local topdir=""; local rest="$path" ;;
   esac
 
-  idx="$(find_map_idx "$topdir")"
+  local idx="$(find_map_idx "$topdir")"
   if [ "$idx" -ge 0 ]; then
-    dest_rel="${map_to[$idx]}/$rest"
+    echo "${map_to[$idx]}/$rest"
   else
-    dest_rel="$rel"
+    echo "$path"
+  fi
+}
+
+# --- read TSV and create hard links ---
+while IFS=$'\t' read -r path size hash description; do
+  [ -z "${path:-}" ] && continue
+  [ "${path:0:1}" = "#" ] && continue
+  [ -z "${hash:-}" ] && { echo "ERROR: malformed TSV entry for '$path'" >&2; exit 1; }
+
+  # Apply directory mapping if configured
+  if [ ${#map_from[@]} -gt 0 ]; then
+    mapped_path="$(apply_mapping "$path")"
+  else
+    mapped_path="$path"
   fi
 
-  dest_path="$dst/$dest_rel"
-  pdir="$(parent_dir "$dest_path")"
+  src_file="$src/$hash"
+  dest_file="$dst/$mapped_path"
+  dest_dir="$(dirname "$dest_file")"
 
-  # Require parent dir to exist
-  [ -d "$pdir" ] || { echo "ERROR: destination directory missing: $pdir" >&2; exit 1; }
-
-  # Do not overwrite
-  if [ -e "$dest_path" ] || [ -L "$dest_path" ]; then
-    echo "ERROR: target already exists: $dest_path" >&2
+  # Check source file exists
+  if [ ! -f "$src_file" ]; then
+    echo "ERROR: source file not found: $src_file (for $path)" >&2
     exit 1
   fi
 
-  # Create HARD link; capture error to detect cross-device issues
-  if ! out=$(ln "$src/$rel" "$dest_path" 2>&1); then
+  # Create destination directory if needed
+  if [ ! -d "$dest_dir" ]; then
+    mkdir -p "$dest_dir" || { echo "ERROR: failed to create directory: $dest_dir" >&2; exit 1; }
+  fi
+
+  # Do not overwrite
+  if [ -e "$dest_file" ] || [ -L "$dest_file" ]; then
+    echo "ERROR: target already exists: $dest_file" >&2
+    exit 1
+  fi
+
+  # Create HARD link
+  if ! out=$(ln "$src_file" "$dest_file" 2>&1); then
     case "$out" in
       *"cross-device"*|*"EXDEV"*|*"Invalid cross-device link"*)
-        echo "ERROR: hard link failed (different filesystems?): $src/$rel -> $dest_path" >&2
+        echo "ERROR: hard link failed (different filesystems?): $src_file -> $dest_file" >&2
         ;;
       *)
         echo "ERROR: ln failed: $out" >&2
@@ -82,6 +105,8 @@ find . -type f -print0 | while IFS= read -r -d '' f; do
     esac
     exit 1
   fi
-done
+
+  echo "Linked: $hash -> $mapped_path"
+done < "$tsv_file"
 
 echo "All hard links created."
