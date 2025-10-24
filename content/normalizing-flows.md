@@ -30,15 +30,100 @@ distribution:
 
 This process can be repeated several times, and if the functions are invertible, the whole process
 is also invertible. In particular, a simple probability distribution like a Gaussian can be
-converted into a more complex distribution and vice versa.
+converted into a more complex distribution and vice versa. Here we see a Gaussian transformed by a
+sigmoid function, two splines, and a logit function:
 
 [[ layers-widget ]]
 
 This is the idea behind normalizing flows: Trying to learn a series of sequential functions which
-transform the data distribution into a simple one, usually a multivariate normal distribution, hence
-the name normalizing flow. We also require that the functions are differentiable. A sufficiently
-powerful model can then be used for density estimation (i.e. we can state an approximate PDF of the
-data distribution), and also to generate new samples.
+transform a simple "latent" distribution $Z$, usually a multivariate normal distribution, into the
+much more complex data distribution $X$. Or rather, learning the (invertible) functions in the other
+direction, hence the name normalizing flow.
+
+Before we continue we should state the multivariate version of the change-of-variables formula:
+
+$$
+p_X(\mathbf{x}) =
+p_Z(f^{-1}(\mathbf{x})) \left| \det \frac{\partial f^{-1}}{\partial \mathbf{x}} \right|
+$$
+
+where $\det \frac{\partial f^{-1}}{\partial \mathbf{x}}$ is the determinant of the Jacobian
+matrix of the inverse transformation (correcting for the change in volume, analogous to the change
+of area in the 1D case, see above).
+
+For a composition of functions $f = f_1 \circ f_2 \circ \cdots \circ f_K$, we can define
+intermediate variables:
+
+$$
+\mathbf{z}^{(0)} = \mathbf{z}, \quad
+\mathbf{z}^{(1)} = f_1(\mathbf{z}^{(0)}), \quad
+\mathbf{z}^{(2)} = f_2(\mathbf{z}^{(1)}), \quad \dots, \quad
+\mathbf{z}^{(K)} = f_K(\mathbf{z}^{(K-1)}) = \mathbf{x}.
+$$
+
+These can of course also be expressed by applying the inverse functions in the other direction:
+
+$$
+\mathbf{z}^{(K)} = \mathbf{x}, \quad
+\mathbf{z}^{(K-1)} = f_K^{-1}(\mathbf{z}^{(K)}), \quad
+\mathbf{z}^{(K-2)} = f_{K-1}^{-1}(\mathbf{z}^{(K-1)}), \quad \dots, \quad
+\mathbf{z}^{(0)} = f_1^{-1}(\mathbf{z}^{(1)}) = \mathbf{z}.
+$$
+
+Applying the change-of-variables rule successively through all layers, we get the full
+transformation from latent to data space:
+
+$$
+p_X(\mathbf{x})
+= p_Z(\mathbf{z})
+\prod_{k=1}^{K}
+\left|
+\det
+\frac{\partial f_k^{-1}}{\partial \mathbf{z}^{(k)}}
+\right| \, .
+$$
+
+Assuming we can compute the functions in the individual layers of the flow (or approximate them with
+a neural network), we can:
+
+- generate new samples of the data distribution: sample $z$, apply all the transformations:
+$x = f(z)$
+- calculate the likelihood of a datapoint by evaluating the PDF stated above.
+
+The job of the machine learning model will be to approximate the functions in the individual layers
+of the flow (we'll get to how to construct those functions, or at least one way of constructing
+them, in a minute). Since we now have a way of computing the density function of the data
+distribution(!), it's straightforward to give the loss function for training: We want to have a
+model under which the likelihood of the datapoints in the training set is high. So we want to
+maximize the likelihood of the training set, or equivantly (since we want a loss function) minimize
+the negative likelihood. In practice, usually log-likelihoods are minimized, to avoid numerical
+issues and because products turn into sums.
+
+Starting with maximum likelihood estimation:
+
+$$
+\max \prod_{i=1}^{N} p_X(\mathbf{x}_i)
+$$
+
+This is equivalent to minimizing the negative likelihood:
+
+$$
+\min -\prod_{i=1}^{N} p_X(\mathbf{x}_i)
+$$
+
+Taking the logarithm (which is monotonic, so preserves the location of the maximum/minimum):
+
+$$
+\min - \sum_{i=1}^{N} \log p_X(\mathbf{x}_i)
+$$
+
+Substituting the change-of-variables formula from above and averaging over the datapoints gives us
+the negative log-likelihood loss:
+
+$$
+\mathcal{L} = -\frac{1}{N} \sum_{i=1}^{N} \left[ \log p_Z(\mathbf{z}_i) + \sum_{k=1}^{K} \log
+\left| \det \frac{\partial f_k^{-1}}{\partial \mathbf{z}^{(k)}} \right| \right] \, .
+$$
 
 To see an actual example, create a generative model for the 2D moons dataset, which looks like this:
 
@@ -103,8 +188,6 @@ running in the browser (however, there's also a
 with an equivalent implementation in PyTorch). The model has 8 coupling layers and has already been
 trained, the following widget shows the training loss curve. You can however run the training again
 (this will use the samples from the moons widget above).
-
-<!-- TODO: Loss function derivation -->
 
 [[ training-widget ]]
 
