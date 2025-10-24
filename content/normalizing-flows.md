@@ -35,10 +35,69 @@ converted into a more complex distribution and vice versa.
 [[ layers-widget ]]
 
 This is the idea behind normalizing flows: Trying to learn a series of sequential functions which
-transform the data distribution into a simple one, usually a multivariate normal distribution, hence
-the name normalizing flow. We also require that the functions are differentiable. A sufficiently
-powerful model can then be used for density estimation (i.e. we can state an approximate PDF of the
-data distribution), and also to generate new samples.
+transform a simple "latent" distribution $Z$, usually a multivariate normal distribution, into the
+much more complex data distribution $X$. Or rather, learning the (invertible) functions in the other
+direction, hence the name normalizing flow.
+
+Before we continue we should state the multivariate version of the change-of-variables formula:
+
+$$
+p_X(\mathbf{x}) = p_Z(f^{-1}(\mathbf{x})) \left| \det \frac{\partial f^{-1}}{\partial \mathbf{x}} \right|
+$$
+
+where $\det \frac{\partial f^{-1}}{\partial \mathbf{x}}$ is the determinant of the Jacobian
+matrix of the inverse transformation (correcting for the change in volume, analogous to the change
+of area in the 1D case, see above).
+
+For a composition of functions $f = f_1 \circ f_2 \circ \cdots \circ f_K$, this becomes:
+
+$$
+p_X(\mathbf{x}) = p_Z(\mathbf{z}) \prod_{k=1}^{K} \left| \det \frac{\partial f_k^{-1}}{\partial
+\mathbf{z}_k} \right|
+$$
+
+where $\mathbf{z}_k = f_k^{-1}(\mathbf{z}_{k-1})$ and $\mathbf{z}_0 = \mathbf{x}$.
+
+Assuming we can compute the functions in the individual layers of the flow (or approximate with a
+neural network, more on that in a minute), we can:
+
+- generate new samples of the data distribution: sample z, apply all the transformations: x = f(z)
+- calculate the likelihood of a datapoint by applying the PDF stated above.
+
+The job of the machine learning model will be to approximate the functions in the individual layers
+of the flow (we'll get into how to construct those functions, or at least one way of constructing
+them, in a minute). Since we now have a way of computing the density function of the data
+distribution(!), it's straightforward to give the loss function for training: We want to have a
+model under which the likelihood of the datapoints in the training set is high. So we want to
+maximize the likelihood of the training set, or equivantly (since we want a loss function) minimize
+the negative likelihood. In practice, usually log-likelihoods are minimized, to avoid numerical
+issues and because products turn into sums:
+
+Starting with maximum likelihood estimation:
+
+$$
+\max \prod_{i=1}^{N} p_X(\mathbf{x}_i)
+$$
+
+This is equivalent to minimizing the negative likelihood:
+
+$$
+\min -\prod_{i=1}^{N} p_X(\mathbf{x}_i)
+$$
+
+Taking the logarithm (which is monotonic, so preserves the location of the maximum/minimum) and
+dividing by $N$ for numerical stability gives us the negative log-likelihood loss:
+
+$$
+\mathcal{L} = -\frac{1}{N} \sum_{i=1}^{N} \log p_X(\mathbf{x}_i)
+$$
+
+Substituting the change-of-variables formula from above:
+
+$$
+\mathcal{L} = -\frac{1}{N} \sum_{i=1}^{N} \left[ \log p_Z(\mathbf{z}_i) + \sum_{k=1}^{K} \log
+\left| \det \frac{\partial f_k^{-1}}{\partial \mathbf{z}_k} \right| \right].
+$$
 
 To see an actual example, create a generative model for the 2D moons dataset, which looks like this:
 
