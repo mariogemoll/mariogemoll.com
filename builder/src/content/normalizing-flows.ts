@@ -27,10 +27,10 @@ export async function generatePage(
   let mdContent = await fsExtra.readFile(path.join(contentPath, 'normalizing-flows.md'), 'utf-8');
   mdContent = mdContent.replace(PAGE_TITLE_PLACEHOLDER_PATTERN, pageTitle);
   const widgetLabelsAndHeights: [string, number, number][] = [
-    ['linear-transform', 1200, 300],
+    ['linear-transform', 840, 420],
     ['layers', 800, 320],
     ['moons-dataset', 400, 450],
-    ['training', 400, 450],
+    ['training', 600, 450],
     ['flow-visualization', 400, 450]
   ];
 
