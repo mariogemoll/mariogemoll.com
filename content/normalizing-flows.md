@@ -125,11 +125,11 @@ $$
 \left| \det \frac{\partial f_k^{-1}}{\partial \mathbf{z}^{(k)}} \right| \right] \, .
 $$
 
-To see an actual example, create a generative model for the 2D moons dataset, which looks like this:
+## An example flow with coupling layers
+
+To see an actual example, we discuss a generative model for the 2D moons dataset, depicted here:
 
 [[ moons-dataset-widget ]]
-
-## Coupling layers
 
 For each layer in the flow, we need a transformation that is invertible and whose
 derivative/Jacobian is easy to compute. One interesting way of accomplishing this is by using
@@ -142,50 +142,79 @@ to compute. Note, however, that the function which derives the parameters itself
 invertible and can be arbitrarily complex and can be learned during the training process (e.g. a
 convolutional neural net).
 
-In PyTorch, this looks like this:
-
-```python
-class CouplingLayer(nn.Module):
-    def __init__(self, flip):
-        super().__init__()
-        self.flip = flip
-        self.scale_net = MLP()
-        self.shift_net = MLP()
-
-    def forward(self, x):
-        x1, x2 = x.chunk(2, dim=1)
-        if self.flip:
-            x1, x2 = x2, x1
-        s = self.scale_net(x1)
-        s = torch.tanh(s)
-        t = self.shift_net(x1)
-        y1 = x1
-        y2 = torch.exp(s) * x2 + t
-        log_det = s.sum(dim=1)
-        if self.flip:
-            y1, y2 = y2, y1
-        return torch.cat([y1, y2], dim=1), log_det
-
-    def inverse(self, y):
-        y1, y2 = y.chunk(2, dim=1)
-        if self.flip:
-            y1, y2 = y2, y1
-        s = self.scale_net(y1)
-        s = torch.tanh(s)
-        t = self.shift_net(y1)
-        x1 = y1
-        x2 = (y2 - t) * torch.exp(-s)
-        log_det = -s.sum(dim=1)
-        if self.flip:
-            x1, x2 = x2, x1
-        return torch.cat([x1, x2], dim=1), log_det
-```
-
 In the follwing, we'll use a
 [TensorFlow.js model](https://github.com/mariogemoll/normalizing-flows/blob/main/ts/src/model.ts)
 running in the browser (however, there's also a
 [notebook](https://github.com/mariogemoll/normalizing-flows/blob/main/py/normalizing-flows.ipynb)
-with an equivalent implementation in PyTorch). The model has 8 coupling layers and has already been
+with an equivalent implementation in PyTorch). The simplified code section for the coupling layer
+is here:
+
+```js
+export class CouplingLayer {
+  flip: boolean;
+  scaleNet: MLP;
+  shiftNet: MLP;
+
+  forward(x: Tensor2D): [Tensor2D, Tensor1D] {
+    // Split input into two parts
+    let [x1, x2] = tf.split(x, 2, 1);
+
+    if (this.flip) {
+      [x1, x2] = [x2, x1];
+    }
+
+    // Compute scale and shift
+    const s = tf.tanh(this.scaleNet.predict(x1));
+    const t = this.shiftNet.predict(x1);
+
+    // Apply transformation
+    const y1 = x1;
+    const y2 = tf.add(tf.mul(tf.exp(s), x2), t);
+
+    // Compute log determinant
+    const logDet = tf.sum(s, 1);
+
+    // Concatenate output
+    const y = (this.flip ? tf.concat([y2, y1], 1) : tf.concat([y1, y2], 1));
+
+    return [y, logDet];
+  }
+
+  inverse(y: Tensor2D): [Tensor2D, Tensor1D] {
+    let [y1, y2] = tf.split(y, 2, 1);
+
+    if (this.flip) {
+      [y1, y2] = [y2, y1];
+    }
+
+    const s = tf.tanh(this.scaleNet.predict(y1));
+    const t = this.shiftNet.predict(y1);
+
+    const x1 = y1;
+    const x2 = tf.mul(tf.sub(y2, t), tf.exp(tf.neg(s)));
+
+    const logDet = tf.neg(tf.sum(s, 1));
+
+    const x = (this.flip ? tf.concat([x2, x1], 1) : tf.concat([x1, x2], 1));
+    return [x, logDet];
+  }
+}
+```
+
+Note that the transformation is in fact
+
+$$
+\begin{aligned}
+y_1 &= x_1\\
+y_2 &= x_2 \odot \exp\!\big(s(x_1)\big) + t(x_1)
+\end{aligned}
+$$
+
+where $\odot$ and $\exp$ act elementwise. The $\exp$ makes sure that the scale is strictly positive
+(even when the neural network outputs zero). Moreover, the log-determinant of the Jacobian becomes
+super simple: It's just the sum of the values in the scale vector.
+
+Our model has 8 coupling layers and has already been
 trained, the following widget shows the training loss curve. You can however run the training again
 (this will use the samples from the moons widget above).
 
