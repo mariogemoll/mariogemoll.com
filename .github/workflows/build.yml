@@ -29,6 +29,12 @@ jobs:
         run: |
           npx eslint -c basic.eslint.config.js basic.eslint.config.js eslint.config.js
           npx eslint src
+      - name: "Site builder: Compile TypeScript"
+        working-directory: builder
+        run: npx tsc
+      - name: Validate page JSONs
+        working-directory: builder
+        run: node dist/scripts/validate-page-jsons.js
       - name: Run Stylelint
         working-directory: builder
         run: npx stylelint '../content/**/*.css'
