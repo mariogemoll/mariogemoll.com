@@ -1,0 +1,103 @@
+{
+  "references": [
+    {
+      "kind": "youtube",
+      "id": "brubaker-2020",
+      "youtubeId": "u3vVyFVU_lI",
+      "authors": ["Brubaker, M."],
+      "channel": "Marcus Brubaker",
+      "title": "Introduction to Normalizing Flows (ECCV2020 Tutorial)",
+      "year": "2020"
+    },
+    {
+      "kind": "arxiv",
+      "id": "dinh-et-al-2014",
+      "authors": [
+        "Dinh, L.",
+        "Krueger, D.",
+        "Bengio, Y."
+      ],
+      "title": "NICE: Non-linear Independent Components Estimation",
+      "arxivId": "1410.8516"
+    },
+    {
+      "kind": "arxiv",
+      "id": "dinh-et-al-2016",
+      "authors": [
+        "Dinh, L.",
+        "Sohl-Dickstein, J.",
+        "Bengio, S."
+      ],
+      "title": "Density Estimation Using Real NVP",
+      "arxivId": "1605.08803"
+    },
+    {
+      "kind": "arxiv",
+      "id": "ho-et-al-2019",
+      "authors": [
+        "Ho, J.",
+        "Chen, X.",
+        "Srinivas, A.",
+        "Duan, Y.",
+        "Abbeel, P."
+      ],
+      "title": "Flow++: Improving Flow-Based Generative Models with Variational Dequantization and Architecture Design",
+      "arxivId": "1902.00275"
+    },
+    {
+      "kind": "arxiv",
+      "id": "kingma-et-al-2016",
+      "authors": [
+        "Kingma, D. P.",
+        "Salimans, T.",
+        "Jozefowicz, R.",
+        "Chen, X.",
+        "Sutskever, I.",
+        "Welling, M."
+      ],
+      "title": "Improving Variational Autoencoders with Inverse Autoregressive Flow",
+      "arxivId": "1606.04934"
+    },
+    {
+      "kind": "arxiv",
+      "id": "kingma-et-al-2018",
+      "authors": [
+        "Kingma, D. P.",
+        "Dhariwal, P."
+      ],
+      "title": "Glow: Generative Flow with Invertible 1×1 Convolutions",
+      "arxivId": "1807.03039"
+    },
+    {
+      "kind": "arxiv",
+      "id": "kobyzev-et-al-2019",
+      "authors": ["Kobyzev, I.", "Prince, S. J. D.", "Brubaker, M. A."],
+      "title": "Normalizing Flows: An Introduction and Review of Current Methods",
+      "arxivId": "1908.09257"
+    },
+    {
+      "kind": "arxiv",
+      "id": "papamakarios-et-al-2017",
+      "authors": [
+        "Papamakarios, G.",
+        "Pavlakou, T.",
+        "Murray, I."
+      ],
+      "title": "Masked Autoregressive Flow for Density Estimation",
+      "arxivId": "1705.07057"
+    },
+    {
+      "kind": "arxiv",
+      "id": "papamakarios-et-al-2019",
+      "authors": [
+        "Papamakarios, G.",
+        "Nalisnick, E.",
+        "Rezende, D. J.",
+        "Mohamed, S.",
+        "Lakshminarayanan, B."
+      ],
+      "title": "Normalizing Flows for Probabilistic Modeling and Inference",
+      "arxivId": "1912.02762"
+    }
+  ]
+}

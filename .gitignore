@@ -1,7 +1,12 @@
+
+.claude
 .python-version
-node_modules
-package-lock.json
 /build
 /build_info/directory_mapping.tsv
 /builder/dist
+/content/normalizing-flows/loss-history.bin
+/content/normalizing-flows/model.json
+/content/normalizing-flows/model.weights.bin
 /frontend/dist
+node_modules
+package-lock.json

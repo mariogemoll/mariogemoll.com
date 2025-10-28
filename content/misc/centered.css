@@ -19,3 +19,12 @@ h1 {
   font-size: 100px;
   line-height: 120px;
 }
+
+.references-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.references-list li {
+  margin-bottom: 1.5em;
+}

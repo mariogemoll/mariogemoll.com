@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 # verify_tsv_sha256_min.sh — TSV verifier (4+ fields), no stat, no awk.
 # Format per line: path<TAB>size<TAB>sha256<TAB>ignored...
+# Files are expected to be stored with their hash as the filename.
 #
 # Usage:
 #   ./verify_tsv_sha256_min.sh manifest.tsv [base_dir]
@@ -30,10 +31,10 @@ total=0
 while IFS="$(printf '\t')" read -r path size hash _ || [ -n "${path-}" ]; do
   [ -z "${path-}" ] && continue
   total=$((total+1))
-  full="${base%/}/$path"
+  full="${base%/}/$hash"
 
   if [ ! -e "$full" ]; then
-    echo "FAIL,$path,missing"
+    echo "FAIL,$path,missing (expected file: $hash)"
     fails=$((fails+1))
     continue
   fi

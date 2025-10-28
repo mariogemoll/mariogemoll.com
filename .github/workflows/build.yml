@@ -4,12 +4,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+        with:
+          submodules: recursive
       - uses: actions/setup-node@v4
         with:
           node-version: 22.x
-      - name: Initialize submodule
-        run: git submodule update --init
       - name: "Frontend: Install dependencies"
         working-directory: frontend
         run: npm i
@@ -29,10 +29,20 @@ jobs:
         run: |
           npx eslint -c basic.eslint.config.js basic.eslint.config.js eslint.config.js
           npx eslint src
+      - name: "Site builder: Compile TypeScript"
+        working-directory: builder
+        run: npx tsc
+      - name: Validate page JSONs
+        working-directory: builder
+        run: node dist/scripts/validate-page-jsons.js
       - name: Run Stylelint
         working-directory: builder
         run: npx stylelint '../content/**/*.css'
+      - name: Build frontend
+        working-directory: frontend
+        run: scripts/build.sh
       - name: Build the website
-        run: scripts/makesite.sh
+        working-directory: builder
+        run: node dist/makesite.js
         env:
           BASE_URL: https://mariogemoll.com
