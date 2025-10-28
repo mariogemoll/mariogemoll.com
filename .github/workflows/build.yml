@@ -38,7 +38,11 @@ jobs:
       - name: Run Stylelint
         working-directory: builder
         run: npx stylelint '../content/**/*.css'
+      - name: Build frontend
+        working-directory: frontend
+        run: scripts/build.sh
       - name: Build the website
-        run: scripts/makesite.sh
+        working-directory: builder
+        run: node dist/makesite.js
         env:
           BASE_URL: https://mariogemoll.com
