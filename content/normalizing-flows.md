@@ -1,5 +1,12 @@
 # [[ page-title ]]
 
+The following is a description of the basics of normalizing flows. It focuses on the core
+coupling-layer mechanism introduced in the [[ ref-dinh-et-al-2014 (NICE) ]] and
+[[ ref-dinh-et-al-2016 (Real NVP) ]] papers (using alternating affine transformations with tractable
+Jacobians) but omits architectural extensions (such as multiscale structure and normalization
+layers) that appear in full-sized flow models. For a broader overview, plase refer to the
+[further reading](#further-reading) section at the end.
+
 Applying a function to a random variable turns it into another random variable. For example, think
 about applying a simple "scale and shift" linear transformation to a 1D random variable $Z$ to
 create a random variable $X$:
@@ -224,3 +231,23 @@ We can now see how the flow pushes points sampled from the initial Gaussian dist
 the desired target/data distribution:
 
 [[ flow-visualization-widget ]]
+
+## Further reading
+
+This page describes the main ideas introduced by the NICE ([[ ref-dinh-et-al-2014 ]]) and Real NVP
+([[ ref-dinh-et-al-2016 ]]) papers, namely, invertible
+coupling layers that make it possible to learn flexible yet tractable density transformations.
+
+There is a YouTube video by Marcus Brubaker ([[ ref-brubaker-2020 ]]) covering this material and
+much more, which is highly recommended.
+
+Notable milestone advancements in normalizing flows after NICE and Real NVP include IAF
+(Inverse Autoregressive Flow, [[ ref-kingma-et-al-2016 ]]), MAF (Masked Autoregressive Flow,
+[[ ref-papamakarios-et-al-2017 ]]), Glow ([[ ref-kingma-et-al-2018 ]]), and Flow++
+([[ ref-ho-et-al-2019 ]]), which introduced more expressive and scalable architectures.
+[[ ref-kobyzev-et-al-2019 ]] and [[ ref-papamakarios-et-al-2019 ]] provide a comprehensive overview
+of the field. In recent years, the normalizing flow concept has been generalized into continuous
+formulations such as Flow Matching and Rectified Flow models, which connect flows with modern
+diffusion-based generative models.
+
+[[ references ]]

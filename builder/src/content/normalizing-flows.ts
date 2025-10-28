@@ -1,12 +1,15 @@
 import fsExtra from 'fs-extra';
 import hljs from 'highlight.js';
 import MarkdownIt from 'markdown-it';
+import markdownItAnchor from 'markdown-it-anchor';
 import mathjax3 from 'markdown-it-mathjax3';
 import path from 'path';
 
 import { PAGE_TITLE_PLACEHOLDER_PATTERN } from '../constants.js';
-import type { PageContentParams } from '../types.js';
+import { renderReferencesSection, replaceCitations } from '../references.js';
+import { type PageContentParams,PageData } from '../types.js';
 import { highlightJsCssUrl, tfJsUrl, tfJsWebGpuBackendUrl } from './urls.js';
+
 
 export async function generatePage(
   contentPath: string, pageTitle: string
@@ -22,10 +25,24 @@ export async function generatePage(
       }
       return '<pre><code class="hljs">' + md.utils.escapeHtml(str) + '</code></pre>';
     }
-  }).use(mathjax3);
+  })
+    .use(markdownItAnchor)
+    .use(mathjax3);
 
   let mdContent = await fsExtra.readFile(path.join(contentPath, 'normalizing-flows.md'), 'utf-8');
   mdContent = mdContent.replace(PAGE_TITLE_PLACEHOLDER_PATTERN, pageTitle);
+
+  const jsonContent = await fsExtra.readFile(
+    path.join(contentPath, 'normalizing-flows.json'), 'utf8'
+  );
+  const pageData = PageData.parse(JSON.parse(jsonContent));
+
+  // Replace citation placeholders before rendering markdown
+  mdContent = replaceCitations(mdContent, pageData.references);
+
+  const referencesHtml = renderReferencesSection(pageData.references);
+  mdContent = mdContent.replace('[[ references ]]', referencesHtml);
+
   const widgetLabelsAndHeights: [string, number, number][] = [
     ['linear-transform', 840, 420],
     ['layers', 800, 320],

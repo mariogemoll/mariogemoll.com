@@ -34,6 +34,38 @@ for (const pageId of pageIds) {
       console.log(
         `[OK] ${pageId}.json valid & alphabetically sorted (${count.toString()} entries).`
       );
+
+      // Check for unused references
+      const mdPath = resolve(contentDir, `${pageId}.md`);
+      try {
+        const mdContent = readFileSync(mdPath, 'utf8');
+        const usedRefs = new Set<string>();
+
+        // Find all [[ ref-id ]] or [[ ref-id (text) ]] patterns
+        const refPattern = /\[\[\s*ref-([a-z]+(?:-[a-z]+)*-\d{4})(?:\s+\([^)]+\))?\s*\]\]/gi;
+        let match;
+        while ((match = refPattern.exec(mdContent)) !== null) {
+          usedRefs.add(match[1]);
+        }
+
+        // Check for unused references
+        const unusedRefs = res.data.references
+          .map(r => r.id)
+          .filter(id => !usedRefs.has(id));
+
+        if (unusedRefs.length > 0) {
+          console.error(`[FAIL] ${pageId}.json has unused references:`);
+          for (const id of unusedRefs) {
+            console.error(`  - ${id}`);
+          }
+          allValid = false;
+        }
+      } catch (err) {
+        if ((err as NodeJS.ErrnoException).code !== 'ENOENT') {
+          throw err;
+        }
+        // If markdown file doesn't exist, skip unused reference check
+      }
     }
   } catch (err) {
     if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
