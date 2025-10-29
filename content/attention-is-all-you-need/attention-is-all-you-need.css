@@ -1,0 +1,9 @@
+.widget-container .description {
+  font-size: 12px;
+  line-height: 14px;
+  margin-top: 4px;
+}
+
+.widget-container {
+  margin: 40px auto;
+}

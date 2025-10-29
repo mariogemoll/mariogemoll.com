@@ -31,3 +31,23 @@ code {
 .MathJax[display="true"] {
   margin: 40px auto !important
 }
+
+
+@keyframes wave-gray {
+  0% {
+    background-color: #f0f0f0;
+  }
+
+  50% {
+    background-color: #e3e3e3;
+  }
+
+  100% {
+    background-color: #f0f0f0;
+  }
+}
+
+.placeholder {
+  background-color: #f0f0f0;
+  animation: wave-gray 3s ease-in-out infinite;
+}

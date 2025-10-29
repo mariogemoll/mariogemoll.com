@@ -23,3 +23,8 @@ npx esbuild src/parallel-corpus-viewer/parallel-corpus-viewer.ts --bundle --form
 npx esbuild src/normalizing-flows/normalizing-flows.ts --bundle --format=esm \
   --outfile=dist/normalizing-flows/normalizing-flows.js --minify --sourcemap \
   --source-root=https://github.com/mariogemoll/mariogemoll.com/tree/$COMMIT_HASH/frontend/src/normalizing-flows
+
+npx esbuild src/attention-is-all-you-need/attention-is-all-you-need.ts --bundle --format=esm \
+  --outfile=dist/attention-is-all-you-need/attention-is-all-you-need.js --minify --sourcemap \
+  --source-root=https://github.com/mariogemoll/mariogemoll.com/tree/$COMMIT_HASH/frontend/src/attention-is-all-you-need \
+  
