@@ -57,6 +57,18 @@ of the two sequences of each pair.
 
 [[ buckets-widget ]]
 
+## Model
+
+The model architecture follows the base configuration in the Attention Is All You Need paper: An
+encoder-decoder transformer with 6 encoder and 6 decoder layers, 512 model dimensions, 8 attention
+heads. The feed-forward layers have 2,048 dimensions. The vocabulary has a size of 32,768. The model
+has 77M parameters.
+
 ## Training
+
+We train for 15 epochs on a machine with eight RTX 5090 GPUs. One epoch takes about three minutes.
+The rental cost for the machine is roughly $4 per hour, so one full training run takes about 45
+minutes and costs approximately $3. For comparison, the original Attention Is All You Need paper
+reported a training time of around 12 hours for a comparable number of tokens.
 
 ## Result
