@@ -20,7 +20,7 @@ const bucketSeqLenStepSize = 16;
 
 const batchSize = 1000;
 
-async function page(): void {
+async function page(): Promise<void> {
   const corporaBox = el(document, '#corpora-widget') as HTMLDivElement;
   const bucketsBox = el(document, '#buckets-widget') as HTMLDivElement;
   const trainLossBox = el(document, '#train-loss-widget') as HTMLDivElement;
@@ -65,10 +65,8 @@ async function page(): void {
 }
 
 window.addEventListener('load', () => {
-  try {
-    page();
-  } catch (error: unknown) {
+  void page().catch((error: unknown) => {
     console.error(error);
     alert(`Error during page setup: ${error instanceof Error ? error.message : String(error)}`);
-  }
+  });
 });

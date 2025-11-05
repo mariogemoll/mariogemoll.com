@@ -9,6 +9,7 @@
   "devDependencies": {
     "@anywidget/types": "^0.2.0",
     "@stylistic/eslint-plugin": "^5.0.0",
+    "@tensorflow/tfjs": "^4.22.0",
     "@types/fs-extra": "^11.0.4",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^24.0.8",
