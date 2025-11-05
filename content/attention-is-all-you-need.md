@@ -72,3 +72,9 @@ minutes and costs approximately $3. For comparison, the original Attention Is Al
 reported a training time of around 12 hours for a comparable number of tokens.
 
 ## Result
+
+[[ train-loss-widget ]]
+
+[[ loss-widget ]]
+
+[[ bleu-widget ]]

@@ -28,6 +28,26 @@ export async function generatePage(contentPath: string): Promise<PageContentPara
       250,
       'Visualization of the distribution of sentence pairs across different buckets. One box ' +
       'represents 1000 sentence pairs.'
+    ],
+    [
+      'train-loss',
+      600,
+      300
+    ],
+    [
+      'loss',
+      600,
+      300
+    ],
+    [
+      'perplexity',
+      600,
+      300
+    ],
+    [
+      'bleu',
+      600,
+      300
     ]
   ];
 
@@ -37,12 +57,12 @@ export async function generatePage(contentPath: string): Promise<PageContentPara
       maybeDescription = `<div class="description">${description}</div>`;
     }
     const html = `<div class="widget-container">
-          <div id="${label}-widget" class="widget" style="width: ${width}px; height: ${height}px">
-            <div class="placeholder"
-              style="width: ${width}px; height: ${height}px; background-color: #eee"></div>
+        <div id="${label}-widget" class="widget" style="width: ${width}px; height: ${height}px">
+          <div class="placeholder"
+              style="width: ${width}px; height: ${height}px; background-color: #eee">
           </div>
-          ${maybeDescription}
-        </div>`;
+        </div>${maybeDescription}</div>`;
+    console.log('html', html);
     mdContent = mdContent.replace(`[[ ${label}-widget ]]`, html);
   }
 

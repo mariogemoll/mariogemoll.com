@@ -32,3 +32,5 @@ content/vae/losses.bin filter=lfs diff=lfs merge=lfs -text
 content/vae/vae_5_decoder.onnx filter=lfs diff=lfs merge=lfs -text
 content/vae/vae_5_encoder.onnx filter=lfs diff=lfs merge=lfs -text
 content/vae/trainset_images.bin filter=lfs diff=lfs merge=lfs -text
+
+content/attention-is-all-you-need/*.bin binary
