@@ -6,6 +6,7 @@ export default {
   config: {
     MD013: { line_length: 100 },
     MD033: false,
+    MD034: false, // Allow bare URLs
     MD041: false
   },
   customRules: [mathBlockFormat, htmlValidate]
