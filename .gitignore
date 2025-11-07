@@ -1,6 +1,6 @@
-
 .claude
 .python-version
+.vscode
 /build
 /build_info/directory_mapping.tsv
 /builder/dist
