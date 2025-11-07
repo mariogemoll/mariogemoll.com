@@ -96,8 +96,29 @@ for a comparable number of tokens.
 
 ## Result
 
+The cross-entropy loss goes down to about 2.4, or equivalently a perplexity of about 11. The
+Attention Is All You Need paper reached a perplexity of 4.92 for the base model.
+
 [[ train-loss-widget ]]
 
 [[ loss-widget ]]
 
+On BLEU (Newstest 2014 testset), the model achieves a score of 19.1, while the value reported in the
+paper is 25.8.
+
 [[ bleu-widget ]]
+
+So overall, the goal of matching the results of the paper has not fully been achieved (yet).
+However, the translation is
+[somewhat working](https://colab.research.google.com/github/mariogemoll/attention-is-all-you-need/blob/main/py/usage.ipynb).
+
+## Room for improvement?
+
+The following possible optimizations have not been implemented yet and might lead to improvements in
+the future:
+
+* Label smoothing
+* Removing sentence pairs whose sentences differ a lot in length
+* Learning rate schedule improvements
+* Applying dropout to embeddings and positional encoding (in addition to sub-layers)
+* Sharing all embeddings (source, target, output)
