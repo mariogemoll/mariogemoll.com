@@ -37,6 +37,28 @@ dev/validation set "newstest2013" (the test set of WMT13).
 
 [[ corpora-widget ]]
 
+## Common Crawl issues
+
+When inspecting the training data, it becomes clear that the Common Crawl Parallel Corpus portion of
+the WMT14 dataset introduces noticeable noise. A manual review of random samples shows that some
+sentence pairs are not actual translations:
+
+[[ not-translations-table ]]
+
+In other cases, the entries are not even bilingual:
+
+[[ not-bilingual-table ]]
+
+This is likely due to how the corpus was created. The dataset was generated automatically from the
+[Common Crawl](https://commoncrawl.org/) web archive using a
+[large-scale alignment procedure](https://www2.statmt.org/mtm12/pub/crawl-final.pdf): First, pages
+whose URLs look like they are available in multiple languages were selected, e.g.
+https://example.com/page_en.html and https://example.com/page_de.html. Then it was assumed there
+is a direct correspondence between the sentences on those pages, and they were matched. This rather
+crude algorithm leads to a lot of data, however the data is quite noisy, in other words a
+substantial part of the translations are completely off. However, it seems like giving the model
+more data to train on, even if the quality is not the best, is beneficial.
+
 ## Cleaning, tokenization, bucketing
 
 In a first step, a cleaning script is applied to all the input text file pairs to do the following:

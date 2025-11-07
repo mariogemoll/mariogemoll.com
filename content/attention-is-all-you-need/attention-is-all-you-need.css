@@ -7,3 +7,28 @@
 .widget-container {
   margin: 40px auto;
 }
+
+table {
+  max-width: 1200px;
+  margin: 60px auto;
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+  vertical-align: top;
+}
+
+td:first-child, th:first-child {
+  width: 80px;
+}
+
+/* Force equal width for all columns except first */
+td:not(:first-child), th:not(:first-child) {
+  width: calc((100% - 80px) / var(--cols-minus-one));
+}
+
