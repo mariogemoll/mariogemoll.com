@@ -90,8 +90,9 @@ has 77M parameters.
 
 We train for 15 epochs on a machine with eight RTX 5090 GPUs. One epoch takes about three minutes.
 The rental cost for the machine is roughly $4 per hour, so one full training run takes about 45
-minutes and costs approximately $3. For comparison, the original Attention Is All You Need paper
-reported a training time of around 12 hours for a comparable number of tokens.
+minutes and costs approximately $3 (and consumes about 0.75h × 8 × 600W = 3.6kWh of energy). For
+comparison, the original Attention Is All You Need paper reported a training time of around 12 hours
+for a comparable number of tokens.
 
 ## Result
 
