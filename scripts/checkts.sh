@@ -12,13 +12,10 @@ cd $SCRIPT_DIR/../frontend
 
 npx eslint -c basic.eslint.config.js basic.eslint.config.js eslint.config.js
 npx eslint src
-
-npx tsc
+npx tsc --noEmit
 
 cd $SCRIPT_DIR/../builder
 
 npx eslint -c basic.eslint.config.js basic.eslint.config.js eslint.config.js
 npx eslint src
-
-npx tsc
-
+npx tsc --noEmit
