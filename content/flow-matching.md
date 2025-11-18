@@ -31,3 +31,11 @@ $$
 $$
 
 [[ conditional-prob-path-widget ]]
+
+## Conditional vector field
+
+For any conditional probability path there exists an equivalent vector field/ODE. Intuitively,
+instead of sampling from $p_t$ (at a given time point $t$), we can sample a point from
+$p_{\rm{init}}$ and then just follow the vector field until time $t$ (e.g., using the Euler method):
+
+[[ conditional-prob-path-and-vector-field-widget ]]

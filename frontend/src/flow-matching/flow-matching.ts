@@ -1,16 +1,25 @@
 import { el } from 'web-ui-common/dom';
 import type { Pair } from 'web-ui-common/types';
 
-import { initConditionalProbPathWidget } from './fmad/conditional';
+import {
+  initConditionalProbPathAndVectorFieldWidget,
+  initConditionalProbPathWidget } from './fmad/conditional';
 
 async function page(): Promise<void> {
-  const container = el(document, '#conditional-prob-path-widget') as HTMLElement;
+  const probPathContainer = el(document, '#conditional-prob-path-widget') as HTMLElement;
+  const probPathAndVectorFieldContainer = el(
+    document,
+    '#conditional-prob-path-and-vector-field-widget'
+  ) as HTMLElement;
 
   const initialPosition: Pair<number> = [1.0, 0.5];
   const initialTime = 0;
 
   await tf.ready();
-  initConditionalProbPathWidget(container, initialPosition, initialTime);
+  initConditionalProbPathWidget(probPathContainer, initialPosition, initialTime);
+  initConditionalProbPathAndVectorFieldWidget(
+    probPathAndVectorFieldContainer, initialPosition, initialTime
+  );
 }
 
 window.addEventListener('load', () => {

@@ -32,7 +32,8 @@ export async function generatePage(
   mdContent = mdContent.replace(PAGE_TITLE_PLACEHOLDER_PATTERN, pageTitle);
 
   const widgetLabelsAndDimensions: [string, number, number][] = [
-    ['conditional-prob-path', 480, 460]
+    ['conditional-prob-path', 480, 460],
+    ['conditional-prob-path-and-vector-field', 960, 460]
   ];
 
   for (const [label, width, height] of widgetLabelsAndDimensions) {
@@ -48,7 +49,8 @@ export async function generatePage(
   const cssFiles = [
     highlightJsCssUrl,
     '/misc/centered.css',
-    '/misc/widgets.css'
+    '/misc/widgets.css',
+    '/flow-matching/flow-matching.css'
   ];
 
   const jsUrls: string[] = [tfJsUrl];
