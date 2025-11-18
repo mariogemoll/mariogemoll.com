@@ -39,3 +39,23 @@ instead of sampling from $p_t$ (at a given time point $t$), we can sample a poin
 $p_{\rm{init}}$ and then just follow the vector field until time $t$ (e.g., using the Euler method):
 
 [[ conditional-prob-path-and-vector-field-widget ]]
+
+## Marginal probability path and vector field
+
+Now imagine we have a complex data distribution $p_{\rm{data}}$. As with any point in
+$\mathbb{R}^d$, we can build the conditional probability path described above for points sampled
+from this distribution. Thus we can speak of a marginal probability path, i.e. a set of
+distributions $p_t$ which transforms the initial distribution $p_{\rm{init}}$ into $p_{\rm{data}}$.
+
+To sample a point $x \sim p_t$, we just need to follow the procedure "sample $z \sim p_{\rm{data}}$,
+then get $p_t(\cdot|z)$ (via conditional probability path), then sample $x \sim p_t(\cdot|z)$".
+
+We can even give the PDF for $p_t$. It is simply the integral over the values of the $p_t(\cdot|z)$
+for _all_ $z$, weighed by their likelihoods, in other words we marginalize over $z$:
+
+$$
+p_t(x) = \int p_t(x | z)\, p_{\rm{data}}(z)\, dz
+$$
+
+Analogous to above, there is also always an equivalent marginal vector field leading to the same
+outcome.
