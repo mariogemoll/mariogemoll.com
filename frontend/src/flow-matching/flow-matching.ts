@@ -3,7 +3,11 @@ import type { Pair } from 'web-ui-common/types';
 
 import {
   initConditionalProbPathAndVectorFieldWidget,
-  initConditionalProbPathWidget } from './fmad/conditional';
+  initConditionalProbPathWidget
+} from './fmad/conditional';
+import {
+  initMarginalProbPathAndVectorFieldWidget
+} from './fmad/marginal';
 
 async function page(): Promise<void> {
   const probPathContainer = el(document, '#conditional-prob-path-widget') as HTMLElement;
@@ -11,14 +15,24 @@ async function page(): Promise<void> {
     document,
     '#conditional-prob-path-and-vector-field-widget'
   ) as HTMLElement;
+  const marginalProbPathAndVectorFieldContainer = el(
+    document,
+    '#marginal-prob-path-and-vector-field-widget'
+  ) as HTMLElement;
 
   const initialPosition: Pair<number> = [1.0, 0.5];
   const initialTime = 0;
 
   await tf.ready();
-  initConditionalProbPathWidget(probPathContainer, initialPosition, initialTime);
+  initConditionalProbPathWidget(
+    probPathContainer, initialPosition, initialTime, 'conditional-prob-path'
+  );
   initConditionalProbPathAndVectorFieldWidget(
-    probPathAndVectorFieldContainer, initialPosition, initialTime
+    probPathAndVectorFieldContainer, initialPosition, initialTime,
+    'conditional-prob-path-and-vector-field'
+  );
+  initMarginalProbPathAndVectorFieldWidget(
+    marginalProbPathAndVectorFieldContainer, 'marginal-prob-path-and-vector-field'
   );
 }
 

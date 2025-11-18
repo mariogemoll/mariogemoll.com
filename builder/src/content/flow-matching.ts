@@ -33,7 +33,8 @@ export async function generatePage(
 
   const widgetLabelsAndDimensions: [string, number, number][] = [
     ['conditional-prob-path', 480, 460],
-    ['conditional-prob-path-and-vector-field', 960, 460]
+    ['conditional-prob-path-and-vector-field', 960, 460],
+    ['marginal-prob-path-and-vector-field', 1200, 460]
   ];
 
   for (const [label, width, height] of widgetLabelsAndDimensions) {

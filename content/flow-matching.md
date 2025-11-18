@@ -58,4 +58,7 @@ p_t(x) = \int p_t(x | z)\, p_{\rm{data}}(z)\, dz
 $$
 
 Analogous to above, there is also always an equivalent marginal vector field leading to the same
-outcome.
+outcome. Here we see this visualized for a mixture of Gaussians distribution (can be modified at
+$t=1$):
+
+[[ marginal-prob-path-and-vector-field-widget ]]
