@@ -10,6 +10,7 @@ import { fileURLToPath,pathToFileURL } from 'url';
 import { PAGE_TITLE_PLACEHOLDER_PATTERN } from './constants.js';
 import { makeAtomFeed, makeRssFeed, makeSitemap } from './feeds.js';
 import type { PageContentParams, SiteConfig } from './types.js';
+import { omit,pick } from './util.js';
 
 const markdown = new MarkdownIt({
   html: true,
@@ -175,15 +176,30 @@ async function makePages(
   return generatedPages;
 }
 
+function pageListEntries(
+  pages: Map<string, [string, string, string, string, string]>
+): [string, string, string][] {
+  return Array.from(pages.entries()).map(
+    ([id, [, title, description]]) => [id, title, description]
+  );
+}
+
 function makeHomepage(
   homeTemplate: pug.compileTemplate,
   pageTemplate: pug.compileTemplate,
   generatedPages: Map<string, [string, string, string, string, string]>,
   siteConfig: SiteConfig
 ): string {
-  const pages = Array.from(generatedPages.entries())
-    .map(([id, [, title]]) => [id, title]);
-  const homeHtml = homeTemplate({ pages, siteTitle: siteConfig.title });
+  const mlIds = ['attention-is-all-you-need', 'normalizing-flows', 'vae'];
+  const other = pageListEntries(omit(generatedPages, mlIds));
+  other.push([
+    'https://gen3d.chat/', 'gen3d.chat', 'An agent to help with (basic) 3D CAD modeling.'
+  ]);
+  const homeHtml = homeTemplate({
+    siteTitle: siteConfig.title,
+    ml: pageListEntries(pick(generatedPages, mlIds)),
+    other
+  });
   const [output] = makePage(
     pageTemplate, homeHtml, ['/misc/centered.css', '/misc/home.css'], [], []
   );

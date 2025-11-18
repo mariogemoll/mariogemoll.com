@@ -1,8 +1,22 @@
+mixin entryList(entries)
+  ul
+    each entry in entries
+      - const [url, title, description] = entry
+      li
+        a(href=url)
+          strong= title
+          if description
+            br
+            | #{description}
+
 h1= siteTitle
-ul
-  each page in pages
-    li
-      a(href=page[0])= page[1]
+
+h2 Machine learning notes and experiments
++entryList(ml)
+
+h2 Other
++entryList(other)
+
 p.external-links
   a(href="https://github.com/mariogemoll") GitHub
   | #{' '} | #{' '}

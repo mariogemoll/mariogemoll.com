@@ -1,12 +1,19 @@
-h1, p, li {
+h1, h2, p, li {
   font-size: 16px;
   line-height: 1.5;
 }
 
-h1, li {
+h1, h2 {
+  font-weight: 500;
+}
+
+h2 {
+  margin-top: 80px;
+}
+
+h1, li, strong {
   font-family: Inter, sans-serif;
   font-optical-sizing: auto;
-  font-weight: 400;
   font-style: normal;
 }
 
@@ -22,9 +29,19 @@ ul {
   list-style: none;
 }
 
+li {
+  margin-bottom: 10px;
+}
+
 a {
-  color: black;
+  font-weight: 300;
+  color: grey;
   text-decoration: none;
+}
+
+a strong {
+  font-weight: 400;
+  color: black;
 }
 
 .external-links {
