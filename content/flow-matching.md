@@ -62,3 +62,19 @@ outcome. Here we see this visualized for a mixture of Gaussians distribution (ca
 $t=1$):
 
 [[ marginal-prob-path-and-vector-field-widget ]]
+
+So what's the point of all this? We see that for any distribution, there is a vector field that
+transforms a simple initial distribution into the target distribution. Given the appropriate vector
+field, we could sample from the initial distribution, run the data point through the vector field
+till the end (ie., till $t=1$), and the result would be equivalent to sampling from the target
+distribution.
+
+And this works for arbitrarily complex distributions and any number of dimensions. What this means
+is we could, in theory, say, sample from a 515x515x3-dimensional standard Gaussian, apply the vector
+field corresponding to the marginal probability path towards the distribution of all Studio Ghibli
+images, and get one of those pictures out.
+
+The problem, of course, is that for this and any other "real" distribution, we can't give a formula
+for the distribution, nor describe the marginal vector field explicitly (this basically only works
+for mixtures of Gaussians, like in the visualization above). We can, however, learn a neural network
+which approximates the vector field.
