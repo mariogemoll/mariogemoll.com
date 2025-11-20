@@ -94,8 +94,8 @@ $$
 
 Again, the formula is explained in …, but don't worry about it for now.
 
-Here we see this visualized for a mixture of Gaussians distribution (can be modified at
-$t=1$):
+Here we see a marginal probability path and vector field visualized for a mixture of Gaussians
+distribution (can be modified at $t=1$):
 
 [[ marginal-prob-path-and-vector-field-widget ]]
 
