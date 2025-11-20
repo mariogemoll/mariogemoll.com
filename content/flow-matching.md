@@ -38,7 +38,28 @@ For any conditional probability path there exists an equivalent vector field/ODE
 instead of sampling from $p_t$ (at a given time point $t$), we can sample a point from
 $p_{\rm{init}}$ and then just follow the vector field until time $t$ (e.g., using the Euler method):
 
+$$
+X_0\sim p_{\rm{init}}, \quad
+\frac{d}{d t}X_t = u_t(X_t|z)\quad
+\Rightarrow \quad X_t\sim p_t(\cdot|z)\quad
+(0\leq t\leq 1)
+$$
+
 [[ conditional-prob-path-and-vector-field-widget ]]
+
+The formula for this vector field (for the Gaussian case) is rather simple:
+
+$$
+u_t(x|z)
+= \left( \dot{\alpha_t}
+       - \frac{\dot{\beta_t}}{\beta_t}\,\alpha_t \right) z
+  + \frac{\dot{\beta_t}}{\beta_t}\, x
+$$
+
+A justification is given in ….
+
+Sidenote: The "dot notation" is the physics convention for denoting the derivative with respect to
+time: $\dot{\alpha_t}=\frac{d}{dt}\alpha_t$.
 
 ## Marginal probability path and vector field
 
@@ -58,7 +79,22 @@ p_t(x) = \int p_t(x | z)\, p_{\rm{data}}(z)\, dz
 $$
 
 Analogous to above, there is also always an equivalent marginal vector field leading to the same
-outcome. Here we see this visualized for a mixture of Gaussians distribution (can be modified at
+outcome:
+
+$$
+u_t(x) = \int u_t(x|z)\frac{p_t(x|z)p_{\rm{data}}}{p_t(x)}d z
+$$
+
+$$
+X_0 \sim p_{\rm{init}} ,\quad
+\frac{d}{d t}X_t = u_t(X_t)\quad
+\Rightarrow \quad
+X_t\sim p_t\quad (0\leq t\leq 1)
+$$
+
+Again, the formula is explained in …, but don't worry about it for now.
+
+Here we see this visualized for a mixture of Gaussians distribution (can be modified at
 $t=1$):
 
 [[ marginal-prob-path-and-vector-field-widget ]]
