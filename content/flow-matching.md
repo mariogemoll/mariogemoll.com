@@ -15,7 +15,7 @@ $$
 In particular, we can construct a Gaussian conditional probability path where we start with a
 the standard Gaussian distribution and then successively move the mean towards z and the covariance
 matrix towards the identity matrix. This is governed by "noise schedulers" $\alpha_t$ and
-$\beta_t$
+$\beta_t$:
 
 $$
 p_t(\cdot|z) = \mathcal{N}(\alpha_t z,\beta_t^2 I_d)
@@ -29,6 +29,12 @@ $$
     \quad p_1(\cdot|z) = \mathcal{N}(z, 0) = \delta_z
 \end{align}
 $$
+
+By the way, if you're (like I was) a bit confused by the "underscore $t$": It means the value at
+time $t$, and since $t$ is between $0$ and $1$ it usually isn't an integer, so there's $p_{0.123}$,
+$\alpha_{0.456}$, $\beta_{0.789}$ etc.
+
+Here is a visualization in which you can also see the effect of different noise schedulers:
 
 [[ conditional-prob-path-widget ]]
 
@@ -103,7 +109,8 @@ So what's the point of all this? We see that for any distribution, there is a ve
 transforms a simple initial distribution into the target distribution. Given the appropriate vector
 field, we could sample from the initial distribution, run the data point through the vector field
 till the end (ie., till $t=1$), and the result would be equivalent to sampling from the target
-distribution.
+distribution. Note that the trajectory given by the vector field procedure is also fully
+deterministic, ie. all the randomness comes from the initial sampling.
 
 And this works for arbitrarily complex distributions and any number of dimensions. What this means
 is we could, in theory, say, sample from a 515x515x3-dimensional standard Gaussian, apply the vector
