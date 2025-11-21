@@ -143,7 +143,7 @@ This leads to the **flow matching loss** defined as follows:
 
 $$
 \mathcal{L}_{\text{FM}} =
-\mathbb{E}_{t\sim \text{Unif}_{[0,1]},\ z\sim p_{\rm{data}},\ x\sim p_t(\cdot|z)}[
+\mathbb{E}_{t\sim \mathcal{U}(0,1),\ z\sim p_{\rm{data}},\ x\sim p_t(\cdot|z)}[
 \|\hat{u}_t(x) - u_t(x)\|^2
 ]
 $$
@@ -156,7 +156,7 @@ equivalent to minimizing the flow matching loss!
 
 $$
 \mathcal{L}_{\text{CFM}} =
-\mathbb{E}_{t\sim \text{Unif}_{[0,1]},\ z\sim p_{\rm{data}},\ x\sim p_t(\cdot|z)}[
+\mathbb{E}_{t\sim \mathcal{U}(0,1),\ z\sim p_{\rm{data}},\ x\sim p_t(\cdot|z)}[
 \|\hat{u}_t(x) - u_t(x|z)\|^2
 ]
 $$
@@ -169,7 +169,7 @@ probability path $p_t(\cdot|z)$ and conditional vector field $u_t(x|z)$:
 $$
 \mathcal{L}_{\text{CFM}} =
 \mathbb{E}_{
-    t \sim \text{Unif}_{[0,1]},\ z\sim p_{\rm{data}},\ x\sim \mathcal{N}(\alpha_t z,\ \beta_t^2 I_d)
+    t \sim \mathcal{U}(0,1),\ z\sim p_{\rm{data}},\ x\sim \mathcal{N}(\alpha_t z,\ \beta_t^2 I_d)
 }\left[\left\|
     \hat{u}_t(x) - \left( \dot{\alpha_t}
        - \frac{\dot{\beta_t}}{\beta_t}\,\alpha_t \right) z
@@ -185,7 +185,7 @@ $$
 \begin{align}
 \mathcal{L}_{\text{CFM}} &=
 \mathbb{E}_{
-    t \sim \text{Unif}_{[0,1]},\ z\sim p_{\rm{data}},\ \epsilon \sim \mathcal{N}(0, I_d)
+    t \sim \mathcal{U}(0,1),\ z\sim p_{\rm{data}},\ \epsilon \sim \mathcal{N}(0, I_d)
 }\left[\left\|
     \hat{u}_t(\alpha_tz+\beta_t\epsilon) - \left( \dot{\alpha_t}
        - \frac{\dot{\beta_t}}{\beta_t}\,\alpha_t \right) z
@@ -193,7 +193,7 @@ $$
 \right\|^2\right] \\
 &=
 \mathbb{E}_{
-    t \sim \text{Unif}_{[0,1]},\ z\sim p_{\rm{data}},\ \epsilon \sim \mathcal{N}(0, I_d)
+    t \sim \mathcal{U}(0,1),\ z\sim p_{\rm{data}},\ \epsilon \sim \mathcal{N}(0, I_d)
 }\left[\left\|
     \hat{u}_t(\alpha_tz+\beta_t\epsilon)
     - \dot{\alpha_t} z
@@ -203,7 +203,7 @@ $$
 \right\|^2\right] \\
 &=
 \mathbb{E}_{
-    t \sim \text{Unif}_{[0,1]},\ z\sim p_{\rm{data}},\ \epsilon \sim \mathcal{N}(0, I_d)
+    t \sim \mathcal{U}(0,1),\ z\sim p_{\rm{data}},\ \epsilon \sim \mathcal{N}(0, I_d)
 }\left[\left\|
     \hat{u}_t(\alpha_tz+\beta_t\epsilon)
     - (\dot{\alpha_t} z + \dot{\beta_t} \epsilon)
@@ -225,7 +225,7 @@ Thus the CFM objective becomes
 $$
 \mathcal{L}_{\text{CFM}}
 =
-\mathbb{E}_{t \sim \mathrm{Unif}_[0,1],\; z \sim p_{\rm data},\; \epsilon \sim \mathcal{N}(0,I_d)}
+\mathbb{E}_{t \sim \mathcal{U}(0,1),\; z \sim p_{\rm data},\; \epsilon \sim \mathcal{N}(0,I_d)}
 \left[
 \left\|
 \hat{u}_t\!\bigl(tz+(1-t)\epsilon\bigr) - (z - \epsilon)
@@ -236,7 +236,7 @@ $$
 In practice, training reduces to the following simple procedure:
 
 * Sample a data point $z \sim p_{\rm data}$.
-* Sample a time $t \sim \mathrm{Unif}_[0,1]$.
+* Sample a time $t \sim \mathcal{U}(0,1)$.
 * Sample Gaussian noise $\epsilon \sim \mathcal{N}(0,I_d)$.
 * Form the noisy input $x = t z + (1 - t)\epsilon$.
 * Evaluate the model prediction $\hat{u}_t(x)$.
