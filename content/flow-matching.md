@@ -121,3 +121,123 @@ The problem, of course, is that for this and any other "real" distribution, we c
 for the distribution, nor describe the marginal vector field explicitly (this basically only works
 for mixtures of Gaussians, like in the visualization above). We can, however, learn a neural network
 which approximates the vector field.
+
+## Loss function
+
+What we need is a neural network which gives us for a point x and time t a vector which pushes the
+point towards a sensible point in the data distribution. In other words, we want a neural network
+which "matches the flow" given by the vector field. Then we can sample from $p_{\rm{init}}$
+and use the Euler method, i.e. get the vector from the neural network, push the point a bit in that
+direction, call the vector field neural network again, and repeat, up to $t = 1$.
+
+As usual in machine learning we can initialize a neural network with random parameters and then try
+to tweak them using gradient descent and a lot of training data. What should our loss function be
+though? A natural choice is the means squared error between the output of the neural network and the
+actual value of the vector field.
+
+One complication is that we need inputs at different $t$, but we only have training data for
+$p_{\rm{data}}$ ($= p_1$). However that's not an issue, we can simply sample $t$ uniformly from
+$[0,1]$ get the value along the conditional probability path.
+
+This leads to the **flow matching loss** defined as follows:
+
+$$
+\mathcal{L}_{\text{FM}} =
+\mathbb{E}_{t\sim \text{Unif}_{[0,1]},\ z\sim p_{\rm{data}},\ x\sim p_t(\cdot|z)}[
+\|\hat{u}_t(x) - u_t(x)\|^2
+]
+$$
+
+However, as stated above, we can't calculate that hairy integral which hides behind $u_t(x)$ (in
+particular, it involves $p_{\rm{data}}$, which we don't know). So are we stuck here? No, actually
+we're quite lucky: It turns out we can train the model directly on the conditional vector field
+rather than the marginal one, and minimizing the following **conditional flow matching loss** is
+equivalent to minimizing the flow matching loss!
+
+$$
+\mathcal{L}_{\text{CFM}} =
+\mathbb{E}_{t\sim \text{Unif}_{[0,1]},\ z\sim p_{\rm{data}},\ x\sim p_t(\cdot|z)}[
+\|\hat{u}_t(x) - u_t(x|z)\|^2
+]
+$$
+
+(Proof given in ….)
+
+To make this more concrete in the Gaussian case, let's plug in the formulas for conditional
+probability path $p_t(\cdot|z)$ and conditional vector field $u_t(x|z)$:
+
+$$
+\mathcal{L}_{\text{CFM}} =
+\mathbb{E}_{
+    t \sim \text{Unif}_{[0,1]},\ z\sim p_{\rm{data}},\ x\sim \mathcal{N}(\alpha_t z,\ \beta_t^2 I_d)
+}\left[\left\|
+    \hat{u}_t(x) - \left( \dot{\alpha_t}
+       - \frac{\dot{\beta_t}}{\beta_t}\,\alpha_t \right) z
+  - \frac{\dot{\beta_t}}{\beta_t}\, x
+\right\|^2\right]
+$$
+
+Sampling $x\sim \mathcal{N}(\alpha_t z,\ \beta_t^2 I_d)$ is equivalent to sampling
+$\epsilon \sim \mathcal{N}(0,\ I_d)$ and setting $x=\alpha_tz+\beta_t\epsilon$, so we can simplify
+the loss function as follows:
+
+$$
+\begin{align}
+\mathcal{L}_{\text{CFM}} &=
+\mathbb{E}_{
+    t \sim \text{Unif}_{[0,1]},\ z\sim p_{\rm{data}},\ \epsilon \sim \mathcal{N}(0, I_d)
+}\left[\left\|
+    \hat{u}_t(\alpha_tz+\beta_t\epsilon) - \left( \dot{\alpha_t}
+       - \frac{\dot{\beta_t}}{\beta_t}\,\alpha_t \right) z
+  - \frac{\dot{\beta_t}}{\beta_t}\, (\alpha_tz+\beta_t\epsilon)
+\right\|^2\right] \\
+&=
+\mathbb{E}_{
+    t \sim \text{Unif}_{[0,1]},\ z\sim p_{\rm{data}},\ \epsilon \sim \mathcal{N}(0, I_d)
+}\left[\left\|
+    \hat{u}_t(\alpha_tz+\beta_t\epsilon)
+    - \dot{\alpha_t} z
+    + \frac{\dot{\beta_t}}{\beta_t}\, \alpha_t z
+    - \frac{\dot{\beta_t}}{\beta_t}\, \alpha_t z
+    - \dot{\beta_t} \epsilon
+\right\|^2\right] \\
+&=
+\mathbb{E}_{
+    t \sim \text{Unif}_{[0,1]},\ z\sim p_{\rm{data}},\ \epsilon \sim \mathcal{N}(0, I_d)
+}\left[\left\|
+    \hat{u}_t(\alpha_tz+\beta_t\epsilon)
+    - (\dot{\alpha_t} z + \dot{\beta_t} \epsilon)
+\right\|^2\right]
+\end{align}
+$$
+
+Choosing noise schedulers $\alpha_t=t$ and $\beta_t=1-t$ (and therefore $\dot{\alpha_t}=1$,
+$\dot{\beta_t}=-1$) yields the Gaussian CondOT probability path
+$p_t(x|z) = \mathcal{N}(tz, (1-t)^2I_d)$ (OT stands for "Optimal transport").
+
+A sample from this conditional distribution can be generated simply as
+$x = t z + (1-t)\epsilon,\ \epsilon \sim \mathcal{N}(0, I_d)$.
+
+For this path, the optimal transport vector field takes the remarkably simple form
+$u_t(x|z) = z - \epsilon$.
+
+Thus the CFM objective becomes
+$$
+\mathcal{L}_{\text{CFM}}
+=
+\mathbb{E}_{t \sim \mathrm{Unif}_[0,1],\; z \sim p_{\rm data},\; \epsilon \sim \mathcal{N}(0,I_d)}
+\left[
+\left\|
+\hat{u}_t\!\bigl(tz+(1-t)\epsilon\bigr) - (z - \epsilon)
+\right\|^2
+\right].
+$$
+
+In practice, training reduces to the following simple procedure:
+
+* Sample a data point $z \sim p_{\rm data}$.
+* Sample a time $t \sim \mathrm{Unif}_[0,1]$.
+* Sample Gaussian noise $\epsilon \sim \mathcal{N}(0,I_d)$.
+* Form the noisy input $x = t z + (1 - t)\epsilon$.
+* Evaluate the model prediction $\hat{u}_t(x)$.
+* Compute the squared error with the target velocity $z - \epsilon$.
