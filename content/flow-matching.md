@@ -241,3 +241,93 @@ In practice, training reduces to the following simple procedure:
 * Form the noisy input $x = t z + (1 - t)\epsilon$.
 * Evaluate the model prediction $\hat{u}_t(x)$.
 * Compute the squared error with the target velocity $z - \epsilon$.
+
+## Code Example
+
+Here's a minimal TF.js example showing how to construct a velocity vector field network and compute
+the loss:
+
+```typescript
+// Velocity network: takes [x, t] as input, outputs velocity vector
+const velocityNet = tf.sequential({
+  layers: [
+    tf.layers.dense({ inputShape: [3], units: 128, activation: 'relu' }),
+    tf.layers.dense({ units: 128, activation: 'relu' }),
+    tf.layers.dense({ units: 128, activation: 'relu' }),
+    tf.layers.dense({ units: 2 })  // output: velocity vector
+  ]
+});
+
+function computeLoss(dataBatch) {
+  return tf.tidy(() => {
+    const batchSize = dataBatch.shape[0];
+
+    // Sample t uniformly from [0, 1]
+    const t = tf.randomUniform([batchSize, 1], 0, 1);
+
+    // Sample noise ε ~ N(0, I)
+    const epsilon = tf.randomNormal([batchSize, 2]);
+
+    // Form noisy input: x = tz + (1-t)ε
+    const x = tf.add(tf.mul(t, dataBatch), tf.mul(tf.sub(1, t), epsilon));
+
+    // Target velocity: v = z - ε
+    const targetVelocity = tf.sub(dataBatch, epsilon);
+
+    // Predict velocity from network
+    const input = tf.concat([x, t], 1);
+    const predictedVelocity = velocityNet.predict(input);
+
+    // MSE loss
+    const diff = tf.sub(predictedVelocity, targetVelocity);
+    const loss = tf.mean(tf.square(diff));
+
+    return loss;
+  });
+}
+```
+
+Training loop:
+
+```typescript
+const optimizer = tf.train.adam(0.001);
+
+async function train(dataset, numSteps) {
+  for (let step = 0; step < numSteps; step++) {
+    const dataBatch = dataset.sample();  // Sample batch from training data
+
+    optimizer.minimize(() => computeLoss(dataBatch));
+
+    if (step % 100 === 0) {
+      const loss = computeLoss(dataBatch);
+      console.log(`Step ${step}, Loss: ${await loss.data()}`);
+      loss.dispose();
+    }
+  }
+}
+```
+
+For generation, we start from noise and follow the learned vector field:
+
+```typescript
+function generate(batchSize, numSteps = 100) {
+  // Start from noise: x_0 ~ N(0, I)
+  let x = tf.randomNormal([batchSize, 2]);
+  const dt = 1.0 / numSteps;
+
+  for (let step = 0; step < numSteps; step++) {
+    const t = step * dt;
+
+    x = tf.tidy(() => {
+      const tTensor = tf.fill([batchSize, 1], t);
+      // Get velocity from network
+      const input = tf.concat([x, tTensor], 1);
+      const velocity = velocityNet.predict(input);
+      // Euler step: x_{t+dt} = x_t + dt * v_t(x_t)
+      return tf.add(x, tf.mul(velocity, dt));
+    });
+  }
+
+  return x;  // x_1 ~ p_data
+}
+```
