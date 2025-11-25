@@ -5,6 +5,7 @@
   "dependencies": {
     "es-arraybuffer-base64": "^1.1.2",
     "flow-matching-and-diffusion": "mariogemoll/flow-matching-and-diffusion#1250ed626082170cbebabffeb2f53163f36ef5b9&path:ts",
+    "normalizing-flows": "mariogemoll/normalizing-flows#8270f2e6b3a2d54bcddb5a11b47ae8fdee111c92&path:ts",
     "web-ui-common": "mariogemoll/web-ui-common#1138fbe182f13d5cb1685c99a23d3850ed7c3514"
   },
   "devDependencies": {

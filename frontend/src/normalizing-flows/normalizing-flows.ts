@@ -1,12 +1,12 @@
-import { initWidget as initLayersWidget } from './widgets/layers';
-import { initWidget as initLinearTransformWidget } from './widgets/linear-transform';
-import { initPipeline } from './widgets/pipeline';
-import { el } from './widgets/web-ui-common/dom';
+import { initWidget as initLayersWidget } from 'normalizing-flows/layers';
+import { initWidget as initLinearTransformWidget } from 'normalizing-flows/linear-transform';
+import { initNormalizingFlowPipeline } from 'normalizing-flows/pipeline';
+import { el } from 'web-ui-common/dom';
 
 window.addEventListener('load', () => {
   initLinearTransformWidget(el(document, '#linear-transform-widget') as HTMLDivElement);
   initLayersWidget(el(document, '#layers-widget') as HTMLDivElement);
-  initPipeline(
+  initNormalizingFlowPipeline(
     el(document, '#moons-dataset-widget') as HTMLDivElement,
     el(document, '#training-widget') as HTMLDivElement,
     el(document, '#flow-visualization-widget') as HTMLDivElement,
