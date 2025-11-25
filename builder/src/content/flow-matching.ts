@@ -6,7 +6,8 @@ import mathjax3 from 'markdown-it-mathjax3';
 import path from 'path';
 
 import { PAGE_TITLE_PLACEHOLDER_PATTERN } from '../constants.js';
-import { type PageContentParams } from '../types.js';
+import { renderReferencesSection, replaceCitations } from '../references.js';
+import { type PageContentParams,PageData } from '../types.js';
 import { highlightJsCssUrl, tfJsUrl } from './urls.js';
 
 
@@ -31,6 +32,17 @@ export async function generatePage(
   let mdContent = await fsExtra.readFile(path.join(contentPath, 'flow-matching.md'), 'utf-8');
   mdContent = mdContent.replace(PAGE_TITLE_PLACEHOLDER_PATTERN, pageTitle);
 
+  const jsonContent = await fsExtra.readFile(
+    path.join(contentPath, 'flow-matching.json'), 'utf8'
+  );
+  const pageData = PageData.parse(JSON.parse(jsonContent));
+
+  // Replace citation placeholders before rendering markdown
+  mdContent = replaceCitations(mdContent, pageData.references);
+
+  const referencesHtml = renderReferencesSection(pageData.references);
+
+  mdContent = mdContent.replace('[[ references ]]', referencesHtml);
   const widgetLabelsAndDimensions: [string, number, number][] = [
     ['conditional-prob-path', 480, 460],
     ['conditional-prob-path-and-vector-field', 960, 460],

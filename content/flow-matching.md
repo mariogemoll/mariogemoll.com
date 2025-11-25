@@ -62,7 +62,7 @@ u_t(x|z)
   + \frac{\dot{\beta_t}}{\beta_t}\, x
 $$
 
-A justification is given in ….
+A justification is given in [[ ref-holderrieth-and-erives-2025 ]].
 
 Sidenote: The "dot notation" is the physics convention for denoting the derivative with respect to
 time: $\dot{\alpha_t}=\frac{d}{dt}\alpha_t$.
@@ -98,7 +98,8 @@ X_0 \sim p_{\rm{init}} ,\quad
 X_t\sim p_t\quad (0\leq t\leq 1)
 $$
 
-Again, the formula is explained in …, but don't worry about it for now.
+Again, the formula is explained in [[ ref-holderrieth-and-erives-2025 ]] but don't worry about it for
+now.
 
 Here we see a marginal probability path and vector field visualized for a mixture of Gaussians
 distribution (can be modified at $t=1$):
@@ -161,7 +162,7 @@ $$
 ]
 $$
 
-(Proof given in ….)
+(Proof given in [[ ref-holderrieth-and-erives-2025 ]].)
 
 To make this more concrete in the Gaussian case, let's plug in the formulas for conditional
 probability path $p_t(\cdot|z)$ and conditional vector field $u_t(x|z)$:
@@ -346,3 +347,5 @@ you can train a model from scratch by clicking on "Reset model" and then "Train 
 We can see how the model transforms a normal Gaussian distribution into the data distribution:
 
 [[ flow-visualization-widget ]]
+
+[[ references ]]
