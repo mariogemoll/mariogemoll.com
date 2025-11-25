@@ -7,6 +7,9 @@
 /content/normalizing-flows/loss-history.bin
 /content/normalizing-flows/model.json
 /content/normalizing-flows/model.weights.bin
+/content/flow-matching/flow-matching-loss-history.bin
+/content/flow-matching/flow-matching-model.json
+/content/flow-matching/flow-matching-model.weights.bin
 /frontend/dist
 node_modules
 package-lock.json

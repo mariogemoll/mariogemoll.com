@@ -2,6 +2,7 @@ import {
   initConditionalProbPathAndVectorFieldWidget,
   initConditionalProbPathWidget
 } from 'flow-matching-and-diffusion/conditional';
+import { initFlowMatchingPipeline } from 'flow-matching-and-diffusion/flow-matching-pipeline';
 import {
   initMarginalProbPathAndVectorFieldWidget
 } from 'flow-matching-and-diffusion/marginal';
@@ -32,6 +33,14 @@ async function page(): Promise<void> {
   );
   initMarginalProbPathAndVectorFieldWidget(
     marginalProbPathAndVectorFieldContainer, 'marginal-prob-path-and-vector-field'
+  );
+  await initFlowMatchingPipeline(
+    el(document, '#moons-dataset-widget') as HTMLDivElement,
+    el(document, '#training-widget') as HTMLDivElement,
+    el(document, '#flow-visualization-widget') as HTMLDivElement,
+    '/flow-matching/flow-matching-model.json',
+    '/flow-matching/flow-matching-loss-history.bin',
+    1000 // epochs
   );
 }
 

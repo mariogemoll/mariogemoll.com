@@ -1,3 +1,6 @@
+flow-matching/flow-matching-loss-history.bin	1008	c4a307ef43fe8252332001254bc86ffa476217116667f48d496033a2fd3c1236	Binary file containing the training loss history
+flow-matching/flow-matching-model.json	2562	9aa6ef03391632ee1558b4f93fc173401b229966a26ff21e89efff63766fcf84	Model JSON file containing the architecture and weights manifest
+flow-matching/flow-matching-model.weights.bin	2113544	6c4c060175aa2a0ad05a40f629ff2abf7f88a31399742d301b236ae4de8325f3	Binary file containing the model weights
 normalizing-flows/loss-history.bin	1008	0e80d25fc190a129cce7b0e26be3ab290ab7537d798ac05e4e23cb6a0e1e58ce	Binary file containing the training loss history
 normalizing-flows/model.json	26569	8a91524b9865394eaaa97ec7a3e503e70719e8d9ea74ddd7e18286beaeb6a6bd	Model JSON file containing the architecture and weights manifest
 normalizing-flows/model.weights.bin	43072	74c8b0f8c7945496bb464cca822d7be99b586adb8ea6b3ccd1698054f418d562	Binary file containing the model weights
