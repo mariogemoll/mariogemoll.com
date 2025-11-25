@@ -10,9 +10,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22.x
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
       - name: "Frontend: Install dependencies"
         working-directory: frontend
-        run: npm i
+        run: pnpm i
       - name: "Site builder: Install dependencies"
         working-directory: builder
         run: npm i
@@ -22,11 +25,11 @@ jobs:
       - name: "Frontend: Run ESLint"
         working-directory: frontend
         run: |
-          npx eslint -c basic.eslint.config.js basic.eslint.config.js eslint.config.js
-          npx eslint src
+          pnpm exec eslint -c basic.eslint.config.js basic.eslint.config.js eslint.config.js
+          pnpm exec eslint src
       - name: "Frontend: Type check"
         working-directory: frontend
-        run: npx tsc --noEmit
+        run: pnpm exec tsc --noEmit
       - name: "Site builder: Run ESLint"
         working-directory: builder
         run: |
