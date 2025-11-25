@@ -30,6 +30,10 @@ const formatCitation = (authors: string[], year: string): string => {
   if (authors.length === 1) {
     return `${firstAuthor}, ${year}`;
   }
+  if (authors.length === 2) {
+    const secondAuthor = authors[1].split(',')[0]; // Get surname only
+    return `${firstAuthor} & ${secondAuthor}, ${year}`;
+  }
   return `${firstAuthor} et al., ${year}`;
 };
 
