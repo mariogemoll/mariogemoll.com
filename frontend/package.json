@@ -4,6 +4,7 @@
   "type": "module",
   "dependencies": {
     "es-arraybuffer-base64": "^1.1.2",
+    "flow-matching-and-diffusion": "mariogemoll/flow-matching-and-diffusion#1250ed626082170cbebabffeb2f53163f36ef5b9&path:ts",
     "web-ui-common": "mariogemoll/web-ui-common#1138fbe182f13d5cb1685c99a23d3850ed7c3514"
   },
   "devDependencies": {

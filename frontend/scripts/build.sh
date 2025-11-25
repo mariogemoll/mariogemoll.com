@@ -31,5 +31,4 @@ pnpm exec esbuild src/attention-is-all-you-need/attention-is-all-you-need.ts --b
 
 pnpm exec esbuild src/flow-matching/flow-matching.ts --bundle --format=esm \
   --outfile=dist/flow-matching/flow-matching.js --minify --sourcemap \
-  --source-root=https://github.com/mariogemoll/mariogemoll.com/tree/$COMMIT_HASH/frontend/src/flow-matching \
-  --alias:web-ui-common=./node_modules/web-ui-common/src
+  --source-root=https://github.com/mariogemoll/mariogemoll.com/tree/$COMMIT_HASH/frontend/src/flow-matching

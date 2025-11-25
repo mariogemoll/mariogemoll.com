@@ -1,13 +1,12 @@
-import { el } from 'web-ui-common/dom';
-import type { Pair } from 'web-ui-common/types';
-
 import {
   initConditionalProbPathAndVectorFieldWidget,
   initConditionalProbPathWidget
-} from './fmad/conditional';
+} from 'flow-matching-and-diffusion/conditional';
 import {
   initMarginalProbPathAndVectorFieldWidget
-} from './fmad/marginal';
+} from 'flow-matching-and-diffusion/marginal';
+import { el } from 'web-ui-common/dom';
+import type { Pair } from 'web-ui-common/types';
 
 async function page(): Promise<void> {
   const probPathContainer = el(document, '#conditional-prob-path-widget') as HTMLElement;

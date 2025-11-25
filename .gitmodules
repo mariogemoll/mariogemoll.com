@@ -7,6 +7,3 @@
 [submodule "attention-is-all-you-need"]
 	path = attention-is-all-you-need
 	url = https://github.com/mariogemoll/attention-is-all-you-need.git
-[submodule "flow-matching-and-diffusion"]
-	path = flow-matching-and-diffusion
-	url = https://github.com/mariogemoll/flow-matching-and-diffusion.git
