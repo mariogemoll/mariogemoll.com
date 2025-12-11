@@ -44,11 +44,11 @@ export async function generatePage(
 
   mdContent = mdContent.replace('[[ references ]]', referencesHtml);
   const widgetLabelsAndDimensions: [string, number, number][] = [
-    ['vector-field', 480, 420],
-    ['euler-method', 560, 480],
-    ['conditional-prob-path', 480, 460],
-    ['conditional-prob-path-and-vector-field', 960, 460],
-    ['marginal-prob-path-and-vector-field', 1200, 460],
+    ['vector-field', 500, 420],
+    ['euler-method', 580, 480],
+    ['conditional-prob-path', 680, 460],
+    ['conditional-prob-path-and-vector-field', 1180, 460],
+    ['marginal-prob-path-and-vector-field', 1180, 460],
     ['moons-dataset', 400, 450],
     ['training', 600, 450],
     ['flow-visualization', 400, 450]
