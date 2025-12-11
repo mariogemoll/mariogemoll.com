@@ -1,4 +1,4 @@
-# Attention Is All You Need
+# [[ page-title ]]
 
 In 2017, the [Attention Is All You Need](https://arxiv.org/abs/1706.03762) paper introduced the
 [transformer](https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)), a neural

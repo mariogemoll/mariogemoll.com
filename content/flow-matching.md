@@ -1,4 +1,4 @@
-# Flow Matching
+# [[ page-title ]]
 
 ## Prologue: Time-dependent vector fields
 
