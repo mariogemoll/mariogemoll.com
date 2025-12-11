@@ -1,0 +1,34 @@
+import {
+  createMarkdownRenderer, readMarkdownFile, replaceWidgetPlaceholders
+} from '../page-helpers.js';
+import { type PageContentParams } from '../types.js';
+import { highlightJsCssUrl, tfJsUrl } from './urls.js';
+
+
+export async function generatePage(
+  contentPath: string, pageTitle: string
+): Promise<PageContentParams> {
+  const md = createMarkdownRenderer({ useHighlightJs: true, useAnchor: true });
+
+  let mdContent = await readMarkdownFile(contentPath, 'diffusion.md', pageTitle);
+
+  const widgets: [] = [];
+
+  mdContent = replaceWidgetPlaceholders(mdContent, widgets);
+
+  const html = md.render(mdContent);
+
+  const cssFiles = [
+    highlightJsCssUrl,
+    '/misc/centered.css',
+    '/misc/widgets.css',
+    '/misc/controls.css',
+    '/diffusion/diffusion.css'
+  ];
+
+  const jsUrls: string[] = [tfJsUrl];
+
+  const jsModuleUrls = ['/diffusion/diffusion.js'];
+
+  return [html, cssFiles, jsUrls, jsModuleUrls];
+}

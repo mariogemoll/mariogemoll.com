@@ -190,7 +190,9 @@ function makeHomepage(
   generatedPages: Map<string, [string, string, string, string, string]>,
   siteConfig: SiteConfig
 ): string {
-  const mlIds = ['flow-matching', 'attention-is-all-you-need', 'normalizing-flows', 'vae'];
+  const mlIds = [
+    'diffusion', 'flow-matching', 'attention-is-all-you-need', 'normalizing-flows', 'vae'
+  ];
   const other = pageListEntries(omit(generatedPages, mlIds));
   other.push([
     'https://gen3d.chat/', 'gen3d.chat', 'An agent to help with (basic) 3D CAD modeling.'
