@@ -44,6 +44,8 @@ export async function generatePage(
 
   mdContent = mdContent.replace('[[ references ]]', referencesHtml);
   const widgetLabelsAndDimensions: [string, number, number][] = [
+    ['vector-field', 480, 420],
+    ['euler-method', 560, 480],
     ['conditional-prob-path', 480, 460],
     ['conditional-prob-path-and-vector-field', 960, 460],
     ['marginal-prob-path-and-vector-field', 1200, 460],
@@ -66,6 +68,7 @@ export async function generatePage(
     highlightJsCssUrl,
     '/misc/centered.css',
     '/misc/widgets.css',
+    '/misc/controls.css',
     '/flow-matching/flow-matching.css'
   ];
 

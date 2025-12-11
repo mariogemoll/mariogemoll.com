@@ -2,3 +2,91 @@
   margin-top: 30px;
   margin-bottom: 30px;
 }
+
+.vector-field-widget {
+  text-align: center;
+}
+
+.time-slider {
+  width: 480px;
+}
+
+.time-slider input {
+  width: 100%;
+}
+
+.time-slider span {
+  width: 60px;
+  text-align: left;
+}
+
+.steps-slider {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.steps-slider button, .steps-slider span {
+  width: 80px;
+}
+
+.vector-field-widget .trajectory-switch {
+  margin-bottom: 10px;
+}
+
+.euler-method-widget {
+  display: grid;
+  grid-template:
+    "canvas canvas canvas canvas" 350px
+    "trajectories-headline trajectories-real trajectories-approx steps" 20px
+    "time time time time" auto
+    / 90px 60px 150px auto;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.euler-method-widget > canvas,
+.euler-method-widget > .time-slider {
+  justify-self: center;
+}
+
+.euler-method-widget > h3,
+.euler-method-widget > .real-trajectory-switch,
+.euler-method-widget > .euler-approximation-trajectory-switch,
+.euler-method-widget > .steps-slider {
+  align-self: center;
+}
+
+.euler-method-widget > canvas {
+  grid-area: canvas;
+}
+
+.euler-method-widget > .steps-slider {
+  grid-area: steps;
+}
+
+/* stack options + approx vertically in the same grid cell */
+.euler-method-widget h3,
+.euler-method-widget .euler-approximation-trajectory-switch {
+  grid-area: options;
+  display: block;
+}
+
+.euler-method-widget h3 {
+  margin: 0;
+  font-size: 12px;
+  line-height: 16px;
+  grid-area: trajectories-headline;
+}
+
+.euler-method-widget .real-trajectory-switch {
+  grid-area: trajectories-real;
+}
+
+.euler-method-widget .euler-approximation-trajectory-switch {
+  grid-area: trajectories-approx;
+}
+
+.euler-method-widget > .time-slider {
+  grid-area: time;
+}

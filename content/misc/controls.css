@@ -1,0 +1,10 @@
+.time-slider {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.time-slider button, .time-slider span {
+  width: 80px;
+}

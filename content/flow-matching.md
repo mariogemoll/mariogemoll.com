@@ -1,12 +1,50 @@
 # Flow Matching
 
+## Prologue: Time-dependent vector fields
+
+On this page we will work with time-dependent vector fields and trajectories of points moving along
+these fields between time $t=0$ and time $t=1$. A time-dependent vector field maps a point $x$ and a
+time $t$ to a velocity vector (the instantaneous velocity at point $x$ at time $t$).
+
+Formally, such
+a field is defined as
+
+$$
+u: \mathbb{R}^d \times [0,1] \to \mathbb{R}^d,\quad (x,t)\mapsto u_t(x)
+$$
+
+and trajectories $x_t$ evolve according to the ordinary differential equation (ODE)
+
+$$
+\dot x_t = u_t(x_t).
+$$
+
+Sidenote 1: The "dot notation" is the physics convention for denoting the derivative with respect to
+time: $\dot x_t =\frac{d}{dt}x_t$.
+
+Sidenote 2: If the subscript $t$ looks a bit strange at first: it simply denotes the value at time
+$t$. Since $t\in[0,1]$ is a real number, subscripts are not restricted to integers: E.g.
+$x_{0.123}$, $u_{0.456}$.
+
+[[ vector-field-widget ]]
+
+Answering the question "If a point starts at $x_0$ at $t=0$ and follows the vector field, where is
+it at any later time?" means solving the ODE. For some simple vector fields we can find a
+closed-form solution, but in many cases we approximate the trajectory numerically using methods like
+the Euler method.
+
+The idea is simple: use the velocity vectors to advance the point in small time increments. The
+smaller the steps, the more accurate the approximation becomes:
+
+[[ euler-method-widget ]]
+
 ## Conditional probability path
 
-Given a point $z$ in $\mathbb{R}^d$ (for now we'll look at $\mathbb{R}^2$) we can define a
-conditional probability path, ie. a transformation of an initial probability distribution
-$p_{\rm{init}}$ into the Dirac delta distribution $\delta_{z}$ (which when sampled always gives the
-point $z$) over the continuous timespan between time points $t=0$ and $t=1$, described as a
-set of distributions $p_t(\cdot|z)$:
+Let's now switch gears a bit and talk about probability distributions. Given a point $z$ in
+$\mathbb{R}^d$ (for now we'll look at $\mathbb{R}^2$) we can define a conditional probability path,
+ie. a transformation of an initial probability distribution $p_{\rm{init}}$ into the Dirac delta
+distribution $\delta_{z}$ (which when sampled always gives the point $z$) over the continuous
+timespan between time points $t=0$ and $t=1$, described as a set of distributions $p_t(\cdot|z)$:
 
 $$
 p_0(\cdot|z)=p_{\rm{init}}, \quad p_1(\cdot|z)=\delta_{z}\quad \text{ for all }z\in\mathbb{R}^d.
@@ -29,10 +67,6 @@ $$
     \quad p_1(\cdot|z) = \mathcal{N}(z, 0) = \delta_z
 \end{align}
 $$
-
-By the way, if you're (like I was) a bit confused by the "underscore $t$": It means the value at
-time $t$, and since $t$ is between $0$ and $1$ it usually isn't an integer, so there's $p_{0.123}$,
-$\alpha_{0.456}$, $\beta_{0.789}$ etc.
 
 Here is a visualization in which you can also see the effect of different noise schedulers:
 
@@ -63,9 +97,6 @@ u_t(x|z)
 $$
 
 A justification is given in [[ ref-holderrieth-and-erives-2025 ]].
-
-Sidenote: The "dot notation" is the physics convention for denoting the derivative with respect to
-time: $\dot{\alpha_t}=\frac{d}{dt}\alpha_t$.
 
 ## Marginal probability path and vector field
 

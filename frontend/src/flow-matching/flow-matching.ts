@@ -6,6 +6,7 @@ import { initFlowMatchingPipeline } from 'flow-matching-and-diffusion/flow-match
 import {
   initMarginalProbPathAndVectorFieldWidget
 } from 'flow-matching-and-diffusion/marginal';
+import { initEulerMethodWidget, initVectorFieldWidget } from 'flow-matching-and-diffusion/vf';
 import { el } from 'web-ui-common/dom';
 import type { Pair } from 'web-ui-common/types';
 
@@ -23,7 +24,11 @@ async function page(): Promise<void> {
   const initialPosition: Pair<number> = [1.0, 0.5];
   const initialTime = 0;
 
+  initVectorFieldWidget(el(document, '#vector-field-widget') as HTMLDivElement);
+  initEulerMethodWidget(el(document, '#euler-method-widget') as HTMLDivElement);
+
   await tf.ready();
+
   initConditionalProbPathWidget(
     probPathContainer, initialPosition, initialTime, 'conditional-prob-path'
   );
