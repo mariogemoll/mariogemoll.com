@@ -4,9 +4,9 @@
   "type": "module",
   "dependencies": {
     "es-arraybuffer-base64": "^1.1.2",
-    "flow-matching-and-diffusion": "mariogemoll/flow-matching-and-diffusion#8dd33fcf6d1fd92d0a719f04c290b6d3008fee75&path:ts",
+    "flow-matching-and-diffusion": "mariogemoll/flow-matching-and-diffusion#d7c6db04a5492206ae6a23850106d3db14d86db0&path:ts",
     "normalizing-flows": "mariogemoll/normalizing-flows#8270f2e6b3a2d54bcddb5a11b47ae8fdee111c92&path:ts",
-    "web-ui-common": "mariogemoll/web-ui-common#1138fbe182f13d5cb1685c99a23d3850ed7c3514"
+    "web-ui-common": "mariogemoll/web-ui-common#84a60ad7b7fe4b7e1162d6fff86533a982f5b117"
   },
   "devDependencies": {
     "@anywidget/types": "^0.2.0",

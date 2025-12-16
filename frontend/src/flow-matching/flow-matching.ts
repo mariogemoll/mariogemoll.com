@@ -29,16 +29,11 @@ async function page(): Promise<void> {
 
   await tf.ready();
 
-  initConditionalProbPathWidget(
-    probPathContainer, initialPosition, initialTime, 'conditional-prob-path'
-  );
+  initConditionalProbPathWidget( probPathContainer, initialPosition, initialTime);
   initConditionalProbPathAndVectorFieldWidget(
-    probPathAndVectorFieldContainer, initialPosition, initialTime,
-    'conditional-prob-path-and-vector-field'
+    probPathAndVectorFieldContainer, initialPosition, initialTime
   );
-  initMarginalProbPathAndVectorFieldWidget(
-    marginalProbPathAndVectorFieldContainer, 'marginal-prob-path-and-vector-field'
-  );
+  initMarginalProbPathAndVectorFieldWidget(marginalProbPathAndVectorFieldContainer);
   await initFlowMatchingPipeline(
     el(document, '#moons-dataset-widget') as HTMLDivElement,
     el(document, '#training-widget') as HTMLDivElement,

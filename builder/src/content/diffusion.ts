@@ -12,7 +12,10 @@ export async function generatePage(
 
   let mdContent = await readMarkdownFile(contentPath, 'diffusion.md', pageTitle);
 
-  const widgets: [] = [];
+  const widgets: [string, number, number][] = [
+    ['brownian-motion', 480, 420],
+    ['sde', 680, 420]
+  ];
 
   mdContent = replaceWidgetPlaceholders(mdContent, widgets);
 
