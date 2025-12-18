@@ -27,3 +27,16 @@ $$
 Note the diffusion coefficient $\sigma_t$, which controls the amount of randomness.
 
 [[ sde-widget ]]
+
+## Score function
+
+As described on the [flow matching page](/flow-matching), any conditional probability path can be
+expressed as an ODE which transforms points sampled from $p_\rm{init}$ into $p_\rm{data}$. It turns
+out the same can be accomplished using an SDE. We can construct it by extending an existing ODE: We
+add Brownian motion as above, and counteract this via the so-called conditional score function.
+
+[[ conditional-path-ode-sde-widget ]]
+
+This also works for the marginal path:
+
+[[ marginal-path-ode-sde-widget ]]
