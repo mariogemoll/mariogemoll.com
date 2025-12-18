@@ -14,7 +14,7 @@ export async function generatePage(
 
   const widgets: [string, number, number][] = [
     ['brownian-motion', 480, 420],
-    ['sde', 680, 420]
+    ['sde', 768, 420]
   ];
 
   mdContent = replaceWidgetPlaceholders(mdContent, widgets);
@@ -26,7 +26,7 @@ export async function generatePage(
     '/misc/centered.css',
     '/misc/widgets.css',
     '/misc/controls.css',
-    '/diffusion/diffusion.css'
+    '/misc/flow-visualizations.css'
   ];
 
   const jsUrls: string[] = [tfJsUrl];

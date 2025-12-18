@@ -1,15 +1,1 @@
-.slider {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.slider input {
-  padding: 0;
-  margin: 0;
-  width: 100%;
-}
-
-.time-slider span {
-  width: 60px;
-}
+../../frontend/node_modules/flow-matching-and-diffusion/controls.css

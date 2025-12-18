@@ -20,11 +20,11 @@ export async function generatePage(
   mdContent = processReferences(mdContent, pageData);
 
   const widgets = [
-    ['vector-field', 500, 420],
-    ['euler-method', 580, 480],
-    ['conditional-prob-path', 680, 460],
-    ['conditional-prob-path-and-vector-field', 1180, 460],
-    ['marginal-prob-path-and-vector-field', 1180, 460],
+    ['vector-field', 768, 420],
+    ['euler-method', 768, 480],
+    ['conditional-prob-path', 768, 460],
+    ['conditional-prob-path-and-vector-field', 1256, 460],
+    ['marginal-prob-path-and-vector-field', 1256, 460],
     ['moons-dataset', 400, 450],
     ['training', 600, 450],
     ['flow-visualization', 400, 450]
@@ -39,7 +39,7 @@ export async function generatePage(
     '/misc/centered.css',
     '/misc/widgets.css',
     '/misc/controls.css',
-    '/flow-matching/flow-matching.css'
+    '/misc/flow-visualizations.css'
   ];
 
   const jsUrls: string[] = [tfJsUrl];

@@ -3,11 +3,12 @@ import { initSdeWidget } from 'flow-matching-and-diffusion/sde';
 import { el } from 'web-ui-common/dom';
 
 function run(): void {
-  const brownianContainer = el(document, '#brownian-motion-widget') as HTMLElement;
-  const sdeContainer = el(document, '#sde-widget') as HTMLElement;
-
-  initBrownianMotionWidget(brownianContainer);
-  initSdeWidget(sdeContainer);
+  const brownianMotionWidget = el(document, '#brownian-motion-widget') as HTMLElement;
+  const sdeWidget = el(document, '#sde-widget') as HTMLElement;
+  brownianMotionWidget.classList.add('one-chart');
+  initBrownianMotionWidget(brownianMotionWidget);
+  sdeWidget.classList.add('one-chart', 'with-controls');
+  initSdeWidget(sdeWidget);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
