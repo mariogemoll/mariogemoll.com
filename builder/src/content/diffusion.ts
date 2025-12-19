@@ -24,7 +24,11 @@ export async function generatePage(
     ['brownian-motion', 480, 420],
     ['sde', 768, 420],
     ['conditional-path-ode-sde', 1440, 520],
-    ['marginal-path-ode-sde', 1440, 520]
+    ['marginal-path-ode-sde', 1440, 520],
+    ['moons-dataset', 400, 450],
+    ['flow-matching-training', 600, 450],
+    ['score-matching-training', 600, 450],
+    ['diffusion-visualization', 400, 450]
   ];
 
   mdContent = replaceWidgetPlaceholders(mdContent, widgets);
