@@ -164,7 +164,7 @@ direction, call the vector field neural network again, and repeat, up to $t = 1$
 
 As usual in machine learning we can initialize a neural network with random parameters and then try
 to tweak them using gradient descent and a lot of training data. What should our loss function be
-though? A natural choice is the means squared error between the output of the neural network and the
+though? A natural choice is the mean squared error between the output of the neural network and the
 actual value of the vector field.
 
 One complication is that we need inputs at different $t$, but we only have training data for
