@@ -1,3 +1,6 @@
+diffusion/score-matching-loss-history.bin	1008	b9c7b90fc4f88c98c4b98b2259d5aac822342e0d07fb4f1f395d165c5a1fd71e	Binary file containing the training loss history
+diffusion/score-matching-model.json	2563	32f7d630b7a9e7734a40e240742987c56b6b7149bd188b3c8342ec10414775b3	Model JSON file containing the architecture and weights manifest
+diffusion/score-matching-model.weights.bin	2113544	375c275c75f77de44adda08cdb10de77296d75e8ef1dfb04c87a4d9073f3443d	Binary file containing the model weights
 flow-matching/flow-matching-loss-history.bin	1008	c4a307ef43fe8252332001254bc86ffa476217116667f48d496033a2fd3c1236	Binary file containing the training loss history
 flow-matching/flow-matching-model.json	2562	9aa6ef03391632ee1558b4f93fc173401b229966a26ff21e89efff63766fcf84	Model JSON file containing the architecture and weights manifest
 flow-matching/flow-matching-model.weights.bin	2113544	6c4c060175aa2a0ad05a40f629ff2abf7f88a31399742d301b236ae4de8325f3	Binary file containing the model weights
