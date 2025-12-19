@@ -26,6 +26,8 @@ X_0 &= x_0
 \end{align*}
 $$
 
+For the details about this notation, see [[ ref-holderrieth-and-erives-2025 ]].
+
 Such an SDE can be approximated by the Euler-Maruyama method (basically the Euler method with some
 randomness added to it):
 
@@ -49,3 +51,5 @@ add Brownian motion as above, and counteract this via the so-called conditional 
 This also works for the marginal path:
 
 [[ marginal-path-ode-sde-widget ]]
+
+[[ references ]]

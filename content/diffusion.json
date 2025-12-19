@@ -1,0 +1,14 @@
+{
+  "references": [
+    {
+      "kind": "arxiv",
+      "id": "holderrieth-and-erives-2025",
+      "authors": [
+        "Holderrieth, P.",
+        "Erives, E."
+      ],
+      "title": "An Introduction to Flow Matching and Diffusion Models",
+      "arxivId": "2506.02070"
+    }
+  ]
+}

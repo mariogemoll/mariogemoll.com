@@ -1,5 +1,9 @@
 import {
-  createMarkdownRenderer, readMarkdownFile, replaceWidgetPlaceholders
+  createMarkdownRenderer,
+  loadPageData,
+  processReferences,
+  readMarkdownFile,
+  replaceWidgetPlaceholders
 } from '../page-helpers.js';
 import { type PageContentParams } from '../types.js';
 import { highlightJsCssUrl, tfJsUrl } from './urls.js';
@@ -11,6 +15,10 @@ export async function generatePage(
   const md = createMarkdownRenderer({ useHighlightJs: true, useAnchor: true });
 
   let mdContent = await readMarkdownFile(contentPath, 'diffusion.md', pageTitle);
+
+  const pageData = await loadPageData(contentPath, 'diffusion.json');
+
+  mdContent = processReferences(mdContent, pageData);
 
   const widgets: [string, number, number][] = [
     ['brownian-motion', 480, 420],
