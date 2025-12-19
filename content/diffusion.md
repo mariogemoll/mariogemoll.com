@@ -17,8 +17,17 @@ $$
 
 We can add some Brownian motion to the paths taken by particles moving along a vector field
 described by an [ODE](/flow-matching#prologue%3A-time-dependent-vector-fields), which gives rise to
-the concept of a stochastic differential equation (SDE). Such an SDE can be approximated by the
-Euler-Maruyama method (basically the Euler method with some randomness added to it):
+the concept of a stochastic differential equation (SDE):
+
+$$
+\begin{align*}
+dX_t &= u_t(X_t)dt + σ_t dW_t \\
+X_0 &= x_0
+\end{align*}
+$$
+
+Such an SDE can be approximated by the Euler-Maruyama method (basically the Euler method with some
+randomness added to it):
 
 $$
 x_{t+h} = x_t + h u_t(x_t) + \sqrt h σ_t ϵ_t, \quad ϵ_t ∼ \mathcal N (0, I_d)
