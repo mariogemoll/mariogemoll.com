@@ -90,4 +90,30 @@ $$
 
 [[ marginal-path-ode-sde-widget ]]
 
+## Learning a diffusion model
+
+A marginal SDE (or an approximation thereof) gives us a diffusion model: We can sample a point from
+$p_\mathrm{init}$, then apply Euler-Maruyama using the SDE, and at $t=1$ we will arrive at a point
+from $p_\mathrm{data}$. As we've seen above, for the SDE we need the ODE and the score field.
+With [flow matching](/flow-matching) we have a method to get $\hat{u}_t(x)$, an approximation ODE.
+For the SDE, as in flow matching, we can try to learn a neural network $\hat{s}_t(x)$ that minimizes
+the mean squared error, ie. the **score matching loss**:
+
+$$
+\mathcal{L}_{\text{SM}}
+  = \mathbb{E}_{t\sim \mathcal{U}(0,1),\ z\sim p_{\rm{data}},\ x\sim p_t(\cdot|z)}[
+    \|\hat{s}_t(x) - s_t(x)\|^2
+  ]
+$$
+
+Similarly to before, this is intractable because of the integral in $s_t(x)$ (see above), however we
+can again just minimize the **conditional score matching loss**:
+
+$$
+\mathcal{L}_{\text{CSM}}
+  = \mathbb{E}_{t\sim \mathcal{U}(0,1),\ z\sim p_{\rm{data}},\ x\sim p_t(\cdot|z)}[
+    \|\hat{s}_t(x) - s_t(x|z)\|^2
+  ]
+$$
+
 [[ references ]]
