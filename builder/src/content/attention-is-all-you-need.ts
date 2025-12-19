@@ -118,7 +118,6 @@ export async function generatePage(
     ],
     ['train-loss', 600, 300],
     ['loss', 600, 300],
-    ['perplexity', 600, 300],
     ['bleu', 600, 300]
   ] as const;
 

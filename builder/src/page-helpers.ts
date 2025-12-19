@@ -80,6 +80,12 @@ export function replaceWidgetPlaceholders(
   for (const widget of widgets) {
     const [label, width, height, description] = widget;
 
+    const placeholder = `[[ ${label}-widget ]]`;
+
+    if (!result.includes(placeholder)) {
+      throw new Error(`Widget placeholder "${placeholder}" not found in content`);
+    }
+
     const styleStr = `width: ${width}px; height: ${height}px;`;
 
     let html = `<div id="${label}-widget" class="widget ${label}-widget" style="${styleStr}">
@@ -91,7 +97,7 @@ export function replaceWidgetPlaceholders(
         ${html}<div class="description">${description}</div></div>`;
     }
 
-    result = result.replace(`[[ ${label}-widget ]]`, html);
+    result = result.replace(placeholder, html);
   }
 
   return result;
