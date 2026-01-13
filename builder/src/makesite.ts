@@ -78,7 +78,8 @@ function makePage(
   htmlContent: string,
   cssUrls: string[],
   jsUrls: string[],
-  jsModuleUrls: string[]
+  jsModuleUrls: string[],
+  importMap?: Record<string, string>
 ): [string, string] {
   const $ = cheerio.load(htmlContent);
   const h1Tags = $('h1');
@@ -89,7 +90,9 @@ function makePage(
     throw new Error('No <h1> found in the content');
   }
   const title = h1Tags.first().text().trim();
-  const output = pageTemplate({ title, content: htmlContent, cssUrls, jsUrls, jsModuleUrls });
+  const output = pageTemplate(
+    { title, content: htmlContent, cssUrls, jsUrls, jsModuleUrls, importMap }
+  );
 
   return [output, title];
 }
@@ -132,6 +135,7 @@ async function makePages(
     let cssUrls: string[] = [];
     let jsUrls: string[] = [];
     let jsModuleUrls: string[] = [];
+    let importMap: Record<string, string> | undefined;
     const jsPath = path.join(pageJsPath, `${page.id}.js`);
     if (fs.existsSync(jsPath)) {
       const importedModule: unknown = await import(pathToFileURL(jsPath).href);
@@ -148,7 +152,7 @@ async function makePages(
             pageTitle: string
           ) => Promise<PageContentParams>
         };
-        [pageHtmlContent, cssUrls, jsUrls, jsModuleUrls] =
+        [pageHtmlContent, cssUrls, jsUrls, jsModuleUrls, importMap] =
           await module.generatePage(contentPath, page.title);
       } else {
         throw new Error(`Module for page ${page.id} does not export a generatePage function`);
@@ -163,7 +167,7 @@ async function makePages(
     const secretId = randomString();
     // Add header
     const wrappedHtml = contentTemplate({ content: pageHtmlContent, siteTitle: siteConfig.title });
-    const [output] = makePage(pageTemplate, wrappedHtml, cssUrls, jsUrls, jsModuleUrls);
+    const [output] = makePage(pageTemplate, wrappedHtml, cssUrls, jsUrls, jsModuleUrls, importMap);
     fs.writeFileSync(`../build/${secretId}.html`, output);
     generatedPages.set(page.id, [
       secretId,

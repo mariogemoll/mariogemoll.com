@@ -11,6 +11,9 @@ html
     link(rel="stylesheet", href="/misc/style.css")
     each url in cssUrls
       link(rel="stylesheet", href=url)
+    if importMap
+      script(type="importmap")
+        != JSON.stringify({ imports: importMap }, null, 2)
     each url in jsUrls
       script(src=url)
     each url in jsModuleUrls

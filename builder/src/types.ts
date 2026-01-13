@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
-export type PageContentParams = [ string, string[], string[], string[] ];
+export type ImportMap = Record<string, string>;
+export type PageContentParams = [ string, string[], string[], string[], ImportMap? ];
 
 export interface SiteConfig {
   title: string;
