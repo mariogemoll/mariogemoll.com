@@ -1,48 +1,43 @@
 import {
-  initConditionalPathOdeWidget,
-  initConditionalPathWidget } from 'flow-matching-and-diffusion/conditional';
-import { initFlowMatchingPipeline } from 'flow-matching-and-diffusion/flow-matching-pipeline';
-import { initMarginalPathOdeWidget } from 'flow-matching-and-diffusion/marginal';
-import { initEulerMethodWidget, initVectorFieldWidget } from 'flow-matching-and-diffusion/vf';
+  initConditionalPathVisualization
+} from 'flow-matching-and-diffusion/visualizations/conditional/path';
+import {
+  initConditionalPathOdeVisualization
+} from 'flow-matching-and-diffusion/visualizations/conditional/path-ode';
+import {
+  initEulerMethodVisualization
+} from 'flow-matching-and-diffusion/visualizations/euler-method';
+import {
+  initMarginalPathOdeVisualization
+} from 'flow-matching-and-diffusion/visualizations/marginal/path-ode';
+import {
+  initVectorFieldVisualization
+} from 'flow-matching-and-diffusion/visualizations/vector-field';
+import {
+  initFlowMatchingPipeline
+} from 'flow-matching-and-diffusion-deprecated/flow-matching-pipeline';
 import { el } from 'web-ui-common/dom';
-import type { Pair } from 'web-ui-common/types';
+
+function initViz(fn: (el: HTMLElement) => () => void, selector: string): void {
+  const container = document.querySelector<HTMLElement>(selector);
+  if (!container) {
+    throw new Error(`Container not found for selector: ${selector}`);
+  }
+  fn(container);
+}
 
 async function page(): Promise<void> {
-  const vectorFieldWidget = el(document, '#vector-field-widget') as HTMLDivElement;
-  const eulerMethodWidget = el(document, '#euler-method-widget') as HTMLDivElement;
-  const probPathWidget = el(document, '#conditional-prob-path-widget') as HTMLElement;
-  const probPathAndVectorFieldWidget = el(
-    document,
-    '#conditional-prob-path-and-vector-field-widget'
-  ) as HTMLElement;
-  const marginalProbPathAndVectorFieldWidget = el(
-    document,
-    '#marginal-prob-path-and-vector-field-widget'
-  ) as HTMLElement;
+  initViz(initVectorFieldVisualization, '#vector-field-visualization');
+  initViz(initEulerMethodVisualization, '#euler-method-visualization');
+  initViz(initConditionalPathVisualization, '#conditional-probability-path-visualization');
+  initViz(initConditionalPathOdeVisualization, '#conditional-probability-path-ode-visualization');
+  initViz(initMarginalPathOdeVisualization, '#marginal-probability-path-ode-visualization');
+
   const moonsDatasetWidget = el(document, '#moons-dataset-widget') as HTMLDivElement;
   const trainingWidget = el(document, '#training-widget') as HTMLDivElement;
   const flowVisualizationWidget = el(document, '#flow-visualization-widget') as HTMLDivElement;
 
-  vectorFieldWidget.classList.add('one-chart', 'with-controls');
-  initVectorFieldWidget(vectorFieldWidget);
-
-  eulerMethodWidget.classList.add('one-chart', 'with-controls');
-  initEulerMethodWidget(eulerMethodWidget);
-
-  const initialPosition: Pair<number> = [1.0, 0.5];
-  const initialTime = 0;
-
   await tf.ready();
-
-  probPathWidget.classList.add('one-chart', 'with-controls');
-  initConditionalPathWidget(probPathWidget, initialPosition, initialTime);
-
-  probPathAndVectorFieldWidget.classList.add('two-charts', 'with-controls');
-  initConditionalPathOdeWidget(
-    probPathAndVectorFieldWidget, initialPosition, initialTime
-  );
-  marginalProbPathAndVectorFieldWidget.classList.add('two-charts', 'with-controls');
-  initMarginalPathOdeWidget(marginalProbPathAndVectorFieldWidget);
 
   await initFlowMatchingPipeline(
     moonsDatasetWidget,
@@ -52,6 +47,7 @@ async function page(): Promise<void> {
     '/flow-matching/flow-matching-loss-history.bin',
     1000 // epochs
   );
+  await Promise.resolve();
 }
 
 window.addEventListener('load', () => {

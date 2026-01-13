@@ -1,21 +1,36 @@
-import { initBrownianMotionWidget } from 'flow-matching-and-diffusion/brownian-motion';
-import { initConditionalPathOdeSdeWidget } from 'flow-matching-and-diffusion/conditional';
+import {
+  initBrownianMotionVisualization
+} from 'flow-matching-and-diffusion/visualizations/brownian-motion';
+import {
+  initConditionalPathOdeSdeVisualization
+} from 'flow-matching-and-diffusion/visualizations/conditional/path-ode-sde';
+import {
+  initEulerMaruyamaMethodVisualization
+} from 'flow-matching-and-diffusion/visualizations/euler-maruyama-method';
+import {
+  initMarginalPathOdeSdeVisualization
+} from 'flow-matching-and-diffusion/visualizations/marginal/path-ode-sde';
 import {
   initFlowAndScoreMatchingPipeline
-} from 'flow-matching-and-diffusion/flow-and-score-matching-pipeline';
-import { initMarginalPathOdeSdeWidget } from 'flow-matching-and-diffusion/marginal';
-import { initSdeWidget } from 'flow-matching-and-diffusion/sde';
+} from 'flow-matching-and-diffusion-deprecated/flow-and-score-matching-pipeline';
 import { el } from 'web-ui-common/dom';
 
+function initViz(fn: (el: HTMLElement) => () => void, selector: string): void {
+  const container = document.querySelector<HTMLElement>(selector);
+  if (!container) {
+    throw new Error(`Container not found for selector: ${selector}`);
+  }
+  fn(container);
+}
+
 async function run(): Promise<void> {
-  const brownianMotionWidget = el(document, '#brownian-motion-widget') as HTMLElement;
-  const sdeWidget = el(document, '#sde-widget') as HTMLElement;
-  const conditionalPathOdeSdeWidget = el(
-    document, '#conditional-path-ode-sde-widget'
-  ) as HTMLElement;
-  const marginalPathOdeSdeWidget = el(
-    document, '#marginal-path-ode-sde-widget'
-  ) as HTMLElement;
+  initViz(initBrownianMotionVisualization, '#brownian-motion-visualization');
+  initViz(initEulerMaruyamaMethodVisualization, '#euler-maruyama-method-visualization');
+  initViz(
+    initConditionalPathOdeSdeVisualization, '#conditional-probability-path-ode-sde-visualization'
+  );
+  initViz(initMarginalPathOdeSdeVisualization, '#marginal-probability-path-ode-sde-visualization');
+
   const moonsDatasetContainer = el(
     document, '#moons-dataset-widget') as HTMLDivElement;
   const flowMatchingTrainingContainer = el(
@@ -25,14 +40,8 @@ async function run(): Promise<void> {
   const diffusionVisualizationContainer = el(
     document, '#diffusion-visualization-widget') as HTMLDivElement;
 
-  brownianMotionWidget.classList.add('one-chart');
-  initBrownianMotionWidget(brownianMotionWidget);
-  sdeWidget.classList.add('one-chart', 'with-controls');
-  initSdeWidget(sdeWidget);
-  conditionalPathOdeSdeWidget.classList.add('three-charts', 'with-controls');
-  initConditionalPathOdeSdeWidget(conditionalPathOdeSdeWidget);
-  marginalPathOdeSdeWidget.classList.add('three-charts', 'with-controls');
-  initMarginalPathOdeSdeWidget(marginalPathOdeSdeWidget);
+  await tf.ready();
+
   await initFlowAndScoreMatchingPipeline(
     moonsDatasetContainer,
     flowMatchingTrainingContainer,

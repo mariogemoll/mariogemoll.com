@@ -11,7 +11,7 @@ $$
 W_{t+h} = W_t + \sqrt h ϵ_t, \quad ϵ_t ∼ \mathcal N (0,Id) \quad (t = 0, h, 2h, ... , 1−h)
 $$
 
-[[ brownian-motion-widget ]]
+[[ brownian-motion-visualization ]]
 
 ## Stochastic differential equations
 
@@ -38,7 +38,7 @@ $$
 x_{t+h} = x_t + h u_t(x_t) + \sqrt h σ_t ϵ_t, \quad ϵ_t ∼ \mathcal N (0, I_d)
 $$
 
-[[ sde-widget ]]
+[[ euler-maruyama-method-visualization ]]
 
 ## Score field
 
@@ -66,7 +66,7 @@ s_t(x|z)
   = - \frac{x - \alpha_t z}{\beta_t^2}
 $$
 
-[[ conditional-path-ode-sde-widget ]]
+[[ conditional-probability-path-ode-sde-visualization ]]
 
 The marginal ODE can be extended to a marginal SDE in a similar manner:
 
@@ -88,7 +88,7 @@ s_t(x)
   = \int \nabla \log p_t(x|z) \frac{p_t(x|z) p_\mathrm{data}(z)}{p_t(x)} \mathrm d z
 $$
 
-[[ marginal-path-ode-sde-widget ]]
+[[ marginal-probability-path-ode-sde-visualization ]]
 
 ## Learning a diffusion model
 

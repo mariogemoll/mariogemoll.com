@@ -1,11 +1,14 @@
 import {
+  addVisualizations,
   createMarkdownRenderer,
   loadPageData,
   processReferences,
   readMarkdownFile,
-  replaceWidgetPlaceholders } from '../page-helpers.js';
+  replaceWidgetPlaceholders,
+  type WidgetTuple
+} from '../page-helpers.js';
 import { type PageContentParams } from '../types.js';
-import { highlightJsCssUrl, tfJsUrl } from './urls.js';
+import { highlightJsCssUrl, reactDomUrl, reactUrl, tfJsUrl } from './urls.js';
 
 
 export async function generatePage(
@@ -19,16 +22,21 @@ export async function generatePage(
 
   mdContent = processReferences(mdContent, pageData);
 
-  const widgets = [
-    ['vector-field', 768, 420],
-    ['euler-method', 768, 480],
-    ['conditional-prob-path', 768, 460],
-    ['conditional-prob-path-and-vector-field', 1256, 460],
-    ['marginal-prob-path-and-vector-field', 1256, 460],
+  const visualizations: WidgetTuple[] = [
+    ['vector-field', 768, 390],
+    ['euler-method', 768, 390],
+    ['conditional-probability-path', 768, 420],
+    ['conditional-probability-path-ode', 768, 420],
+    ['marginal-probability-path-ode', 768, 420]
+  ];
+
+  mdContent = addVisualizations(mdContent, visualizations);
+
+  const widgets: WidgetTuple[] = [
     ['moons-dataset', 400, 450],
     ['training', 600, 450],
     ['flow-visualization', 400, 450]
-  ] as const;
+  ];
 
   mdContent = replaceWidgetPlaceholders(mdContent, widgets);
 
@@ -38,13 +46,21 @@ export async function generatePage(
     highlightJsCssUrl,
     '/misc/centered.css',
     '/misc/widgets.css',
-    '/misc/controls.css',
-    '/misc/flow-visualizations.css'
+    '/flow-matching/visualization.css',
+    '/flow-matching/flow-matching.css'
   ];
 
   const jsUrls: string[] = [tfJsUrl];
 
   const jsModuleUrls = ['/flow-matching/flow-matching.js'];
 
-  return [html, cssFiles, jsUrls, jsModuleUrls];
+  const importMap: Record<string, string> = {
+    'react': reactUrl,
+    'react-dom': reactDomUrl,
+    'react-dom/client': `${reactDomUrl}/client`,
+    'react/jsx-runtime': `${reactUrl}/jsx-runtime`,
+    'react/jsx-dev-runtime': `${reactUrl}/jsx-dev-runtime`
+  };
+
+  return [html, cssFiles, jsUrls, jsModuleUrls, importMap];
 }

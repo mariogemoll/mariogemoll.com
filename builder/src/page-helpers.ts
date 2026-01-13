@@ -69,7 +69,7 @@ export async function readMarkdownFile(
   return mdContent;
 }
 
-type WidgetTuple = readonly [string, number, number] | readonly [string, number, number, string];
+export type WidgetTuple = readonly [string, number, number, string?];
 
 export function replaceWidgetPlaceholders(
   mdContent: string,
@@ -100,6 +100,35 @@ export function replaceWidgetPlaceholders(
     result = result.replace(placeholder, html);
   }
 
+  return result;
+}
+
+export function addVisualizations(
+  mdContent: string,
+  visualizations: readonly WidgetTuple[]
+): string {
+  let result = mdContent;
+  for (const [label, width, height, description] of visualizations) {
+    const placeholder = `[[ ${label}-visualization ]]`;
+
+    if (!result.includes(placeholder)) {
+      throw new Error(`Visualization placeholder "${placeholder}" not found in content`);
+    }
+
+    const styleStr = `width: ${width}px; height: ${height}px;`;
+
+    let containerContent = `<div class="placeholder" style="${styleStr}"></div>`;
+
+    if (description !== undefined) {
+      containerContent += `<div class="description">${description}</div>`;
+    }
+
+    const html = `<div id="${label}-visualization" class="visualization-container">
+      ${containerContent}
+    </div>`;
+
+    result = result.replace(placeholder, html);
+  }
   return result;
 }
 

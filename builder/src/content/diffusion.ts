@@ -1,12 +1,13 @@
 import {
+  addVisualizations,
   createMarkdownRenderer,
   loadPageData,
   processReferences,
   readMarkdownFile,
-  replaceWidgetPlaceholders
-} from '../page-helpers.js';
+  replaceWidgetPlaceholders,
+  type WidgetTuple } from '../page-helpers.js';
 import { type PageContentParams } from '../types.js';
-import { highlightJsCssUrl, tfJsUrl } from './urls.js';
+import { highlightJsCssUrl, reactDomUrl, reactUrl, tfJsUrl } from './urls.js';
 
 
 export async function generatePage(
@@ -20,11 +21,16 @@ export async function generatePage(
 
   mdContent = processReferences(mdContent, pageData);
 
-  const widgets: [string, number, number][] = [
+  const visualizations: WidgetTuple[] = [
     ['brownian-motion', 480, 420],
-    ['sde', 768, 420],
-    ['conditional-path-ode-sde', 1440, 520],
-    ['marginal-path-ode-sde', 1440, 520],
+    ['euler-maruyama-method', 480, 420],
+    ['conditional-probability-path-ode-sde', 768, 420],
+    ['marginal-probability-path-ode-sde', 768, 420]
+  ];
+
+  mdContent = addVisualizations(mdContent, visualizations);
+
+  const widgets: WidgetTuple[] = [
     ['moons-dataset', 400, 450],
     ['flow-matching-training', 600, 450],
     ['score-matching-training', 600, 450],
@@ -39,8 +45,7 @@ export async function generatePage(
     highlightJsCssUrl,
     '/misc/centered.css',
     '/misc/widgets.css',
-    '/misc/controls.css',
-    '/misc/flow-visualizations.css',
+    '/flow-matching/visualization.css',
     '/diffusion/diffusion.css'
   ];
 
@@ -48,5 +53,13 @@ export async function generatePage(
 
   const jsModuleUrls = ['/diffusion/diffusion.js'];
 
-  return [html, cssFiles, jsUrls, jsModuleUrls];
+  const importMap: Record<string, string> = {
+    'react': reactUrl,
+    'react-dom': reactDomUrl,
+    'react-dom/client': `${reactDomUrl}/client`,
+    'react/jsx-runtime': `${reactUrl}/jsx-runtime`,
+    'react/jsx-dev-runtime': `${reactUrl}/jsx-dev-runtime`
+  };
+
+  return [html, cssFiles, jsUrls, jsModuleUrls, importMap];
 }

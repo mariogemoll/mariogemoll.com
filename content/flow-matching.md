@@ -26,7 +26,7 @@ Sidenote 2: If the subscript $t$ looks a bit strange at first: it simply denotes
 $t$. Since $t\in[0,1]$ is a real number, subscripts are not restricted to integers: E.g.
 $x_{0.123}$, $u_{0.456}$.
 
-[[ vector-field-widget ]]
+[[ vector-field-visualization ]]
 
 Answering the question "If a point starts at $x_0$ at $t=0$ and follows the vector field, where is
 it at any later time?" means solving the ODE. For some simple vector fields we can find a
@@ -36,7 +36,7 @@ the Euler method.
 The idea is simple: use the velocity vectors to advance the point in small time increments. The
 smaller the steps, the more accurate the approximation becomes:
 
-[[ euler-method-widget ]]
+[[ euler-method-visualization ]]
 
 ## Conditional probability path
 
@@ -70,7 +70,7 @@ $$
 
 Here is a visualization in which you can also see the effect of different noise schedulers:
 
-[[ conditional-prob-path-widget ]]
+[[ conditional-probability-path-visualization ]]
 
 ## Conditional vector field
 
@@ -85,7 +85,7 @@ X_0\sim p_{\rm{init}}, \quad
 (0\leq t\leq 1)
 $$
 
-[[ conditional-prob-path-and-vector-field-widget ]]
+[[ conditional-probability-path-ode-visualization ]]
 
 The formula for this vector field (for the Gaussian case) is rather simple:
 
@@ -135,7 +135,7 @@ now.
 Here we see a marginal probability path and vector field visualized for a mixture of Gaussians
 distribution (can be modified at $t=1$):
 
-[[ marginal-prob-path-and-vector-field-widget ]]
+[[ marginal-probability-path-ode-visualization ]]
 
 So what's the point of all this? We see that for any distribution, there is a vector field that
 transforms a simple initial distribution into the target distribution. Given the appropriate vector
