@@ -2,6 +2,17 @@
   "references": [
     {
       "kind": "arxiv",
+      "id": "ho-et-al-2020",
+      "authors": [
+        "Ho, J.",
+        "Jain, A.",
+        "Abbeel, P."
+      ],
+      "title": "Denoising Diffusion Probabilistic Models",
+      "arxivId": "2006.11239"
+    },
+    {
+      "kind": "arxiv",
       "id": "holderrieth-and-erives-2025",
       "authors": [
         "Holderrieth, P.",
@@ -9,6 +20,45 @@
       ],
       "title": "An Introduction to Flow Matching and Diffusion Models",
       "arxivId": "2506.02070"
+    },
+    {
+      "kind": "arxiv",
+      "id": "lipman-et-al-2023",
+      "authors": [
+        "Lipman, Y.",
+        "Chen, R. T. Q.",
+        "Ben-Hamu, H.",
+        "Nickel, M.",
+        "Le, M."
+      ],
+      "title": "Flow Matching for Generative Modeling",
+      "arxivId": "2210.02747"
+    },
+    {
+      "kind": "arxiv",
+      "id": "sohl-dickstein-et-al-2015",
+      "authors": [
+        "Sohl-Dickstein, J.",
+        "Weiss, E.",
+        "Maheswaranathan, N.",
+        "Ganguli, S."
+      ],
+      "title": "Deep Unsupervised Learning using Nonequilibrium Thermodynamics",
+      "arxivId": "1503.03585"
+    },
+    {
+      "kind": "arxiv",
+      "id": "song-et-al-2021",
+      "authors": [
+        "Song, Y.",
+        "Sohl-Dickstein, J.",
+        "Kingma, D. P.",
+        "Kumar, A.",
+        "Ermon, S.",
+        "Poole, B."
+      ],
+      "title": "Score-Based Generative Modeling through Stochastic Differential Equations",
+      "arxivId": "2011.13456"
     }
   ]
 }

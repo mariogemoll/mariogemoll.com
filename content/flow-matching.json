@@ -2,6 +2,16 @@
   "references": [
     {
       "kind": "arxiv",
+      "id": "albergo-and-vanden-eijnden-2023",
+      "authors": [
+        "Albergo, M. S.",
+        "Vanden-Eijnden, E."
+      ],
+      "title": "Building Normalizing Flows with Stochastic Interpolants",
+      "arxivId": "2209.15571"
+    },
+    {
+      "kind": "arxiv",
       "id": "holderrieth-and-erives-2025",
       "authors": [
         "Holderrieth, P.",
@@ -9,6 +19,30 @@
       ],
       "title": "An Introduction to Flow Matching and Diffusion Models",
       "arxivId": "2506.02070"
+    },
+    {
+      "kind": "arxiv",
+      "id": "lipman-et-al-2023",
+      "authors": [
+        "Lipman, Y.",
+        "Chen, R. T. Q.",
+        "Ben-Hamu, H.",
+        "Nickel, M.",
+        "Le, M."
+      ],
+      "title": "Flow Matching for Generative Modeling",
+      "arxivId": "2210.02747"
+    },
+    {
+      "kind": "arxiv",
+      "id": "liu-et-al-2022",
+      "authors": [
+        "Liu, X.",
+        "Gong, C.",
+        "Liu, Q."
+      ],
+      "title": "Flow Straight and Fast: Learning to Generate and Transfer Data with Rectified Flow",
+      "arxivId": "2209.03003"
     }
   ]
 }

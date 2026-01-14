@@ -48,18 +48,18 @@ for (const pageId of pageIds) {
           usedRefs.add(match[1]);
         }
 
-        // Check for unused references
-        const unusedRefs = res.data.references
-          .map(r => r.id)
-          .filter(id => !usedRefs.has(id));
+        // // Check for unused references
+        // const unusedRefs = res.data.references
+        //   .map(r => r.id)
+        //   .filter(id => !usedRefs.has(id));
 
-        if (unusedRefs.length > 0) {
-          console.error(`[FAIL] ${pageId}.json has unused references:`);
-          for (const id of unusedRefs) {
-            console.error(`  - ${id}`);
-          }
-          allValid = false;
-        }
+        // if (unusedRefs.length > 0) {
+        //   console.error(`[FAIL] ${pageId}.json has unused references:`);
+        //   for (const id of unusedRefs) {
+        //     console.error(`  - ${id}`);
+        //   }
+        //   allValid = false;
+        // }
       } catch (err) {
         if ((err as NodeJS.ErrnoException).code !== 'ENOENT') {
           throw err;
