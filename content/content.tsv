@@ -3,5 +3,5 @@ vae	Variational Autoencoders	An interactive exploration of Variational Autoencod
 normalizing-flows	Normalizing Flows	A page exploring the basics of normalizing flows.	2025-10-28T00:00:00Z	2025-10-28T00:00:00Z
 parallel-corpus-viewer	Parallel Corpus Viewer	A viewer for the datasets used to train the model for the Attention Is All You Need page.	2025-11-07T15:00:00Z	2025-11-07T15:00:00Z
 attention-is-all-you-need	Attention Is All You Need	Describing the training of an encoder-decoder transformer, following the "Attention Is All You Need" paper.	2025-11-07T16:00:00Z	2025-11-07T16:00:00Z
-flow-matching	Flow Matching	An overview of flow matching techniques for generative modeling.	2025-11-25T10:00:00Z	2025-12-11T16:00:00Z
-diffusion	Diffusion	Extending the flow matching framework to diffusion models.	2025-12-11T17:00:00Z	2025-12-11T17:00:00Z
+flow-matching	Flow Matching	An overview of flow matching techniques for generative modeling.	2025-11-25T10:00:00Z	2026-01-14T21:00:00Z
+diffusion	Diffusion	Extending the flow matching framework to diffusion models.	2026-01-14T22:00:00Z	2026-01-14T22:00:00Z
