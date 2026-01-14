@@ -133,4 +133,15 @@ We can now combine the two to simulate the SDE and use it to generate new sample
 
 [[ diffusion-visualization-widget ]]
 
+## Credits & License
+
+The content on this page is based on the course "Introduction to Flow Matching and Diffusion Models"
+by Peter Holderrieth and Ezra Erives (MIT). I want to thank the authors for the excellent material.
+
+Original course: https://diffusion.csail.mit.edu/2025/index.html
+
+Their material is licensed under Creative Commons Attribution-NonCommercial-ShareAlike
+(CC BY-NC-SA). I have adapted and extended it for this site, and this page is therefore also
+published under CC BY-NC-SA.
+
 [[ references ]]
