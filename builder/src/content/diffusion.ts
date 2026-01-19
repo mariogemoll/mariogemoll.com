@@ -7,7 +7,10 @@ import {
   replaceWidgetPlaceholders,
   type WidgetTuple } from '../page-helpers.js';
 import { type PageContentParams } from '../types.js';
-import { highlightJsCssUrl, reactDomUrl, reactUrl, tfJsUrl } from './urls.js';
+import {
+  fileSaverUrl, highlightJsCssUrl, jszipUrl, reactDomUrl, reactUrl, tfJsUrl
+} from './urls.js';
+
 
 
 export async function generatePage(
@@ -58,7 +61,9 @@ export async function generatePage(
     'react-dom': reactDomUrl,
     'react-dom/client': `${reactDomUrl}/client`,
     'react/jsx-runtime': `${reactUrl}/jsx-runtime`,
-    'react/jsx-dev-runtime': `${reactUrl}/jsx-dev-runtime`
+    'react/jsx-dev-runtime': `${reactUrl}/jsx-dev-runtime`,
+    'file-saver': fileSaverUrl,
+    'jszip': jszipUrl
   };
 
   return [html, cssFiles, jsUrls, jsModuleUrls, importMap];

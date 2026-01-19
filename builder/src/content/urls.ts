@@ -8,3 +8,6 @@ export const tfJsWebGpuBackendUrl = 'https://cdn.jsdelivr.net/npm/@tensorflow/tf
 
 export const reactUrl = 'https://esm.sh/react@19.2.3';
 export const reactDomUrl = 'https://esm.sh/react-dom@19.2.3';
+
+export const fileSaverUrl = 'https://esm.sh/file-saver@2.0.5';
+export const jszipUrl = 'https://esm.sh/jszip@3.10.1';

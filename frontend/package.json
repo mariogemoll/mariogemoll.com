@@ -6,7 +6,7 @@
     "@types/react": "^19.2.8",
     "@types/react-dom": "^19.2.3",
     "es-arraybuffer-base64": "^1.1.2",
-    "flow-matching-and-diffusion": "mariogemoll/flow-matching-and-diffusion#9cf82ba1bead405feee72bdfd1f6c8beb37400d8",
+    "flow-matching-and-diffusion": "mariogemoll/flow-matching-and-diffusion#0e1f64eb49e03813dbaee29408afbbf7f35fb8d1",
     "flow-matching-and-diffusion-deprecated": "mariogemoll/flow-matching-and-diffusion#4eccc4978c214d587dcf66fbb33deffaddf1a07c&path:ts",
     "normalizing-flows": "mariogemoll/normalizing-flows#61dd4df2e4c48c84a867647a8608a50bc013b9d3&path:ts",
     "web-ui-common": "mariogemoll/web-ui-common#84a60ad7b7fe4b7e1162d6fff86533a982f5b117"
@@ -16,6 +16,7 @@
     "@eslint/js": "^9.39.1",
     "@stylistic/eslint-plugin": "^5.0.0",
     "@tensorflow/tfjs": "^4.22.0",
+    "@types/file-saver": "^2.0.7",
     "@types/fs-extra": "^11.0.4",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^24.0.8",
@@ -27,6 +28,7 @@
     "eslint": "^9.30.0",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
+    "jszip": "^3.10.1",
     "onnxruntime-web": "^1.22.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.35.0"

@@ -30,14 +30,14 @@ pnpm exec esbuild src/attention-is-all-you-need/attention-is-all-you-need.ts --b
   --alias:web-ui-common=./node_modules/web-ui-common/src
 
 pnpm exec esbuild src/flow-matching/flow-matching.ts --bundle --format=esm \
-  --external:react --external:react-dom \
+  --external:react --external:react-dom --external:file-saver --external:jszip \
   --loader:.vert=text --loader:.frag=text \
   --jsx=automatic \
   --outfile=dist/flow-matching/flow-matching.js --minify --sourcemap \
   --source-root=https://github.com/mariogemoll/mariogemoll.com/tree/$COMMIT_HASH/frontend/src/flow-matching
 
 pnpm exec esbuild src/diffusion/diffusion.ts --bundle --format=esm \
-  --external:react --external:react-dom \
+  --external:react --external:react-dom --external:file-saver --external:jszip \
   --loader:.vert=text --loader:.frag=text \
   --jsx=automatic \
   --outfile=dist/diffusion/diffusion.js --minify --sourcemap \
