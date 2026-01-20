@@ -1,4 +1,7 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: 2025 Mario Gemoll
+# SPDX-License-Identifier: 0BSD
+
 
 # Fail if a subcommand fails
 set -e

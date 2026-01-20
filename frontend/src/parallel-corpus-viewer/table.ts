@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Mario Gemoll
+// SPDX-License-Identifier: 0BSD
+
 import type { CommonCrawlSegment,NewstestSegment, Segment } from './types';
 
 function addSourceLink(parent: HTMLElement, url: string): void {

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Mario Gemoll
+// SPDX-License-Identifier: 0BSD
+
 import type * as ort from 'onnxruntime-web';
 import type OrtFunction from 'src/widgets/types/ortfunction.js';
 

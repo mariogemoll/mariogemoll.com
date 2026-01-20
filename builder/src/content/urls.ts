@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Mario Gemoll
+// SPDX-License-Identifier: 0BSD
+
 
 export const highlightJsCssUrl = 'https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/default.min.css';
 export const picaJsUrl = 'https://cdnjs.cloudflare.com/ajax/libs/pica/9.0.1/pica.min.js';

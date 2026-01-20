@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2025-2026 Mario Gemoll -->
+<!-- SPDX-License-Identifier: CC-BY-NC-SA-4.0 -->
+
 # [[ page-title ]]
 
 ## Brownian motion and Wiener process

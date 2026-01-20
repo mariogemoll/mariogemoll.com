@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Mario Gemoll
+// SPDX-License-Identifier: 0BSD
+
 export default {
   names: ["math-block-format"],
   description: "Allow only standalone $$ or lines starting and ending with $$",

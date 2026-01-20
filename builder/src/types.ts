@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Mario Gemoll
+// SPDX-License-Identifier: 0BSD
+
 import { z } from 'zod';
 
 export type ImportMap = Record<string, string>;

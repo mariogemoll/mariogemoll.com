@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2025 Mario Gemoll -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+
 <form id="nav" method="get">
     <h1>[[ page-title ]]</h1>
     <div id="corpus-selection-container">

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Mario Gemoll
+// SPDX-License-Identifier: 0BSD
+
 import type { RefsArraySortedT } from './types';
 
 const arxivUrl = (id: string): string => `https://arxiv.org/abs/${id}`;

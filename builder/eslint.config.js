@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Mario Gemoll
+// SPDX-License-Identifier: 0BSD
+
 import tseslint from 'typescript-eslint';
 
 import basicConfig from './basic.eslint.config.js';

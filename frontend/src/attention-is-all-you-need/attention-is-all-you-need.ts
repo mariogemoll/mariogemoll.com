@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Mario Gemoll
+// SPDX-License-Identifier: 0BSD
+
 import { el } from '../common/dom.js';
 import { setUpBuckets } from './widgets/buckets.js';
 import { loadMultipleLossData } from './widgets/data-loader';

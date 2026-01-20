@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2025 Mario Gemoll -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+
 # [[ page-title ]]
 
 In 2017, the [Attention Is All You Need](https://arxiv.org/abs/1706.03762) paper introduced the

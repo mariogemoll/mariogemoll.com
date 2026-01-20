@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2025 Mario Gemoll
+# SPDX-License-Identifier: 0BSD
+
 # Creates HARD LINKS from hash-named files to their original paths based on TSV manifest.
 # TSV format: "path<TAB>size<TAB>hash<TAB>description"
 # Optional directory mapping can remap top-level directories in paths.

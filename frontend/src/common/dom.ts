@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Mario Gemoll
+// SPDX-License-Identifier: 0BSD
+
 
 type HTMLElementGenerator<T> = (
   attrs: Record<string, string>, style?: Partial<CSSStyleDeclaration>

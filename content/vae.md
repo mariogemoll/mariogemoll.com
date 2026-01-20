@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2025 Mario Gemoll -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+
 # [[ page-title ]]
 
 ## Theory

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Mario Gemoll
+// SPDX-License-Identifier: 0BSD
+
 import { createMarkdownRenderer, readMarkdownFile } from '../page-helpers.js';
 import type { PageContentParams } from '../types.js';
 

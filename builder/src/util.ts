@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Mario Gemoll
+// SPDX-License-Identifier: 0BSD
+
 
 export function pick<K, V>(map: Map<K, V>, keys: K[]): Map<K, V> {
   const result = new Map<K, V>();

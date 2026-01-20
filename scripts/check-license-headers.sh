@@ -1,7 +1,6 @@
 #!/bin/bash
-# SPDX-FileCopyrightText: 2025 Mario Gemoll
+# SPDX-FileCopyrightText: 2026 Mario Gemoll
 # SPDX-License-Identifier: 0BSD
-
 
 # Fail if a subcommand fails
 set -e
@@ -11,8 +10,7 @@ set -x
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-$SCRIPT_DIR/../frontend/scripts/build.sh
-
 cd $SCRIPT_DIR/../builder
 npx tsc
-node dist/makesite.js
+cd $SCRIPT_DIR/..
+node builder/dist/scripts/check-license-headers.js

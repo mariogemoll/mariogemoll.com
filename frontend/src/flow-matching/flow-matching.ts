@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Mario Gemoll
+// SPDX-License-Identifier: 0BSD
+
 import {
   initConditionalPathVisualization
 } from 'flow-matching-and-diffusion/visualizations/conditional/path';

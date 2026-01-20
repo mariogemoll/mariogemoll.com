@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Mario Gemoll
+// SPDX-License-Identifier: 0BSD
+
 
 import { getNumber } from './indexed-files';
 import { getLines } from './indexed-text-files';

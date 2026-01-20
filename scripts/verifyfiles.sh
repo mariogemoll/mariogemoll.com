@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
+# SPDX-FileCopyrightText: 2025 Mario Gemoll
+# SPDX-License-Identifier: 0BSD
+
 # verify_tsv_sha256_min.sh — TSV verifier (4+ fields), no stat, no awk.
 # Format per line: path<TAB>size<TAB>sha256<TAB>ignored...
 # Files are expected to be stored with their hash as the filename.

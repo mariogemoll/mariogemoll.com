@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Mario Gemoll
+// SPDX-License-Identifier: 0BSD
+
 import * as cheerio from 'cheerio';
 import * as fs from 'fs';
 import fsExtra from 'fs-extra';

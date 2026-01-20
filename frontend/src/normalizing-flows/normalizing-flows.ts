@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Mario Gemoll
+// SPDX-License-Identifier: 0BSD
+
 import { initWidget as initLayersWidget } from 'normalizing-flows/layers';
 import { initWidget as initLinearTransformWidget } from 'normalizing-flows/linear-transform';
 import { initNormalizingFlowPipeline } from 'normalizing-flows/pipeline';

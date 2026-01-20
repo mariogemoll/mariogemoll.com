@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Mario Gemoll
+// SPDX-License-Identifier: 0BSD
+
 async function fetchFile(url: string, init: RequestInit | undefined): Promise<Response> {
   const response = await fetch(url, init);
   if (!response.ok) {

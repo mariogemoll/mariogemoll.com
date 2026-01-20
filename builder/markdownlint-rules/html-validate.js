@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Mario Gemoll
+// SPDX-License-Identifier: 0BSD
+
 // scripts/md-rule-html-validate.js
 import { HtmlValidate } from "html-validate";
 
