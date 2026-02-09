@@ -8,12 +8,12 @@ import MarkdownIt from 'markdown-it';
 import mathjax3 from 'markdown-it-mathjax3';
 import * as path from 'path';
 import pug from 'pug';
-import { fileURLToPath,pathToFileURL } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 
 import { PAGE_TITLE_PLACEHOLDER_PATTERN } from './constants.js';
 import { makeAtomFeed, makeRssFeed, makeSitemap } from './feeds.js';
 import type { PageContentParams, SiteConfig } from './types.js';
-import { omit,pick } from './util.js';
+import { omit, pick } from './util.js';
 
 const markdown = new MarkdownIt({
   html: true,
@@ -198,7 +198,12 @@ function makeHomepage(
   siteConfig: SiteConfig
 ): string {
   const mlIds = [
-    'diffusion', 'flow-matching', 'attention-is-all-you-need', 'normalizing-flows', 'vae'
+    'reinforcement-learning',
+    'diffusion',
+    'flow-matching',
+    'attention-is-all-you-need',
+    'normalizing-flows',
+    'vae'
   ];
   const other = pageListEntries(omit(generatedPages, mlIds));
   other.push([
