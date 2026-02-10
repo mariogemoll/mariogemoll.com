@@ -212,3 +212,7 @@ $$
 \;\in\;
 \arg\max_a q^*(s,a)
 $$
+
+So far, we have defined Markov Decision Processes and the value-based formulation of control. This
+page will be extended to cover dynamic programming, Monte-Carlo methods, temporal-difference
+learning, and more advanced approaches.
