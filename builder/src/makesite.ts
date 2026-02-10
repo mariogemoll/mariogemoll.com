@@ -199,11 +199,11 @@ function makeHomepage(
 ): string {
   const mlIds = [
     'reinforcement-learning',
-    'diffusion',
     'flow-matching',
-    'attention-is-all-you-need',
+    'diffusion',
     'normalizing-flows',
-    'vae'
+    'vae',
+    'attention-is-all-you-need'
   ];
   const other = pageListEntries(omit(generatedPages, mlIds));
   other.push([
