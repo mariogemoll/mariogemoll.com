@@ -33,7 +33,7 @@ li {
   margin-bottom: 10px;
 }
 
-a {
+a, p {
   font-weight: 300;
   color: grey;
   text-decoration: none;
