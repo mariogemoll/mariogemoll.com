@@ -3,6 +3,11 @@
 
 # [[ page-title ]]
 
+Flow matching is a generative modeling technique that learns a vector field to transforms simple
+noise into complex data. This page builds up the framework step by step, from time-dependent vector
+fields and conditional probability paths to the loss function you actually optimize. Along the way,
+there are interactive visualizations and a model you can train in the browser.
+
 ## Prologue: Time-dependent vector fields
 
 On this page we will work with time-dependent vector fields and trajectories of points moving along

@@ -3,6 +3,10 @@
 
 # [[ page-title ]]
 
+Reinforcement learning formalizes the problem of an agent learning to act in an environment by
+maximizing cumulative reward. This page covers the foundations: Markov decision processes, policies,
+value functions, and the Bellman equations.
+
 ## Markov Decision Process
 
 The mathematical model for reinforcement learning is the **Markov Decision Process (MDP)**. An MDP

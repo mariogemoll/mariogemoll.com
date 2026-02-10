@@ -3,6 +3,11 @@
 
 # [[ page-title ]]
 
+Variational autoencoders learn to compress data into a low-dimensional latent space and reconstruct
+it, balancing reconstruction quality against a structured prior. This page walks through the math,
+from the ELBO derivation to the reparameterization trick, then trains a VAE on a synthetic dataset
+with interactive visualizations for sampling, latent space exploration, and decoding.
+
 ## Theory
 
 To train a VAE, we try to maximize the log likelihood of all the training examples:

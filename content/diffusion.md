@@ -3,6 +3,11 @@
 
 # [[ page-title ]]
 
+Diffusion models extend the flow matching framework by adding stochasticity: instead of following a
+deterministic ODE, points take noisy paths governed by a stochastic differential equation. This page
+introduces Brownian motion, score fields, and the score matching loss, building on the flow matching
+page and ending with a live model that combines both to generate samples.
+
 ## Brownian motion and Wiener process
 
 Brownian motion describes the random motion of particles in fluids or gases. It is basically a
