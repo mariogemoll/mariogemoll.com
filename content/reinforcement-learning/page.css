@@ -1,0 +1,11 @@
+.visualization-container {
+  text-align: center;
+}
+
+.visualization {
+  margin: 40px auto;
+}
+
+#gridworld-visualization .visualization {
+  width: 640px;
+}

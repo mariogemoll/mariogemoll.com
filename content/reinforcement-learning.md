@@ -44,6 +44,25 @@ confusing at first. I will try to be consistent on this page. The most important
 understand what the symbols and concepts mean; once that is clear, different notational conventions
 become much easier to parse.
 
+## Gridworlds
+
+A convenient toy model for a Markov Decision Process is a gridworld: a two-dimensional grid in which
+each cell corresponds to a state (the state is the agent’s position on the grid).
+
+The action set consists of four moves: up, down, left, and right. Each action incurs a step cost
+(negative reward) of −0.1. One cell is designated as a goal state with a reward of +10, and another
+as a trap state with a reward of −10. Goal and trap cells are terminal states. After that, the
+episode ends and no further rewards are obtained.
+
+Transitions are stochastic: the environment is "slippery", meaning that an intended move succeeds
+with high probability, but with some probability the next state is shifted to the cell to the left
+or right of the intended direction. Transitions in the opposite direction never occur.
+
+The visualization below shows such a gridworld, where actions can be selected using the direction
+buttons or the WASD keys.
+
+[[ gridworld-visualization ]]
+
 ## Policy
 
 The way an agent acts in an environment is described by a **policy**: a function that, given the
