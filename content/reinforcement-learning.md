@@ -239,6 +239,40 @@ We can do the same thing for action values as well, just using the appropriate Q
 
 [[ policy-iteration-q-visualization ]]
 
-So far, we have defined Markov decision processes, value functions and policy iteration. This
+### Value iteration
+
+As we've seen, in policy iteration we take a policy, evaluate it by finding state and action values,
+usually in a loop until convergence, then derive a new policy from those values, and iterate the
+process until we arrive at the optimal values and policy.
+
+Value iteration is a related technique that takes a shortcut: It does not go through the iterative
+process of finding the exact state/action values for a given policy, in fact it doesn't explicitly
+deal with policies. Instead it just looks at values and actions and applies the Bellman optimality
+equation iteratively:
+
+$$
+v_{k+1}(s) = \max_a [ r(s,a) + \gamma \sum_{s'} P(s'|s, a) v_k(s') ]
+$$
+
+Basically in each iteration it asks for each state: Using which action can I max out the sum of
+expected immediate reward and next state value (taking into account the transition probabilities)?
+Then it just updates the state's value with that result for the best action.
+
+After each iteration we could extract the greedy policy with respect to the current values (and
+might do so to monitor convergence). However, this is not required for the algorithm itself, since
+the policy does not influence the value updates. Once the values have converged, an optimal policy
+can be obtained by acting greedily with respect to the final value function.
+
+[[ value-iteration-v-visualization ]]
+
+Again, we can do the same thing for Q values:
+
+$$
+q_{k+1}(s, a) = r(s, a) + \gamma \sum_{s'}P(s'|s, a)\max_{a'}q_k(s', a')
+$$
+
+[[ value-iteration-q-visualization ]]
+
+So far, we have defined Markov decision processes, value functions and dynamic programming. This
 page will be extended to cover value iteration, Monte-Carlo methods, temporal-difference
 learning, and more advanced approaches.

@@ -12,6 +12,8 @@
 
 
 #policy-iteration-q-visualization .visualization,
-#policy-iteration-v-visualization .visualization {
+#policy-iteration-v-visualization .visualization,
+#value-iteration-q-visualization .visualization,
+#value-iteration-v-visualization .visualization {
   width: 1000px;
 }

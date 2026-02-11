@@ -19,7 +19,9 @@ export async function generatePage(
   const visualizations: WidgetTuple[] = [
     ['gridworld', 640, 480],
     ['policy-iteration-v', 1000, 480],
-    ['policy-iteration-q', 1000, 480]
+    ['policy-iteration-q', 1000, 480],
+    ['value-iteration-v', 1000, 480],
+    ['value-iteration-q', 1000, 480]
   ];
 
   mdContent = addVisualizations(mdContent, visualizations);
