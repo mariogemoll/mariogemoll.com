@@ -9,3 +9,9 @@
 #gridworld-visualization .visualization {
   width: 640px;
 }
+
+
+#policy-iteration-q-visualization .visualization,
+#policy-iteration-v-visualization .visualization {
+  width: 1000px;
+}

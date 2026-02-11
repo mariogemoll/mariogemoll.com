@@ -1,17 +1,24 @@
+import { initGridworldVisualization } from 'reinforcement-learning/visualizations/gridworld';
 import {
-  type GridworldVisualization,initGridworldVisualization
-} from 'reinforcement-learning/visualizations/gridworld';
-
-let gridworldVisualization: GridworldVisualization | null = null;
+  initPolicyIterationQVisualization
+} from 'reinforcement-learning/visualizations/policy-iteration-q';
+import {
+  initPolicyIterationVVisualization
+} from 'reinforcement-learning/visualizations/policy-iteration-v';
 
 function initializeGridWorld(): void {
-  const panel = document.getElementById('gridworld-visualization');
-  if (!panel) {
-    return;
+  const gridworldVizContainer = document.getElementById('gridworld-visualization');
+  if (gridworldVizContainer) {
+    initGridworldVisualization(gridworldVizContainer);
   }
-
-  gridworldVisualization?.destroy();
-  gridworldVisualization = initGridworldVisualization(panel);
+  const policyIterationVContainer = document.getElementById('policy-iteration-v-visualization');
+  if (policyIterationVContainer) {
+    initPolicyIterationVVisualization(policyIterationVContainer);
+  }
+  const policyIterationQContainer = document.getElementById('policy-iteration-q-visualization');
+  if (policyIterationQContainer) {
+    initPolicyIterationQVisualization(policyIterationQContainer);
+  }
 }
 
 if (document.readyState === 'loading') {

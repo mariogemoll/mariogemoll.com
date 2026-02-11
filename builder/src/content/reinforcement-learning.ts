@@ -17,7 +17,9 @@ export async function generatePage(
   let mdContent = await readMarkdownFile(contentPath, 'reinforcement-learning.md', pageTitle);
 
   const visualizations: WidgetTuple[] = [
-    ['gridworld', 640, 480]
+    ['gridworld', 640, 480],
+    ['policy-iteration-v', 1000, 480],
+    ['policy-iteration-q', 1000, 480]
   ];
 
   mdContent = addVisualizations(mdContent, visualizations);
@@ -29,6 +31,7 @@ export async function generatePage(
     '/misc/centered.css',
     '/misc/widgets.css',
     '/reinforcement-learning/page.css',
+    '/reinforcement-learning/ui.css',
     '/reinforcement-learning/reinforcement-learning.css'
   ];
 

@@ -217,6 +217,28 @@ $$
 \arg\max_a q^*(s,a)
 $$
 
-So far, we have defined Markov Decision Processes and the value-based formulation of control. This
-page will be extended to cover dynamic programming, Monte-Carlo methods, temporal-difference
+## Dynamic programming
+
+Assuming we have a complete model of the environment (i.e., the MDP with all transition
+probabilities and rewards) we can compute the optimal value function, and derive an optimal policy
+from it, using the Bellman equations and dynamic programming techniques. There are two algorithms,
+policy iteration and value iteration.
+
+### Policy iteration
+
+Let's first look at policy iteration for state values. We start with an arbitrary policy and
+arbitrary initial state values. Then, we find the values for each state under this policy ("policy
+evaluation") by applying the Bellman expectation equation repeatedly until convergence (i.e., until
+the values don't change any more).  Then we do "policy improvement" to set the best greedy policy
+for the new values as described above. We repeat this overall two-step process until convergence
+(i.e., until the policy doesn't change any more).
+
+[[ policy-iteration-v-visualization ]]
+
+We can do the same thing for action values as well, just using the appropriate Q-value functions:
+
+[[ policy-iteration-q-visualization ]]
+
+So far, we have defined Markov decision processes, value functions and policy iteration. This
+page will be extended to cover value iteration, Monte-Carlo methods, temporal-difference
 learning, and more advanced approaches.
