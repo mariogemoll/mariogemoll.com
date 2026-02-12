@@ -17,3 +17,7 @@
 #value-iteration-v-visualization .visualization {
   width: 1000px;
 }
+
+#monte-carlo-visualization .visualization {
+  width: 1200px;
+}

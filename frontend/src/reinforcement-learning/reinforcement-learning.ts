@@ -1,4 +1,5 @@
 import { initGridworldVisualization } from 'reinforcement-learning/visualizations/gridworld';
+import { initMonteCarloVisualization } from 'reinforcement-learning/visualizations/monte-carlo';
 import {
   initPolicyIterationQVisualization
 } from 'reinforcement-learning/visualizations/policy-iteration-q';
@@ -32,6 +33,10 @@ function initializeGridWorld(): void {
   const valueIterationQContainer = document.getElementById('value-iteration-q-visualization');
   if (valueIterationQContainer) {
     initValueIterationQVisualization(valueIterationQContainer);
+  }
+  const monteCarloContainer = document.getElementById('monte-carlo-visualization');
+  if (monteCarloContainer) {
+    initMonteCarloVisualization(monteCarloContainer);
   }
 }
 

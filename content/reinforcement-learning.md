@@ -273,6 +273,27 @@ $$
 
 [[ value-iteration-q-visualization ]]
 
-So far, we have defined Markov decision processes, value functions and dynamic programming. This
-page will be extended to cover value iteration, Monte-Carlo methods, temporal-difference
-learning, and more advanced approaches.
+## Monte Carlo methods
+
+So far we’ve lived in a world where we have a perfect model of the environment. We knew all possible
+states and actions, the transition probabilities, and the rewards. In a sense, this is the platonic
+ideal of the control problem. But it is not really reinforcement learning: nothing had to be
+learned. The Bellman equations and dynamic programming were developed in the 1950s precisely for
+this model-known setting.
+
+In the real world, things are messier. We usually do not have access to the transition probabilities
+or reward model. Instead, we observe what happens when we act.
+
+Monte Carlo methods are among the simplest ways to deal with this. Rather than computing
+expectations from a known model, we estimate them from experience. The overall structure resembles
+policy iteration: we follow a policy to generate trajectories (episodes), compute the cumulative
+returns those trajectories produce, and use empirical averages of those returns to estimate the
+value of states and actions. Then we can update the policy by choosing the greedy best action like
+in policy iteration. Since we still need transition probabilities to do that using V values, MC is
+usually done using Q values, which is completely model-free.
+
+[[ monte-carlo-visualization ]]
+
+So far, we have defined Markov decision processes, value functions, dynamic programming and
+Monte Carlo methods. These form the conceptual basis for temporal-difference learning,
+control algorithms, and modern policy-gradient methods.

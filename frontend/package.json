@@ -9,7 +9,7 @@
     "flow-matching-and-diffusion": "mariogemoll/flow-matching-and-diffusion#8660c8c8771264544a188250294cdc9f64d67f24",
     "flow-matching-and-diffusion-deprecated": "mariogemoll/flow-matching-and-diffusion#4eccc4978c214d587dcf66fbb33deffaddf1a07c&path:ts",
     "normalizing-flows": "mariogemoll/normalizing-flows#61dd4df2e4c48c84a867647a8608a50bc013b9d3&path:ts",
-    "reinforcement-learning": "mariogemoll/reinforcement-learning#3b27621e171664e74d1db1facd60c0b9d0f9162e",
+    "reinforcement-learning": "mariogemoll/reinforcement-learning#1e0585a90011a26283842ee3a7d0a62a22288bb6",
     "web-ui-common": "mariogemoll/web-ui-common#84a60ad7b7fe4b7e1162d6fff86533a982f5b117"
   },
   "devDependencies": {

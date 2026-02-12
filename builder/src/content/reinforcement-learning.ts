@@ -21,7 +21,8 @@ export async function generatePage(
     ['policy-iteration-v', 1000, 480],
     ['policy-iteration-q', 1000, 480],
     ['value-iteration-v', 1000, 480],
-    ['value-iteration-q', 1000, 480]
+    ['value-iteration-q', 1000, 480],
+    ['monte-carlo', 1200, 500]
   ];
 
   mdContent = addVisualizations(mdContent, visualizations);
