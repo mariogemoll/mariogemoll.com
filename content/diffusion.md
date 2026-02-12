@@ -51,11 +51,11 @@ $$
 ## Score field
 
 As described on the [flow matching page](/flow-matching), any conditional probability path can be
-expressed as an ODE which transforms points sampled from $p_\rm{init}$ into $p_\rm{data}$. It turns
-out the same can be accomplished using an SDE. We can construct it by extending an existing ODE: We
-add Brownian motion as above, and counteract this by adding the so-called conditional score function
-(or rather, since it's also time-dependent, score field) $s(x|z) = \nabla \log p_t(x|z)$ to the
-drift coefficient:
+expressed as an ODE which transforms points sampled from $p_\mathrm{init}$ into $p_\mathrm{data}$.
+It turns out the same can be accomplished using an SDE. We can construct it by extending an existing
+ODE: We add Brownian motion as above, and counteract this by adding the so-called conditional score
+function (or rather, since it's also time-dependent, score field) $s(x|z) = \nabla \log p_t(x|z)$
+to the drift coefficient:
 
 $$
 \begin{gathered}
