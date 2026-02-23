@@ -80,13 +80,6 @@ $$
 (s_0, a_0, r_1), (s_1, a_1, r_2), (s_2, a_2, r_3), \dots
 $$
 
-The usual objective is to find a policy that maximizes the expected return over all starting states
-and trajectories:
-
-$$
-\pi^* \;=\; \arg\max_\pi \; \mathbb{E}_\pi \!\left[ \sum_{t=0}^{\infty} \gamma^t \, r_{t+1} \right].
-$$
-
 ## Return
 
 The **return** is the discounted sum of future rewards starting at time step $t$:
@@ -95,6 +88,13 @@ $$
 G_t
 \;:=\;
 \sum_{k=0}^{\infty} \gamma^k \, r_{t+k+1}.
+$$
+
+The usual objective in reinforcement learning is to find a policy that maximizes the expected return
+over all starting states and trajectories:
+
+$$
+\pi^* \;=\; \arg\max_\pi \; \mathbb{E}_\pi \!\left[ \sum_{t=0}^{\infty} \gamma^t \, r_{t+1} \right].
 $$
 
 ## State and action values
