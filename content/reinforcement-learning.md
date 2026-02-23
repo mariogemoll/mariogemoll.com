@@ -192,7 +192,7 @@ r(s,a)
 \end{aligned}
 $$
 
-Assuming the optimal state-value function v^* is known, an optimal (greedy) policy can be derived
+Assuming the optimal state-value function $v^*$ is known, an optimal (greedy) policy can be derived
 by, for each state, evaluating all available actions via their immediate reward plus the expected
 value of the next state (weighted by the transition probabilities), and selecting an action that
 maximizes this quantity. If multiple actions attain the maximum, any of them may be chosen:
