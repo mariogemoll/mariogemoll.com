@@ -14,3 +14,6 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 $SCRIPT_DIR/checkmd.sh
 $SCRIPT_DIR/checkcss.sh
 $SCRIPT_DIR/checkts.sh
+
+cd $SCRIPT_DIR/../builder
+pnpm markdownlint-cli2 ../content/*.md
