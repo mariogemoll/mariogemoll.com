@@ -309,6 +309,39 @@ update using averages, like in the following visualization:
 
 [[ monte-carlo-visualization ]]
 
-So far, we have defined Markov decision processes, value functions, dynamic programming and
-Monte Carlo methods. These form the conceptual basis for temporal-difference learning,
-control algorithms, and modern policy-gradient methods.
+## Temporal-difference learning
+
+Now we’ll look at temporal-difference learning, in particular one-step TD methods. For control, two
+common algorithms are SARSA and Q-learning. First we look at SARSA.
+
+### SARSA
+
+As we just discussed, in MC we adjust values after one episode (or multiple episodes) according to
+the returns we saw:
+
+$$
+Q(s,a) \leftarrow Q(s,a) + \alpha \big(G - Q(s,a)\big)
+$$
+
+and then we update the policy.
+
+In SARSA, we update action-value estimates at every step. Since the policy is chosen ε-greedily with
+respect to $Q$, improving $Q$ automatically improves the policy.
+
+Assume we're in state s and take action a according to the policy. We'll observe an immediate reward
+r and land in a state $s'$. We then choose the next action a' according to the same policy and use
+our current estimate $Q(s',a')$. We can therefore update Q(s,a) according to how different it is
+from the immediate reward plus the discounted estimate of the next state–action pair:
+
+$$
+Q(s,a) \leftarrow Q(s, a) + \alpha \big[ r + \gamma Q(s', a') - Q(s, a) \big]
+$$
+
+We then continue by taking action $a'$ in state $s'$ until convergence (or until the values are good
+enough).
+
+In short: in state $S$, sample $A$, observe reward $R$, land in state $S'$, sample $A'$: SARSA.
+
+So far, we have introduced Markov decision processes, value functions, dynamic programming, Monte
+Carlo methods, and temporal-difference learning. Together, these form the conceptual basis for
+control algorithms and modern reinforcement learning methods, including policy-gradient approaches.
