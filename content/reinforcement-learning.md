@@ -290,7 +290,22 @@ policy iteration: we follow a policy to generate trajectories (episodes), comput
 returns those trajectories produce, and use empirical averages of those returns to estimate the
 value of states and actions. Then we can update the policy by choosing the greedy best action like
 in policy iteration. Since we still need transition probabilities to do that using V values, MC is
-usually done using Q values, which is completely model-free.
+usually done using Q values, which is completely "model-free".
+
+The complete algorithm for MC control is as follows:
+
+- Run an episode: Generates $s_0, a_0, r_1, s_1, a_1, r_2 \dots$
+- For each state-action pair encountered, calculate the return $G_t$ from that action. There
+  are two variants: first-visit MC (count only the return from the first time the state-action pair
+  appears in the trajectory) and every-visit MC (count returns from all occurrences).
+- Nudge the action value slightly (according to a step size/learning rate $\alpha$) for each
+  $s, a, G$ triple thus generated: $Q(s,a) \leftarrow Q(s,a) + \alpha \big(G - Q(s,a)\big)$
+- Update the policy (e.g. ε-greedily)
+
+This gets repeated until the policy converges or reaches satisfactory performance.
+
+Instead of updating the policy after every episode, one can also run a batch of episodes and then
+update using averages, like in the following visualization:
 
 [[ monte-carlo-visualization ]]
 
