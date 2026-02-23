@@ -342,6 +342,17 @@ enough).
 
 In short: in state $S$, sample $A$, observe reward $R$, land in state $S'$, sample $A'$: SARSA.
 
+### Q-Learning
+
+In SARSA, we used the estimated value of the next action we'll actually take in the update 
+("on-policy"). Q-learning is similar to SARSA, however here we just use the value of the best
+currently estimated action greedily (which is not necessarily the action we'll actually take in the
+next step, therefore this alogrithm is "off-policy"):
+
+$$
+Q(s,a) \leftarrow Q(s, a) + \alpha \big[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \big].
+$$
+
 So far, we have introduced Markov decision processes, value functions, dynamic programming, Monte
 Carlo methods, and temporal-difference learning. Together, these form the conceptual basis for
 control algorithms and modern reinforcement learning methods, including policy-gradient approaches.
