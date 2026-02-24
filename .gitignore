@@ -1,6 +1,7 @@
 .claude
 .python-version
 .vscode
+*.safetensors
 /build
 /build_info/directory_mapping.tsv
 /builder/dist

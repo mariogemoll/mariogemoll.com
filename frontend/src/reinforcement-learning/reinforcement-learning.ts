@@ -1,3 +1,4 @@
+import { initCartPoleVisualization } from 'reinforcement-learning/visualizations/cartpole';
 import { initGridworldVisualization } from 'reinforcement-learning/visualizations/gridworld';
 import { initMonteCarloVisualization } from 'reinforcement-learning/visualizations/monte-carlo';
 import {
@@ -37,6 +38,12 @@ function initializeGridWorld(): void {
   const monteCarloContainer = document.getElementById('monte-carlo-visualization');
   if (monteCarloContainer) {
     initMonteCarloVisualization(monteCarloContainer);
+  }
+  const cartpoleDqnContainer = document.getElementById('cartpole-visualization');
+  if (cartpoleDqnContainer) {
+    void initCartPoleVisualization(
+      cartpoleDqnContainer, '/reinforcement-learning/cartpole.safetensors'
+    );
   }
 }
 

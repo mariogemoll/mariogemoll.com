@@ -344,7 +344,7 @@ In short: in state $S$, sample $A$, observe reward $R$, land in state $S'$, samp
 
 ### Q-Learning
 
-In SARSA, we used the estimated value of the next action we'll actually take in the update 
+In SARSA, we used the estimated value of the next action we'll actually take in the update
 ("on-policy"). Q-learning is similar to SARSA, however here we just use the value of the best
 currently estimated action greedily (which is not necessarily the action we'll actually take in the
 next step, therefore this alogrithm is "off-policy"):
@@ -353,6 +353,47 @@ $$
 Q(s,a) \leftarrow Q(s, a) + \alpha \big[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \big].
 $$
 
-So far, we have introduced Markov decision processes, value functions, dynamic programming, Monte
-Carlo methods, and temporal-difference learning. Together, these form the conceptual basis for
-control algorithms and modern reinforcement learning methods, including policy-gradient approaches.
+## Q-function approximation using a neural network
+
+So far we have dealt with environments with a finite number of states (e.g. gridworld positions).
+Let's now consider CartPole, an environment in which at every time step the agent is asked to decide
+to move a cart left or right with the aim of balancing a pole attached on top of it for as long as
+possible. This environment has a four-dimensional continuous state space (cart position, cart
+velocity, pole angle, pole angular velocity). The action space is still descrete (left/right).
+
+We could probably solve this environment with some of the techniques discussed so far by
+discretizing the state space with appropriate granularity, however now we'll approximate $Q(s, a)$
+using a neural network.
+
+Recall that in Q-learning we said that ideally $Q(s,a)$ should equal the immediate reward we get from
+taking action a in state s plus the discounted value of the best next action. This was our "target":
+$r + \gamma * \max_{a'} Q(s', a')$.
+
+We then updated the current value we had for $Q(s,a)$ in our table according to its distance to this
+target based on the observation of $r$ and $s'$ (ie., the TD error):
+$Q(s,a) \leftarrow Q(s,a) + \alpha [ \text{target} - Q(s, a) ]$.
+
+We'll now no longer have a table of Q values, but rather a neural network with parameters $\theta$
+$Q_\theta(s)$, outputting a vector of Q values, one for each action. For CartPole we can use a very
+simple architecture with one hidden layer with 4 nodes, and two outputs:
+
+![A simple neural network with 4 inputs, one hidden layer with 8 nodes, and 2
+outputs](/reinforcement-learning/qnn.svg)
+
+To train it we'll need a loss function, we'll take the mean squared error. Each iteration of the
+training loop is as follows:
+
+- We're in state $s$.
+- We get the Q values from the network.
+- We choose the action ε-greedily.
+- We get to a next state $s'$ and receive reward $r$.
+- We consult the network again to get the Q values for the next possible actions.
+- We then can compare the Q value our neural network gave us for a with the target
+$r + \gamma \max_{a'} Q(s', a')$ using MSE.
+- We update $\theta$ using gradient descent.
+
+There is a
+[Jupyter notebook containing JAX training code](https://github.com/mariogemoll/reinforcement-learning/blob/main/py/ql.ipynb)
+and the following visualization shows the model in action:
+
+[[ cartpole-visualization ]]

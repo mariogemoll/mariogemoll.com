@@ -21,3 +21,14 @@
 #monte-carlo-visualization .visualization {
   width: 1200px;
 }
+
+#cartpole-dqn-visualization .visualization {
+  width: 800px;
+}
+
+p > img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}
