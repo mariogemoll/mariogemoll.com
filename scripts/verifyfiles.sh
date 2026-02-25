@@ -11,6 +11,17 @@
 
 set -eu
 
+if [ "${1-}" = "-h" ] || [ "${1-}" = "--help" ] || [ $# -eq 0 ]; then
+  echo "Usage: $(basename "$0") <manifest.tsv> [base_dir]"
+  echo ""
+  echo "Verifies files listed in a TSV manifest against their sha256 hashes."
+  echo ""
+  echo "Arguments:"
+  echo "  manifest.tsv  TSV file with columns: path, size, sha256, ..."
+  echo "  base_dir      Directory where hashed files are stored (default: .)"
+  exit 0
+fi
+
 manifest="$1"
 base="${2:-.}"
 
