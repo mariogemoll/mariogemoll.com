@@ -34,3 +34,4 @@ parallel-corpus-viewer/newstest2014.de-en.metadata.tsv	4364	0ed8cbf2050c948fdccb
 parallel-corpus-viewer/newstest2014.de-en.metadata.tsv.idx	656	5b8104885c9c211348774d6a8774b7cfa2958e302b1a83d0eb7cb160aedb319f	Index file containing the end position (32bit le uint) of each line in newstest2014.de-en.metadata.tsv
 parallel-corpus-viewer/newstest2014.de-en.metadatamapping.bin	12012	be20971993b73143e3600de21dbdd627a2ef2882709f74ddd95158be81f5db58	Index file containing the index (32bit le uint) of the metadata entry for each sentence pair
 reinforcement-learning/cartpole.safetensors	704	acac4bbff80ca82b40fbc20603e191d163dff64785fd68bed7a2e6c6720ed536	Model weights for the CartPole visualization
+reinforcement-learning/minatar-breakout.safetensors	613428	fe9f29af12312810ced30c2b5ae3f8204b753adb7349fdd52da481c5c3e63fd6	Model weights for the Breakout visualization

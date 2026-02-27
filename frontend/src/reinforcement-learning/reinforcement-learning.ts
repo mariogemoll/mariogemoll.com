@@ -1,5 +1,8 @@
 import { initCartPoleVisualization } from 'reinforcement-learning/visualizations/cartpole';
 import { initGridworldVisualization } from 'reinforcement-learning/visualizations/gridworld';
+import {
+  initMinAtarBreakoutVisualization
+} from 'reinforcement-learning/visualizations/minatar-breakout';
 import { initMonteCarloVisualization } from 'reinforcement-learning/visualizations/monte-carlo';
 import {
   initPolicyIterationQVisualization
@@ -43,6 +46,12 @@ function initializeGridWorld(): void {
   if (cartpoleDqnContainer) {
     void initCartPoleVisualization(
       cartpoleDqnContainer, '/reinforcement-learning/cartpole.safetensors'
+    );
+  }
+  const breakoutContainer = document.getElementById('breakout-visualization');
+  if (breakoutContainer) {
+    void initMinAtarBreakoutVisualization(
+      breakoutContainer, '/reinforcement-learning/minatar-breakout.safetensors'
     );
   }
 }

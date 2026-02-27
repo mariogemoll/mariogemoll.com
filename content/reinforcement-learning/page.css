@@ -26,6 +26,10 @@
   width: 800px;
 }
 
+#breakout-visualization .visualization {
+  width: 620px;
+}
+
 p > img {
   display: block;
   margin: 0 auto;

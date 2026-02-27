@@ -397,3 +397,31 @@ There is a
 and the following visualization shows the model in action:
 
 [[ cartpole-visualization ]]
+
+## Deep Q-network (DQN)
+
+The Deep Q-network (DQN) enabled AIs to play Atari. It makes two important extensions to the
+Q-function approximation discussed above:
+
+- **Replay buffer:** Instead of updating the weights according to the data of an observation
+  immediately after that observation was made, in each iteration it makes an observation
+  $(a, s, r, s')$, stores it in a FIFO buffer, then samples a few entries from that buffer and uses
+  those for the gradient descent training step.
+- **Separate target network:** Recall that in approximate Q-learning we use the model itself to
+  calculate the target for the loss, which we then use to update the model. This can create
+  instabilities, for example if the network slightly overestimates a value, that inflated value is
+  used in the next target, which reinforces the error. In DQN, the target network (used in
+  $r + \gamma \max_{a'} Q(s', a')$ ) is a separate network, which is a snapshot of the network that
+  is being trained. It stays frozen for many steps, but gets updated with the weights of the trained
+  model in regular intervals.
+
+Here we see a DQN (trained using
+[this Jupyter notebook](https://github.com/mariogemoll/reinforcement-learning/blob/main/py/dqn_minatar_breakout_cnn.ipynb))
+playing a simplified version of the Atari game Breakout:
+
+[[ breakout-visualization ]]
+
+Starting from Markov decision processes, we developed the notion of value, examined prediction and
+control through dynamic programming and Monte Carlo methods, and arrived at temporal-difference
+learning as a bridge between planning and learning from experience. These concepts collectively
+define the foundations of reinforcement learning.
