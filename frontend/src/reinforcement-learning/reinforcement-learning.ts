@@ -4,6 +4,7 @@ import {
   initMinAtarBreakoutVisualization
 } from 'reinforcement-learning/visualizations/minatar-breakout';
 import { initMonteCarloVisualization } from 'reinforcement-learning/visualizations/monte-carlo';
+import { initPendulumVisualization } from 'reinforcement-learning/visualizations/pendulum';
 import {
   initPolicyIterationQVisualization
 } from 'reinforcement-learning/visualizations/policy-iteration-q';
@@ -46,6 +47,12 @@ function initializeGridWorld(): void {
   if (cartpoleDqnContainer) {
     void initCartPoleVisualization(
       cartpoleDqnContainer, '/reinforcement-learning/cartpole.safetensors'
+    );
+  }
+  const pendulumContainer = document.getElementById('pendulum-visualization');
+  if (pendulumContainer) {
+    void initPendulumVisualization(
+      pendulumContainer, '/reinforcement-learning/pendulum.safetensors'
     );
   }
   const breakoutContainer = document.getElementById('breakout-visualization');
