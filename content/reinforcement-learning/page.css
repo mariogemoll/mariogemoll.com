@@ -30,6 +30,10 @@
   width: 620px;
 }
 
+#pendulum-visualization .visualization {
+  width: 640px;
+}
+
 p > img {
   display: block;
   margin: 0 auto;

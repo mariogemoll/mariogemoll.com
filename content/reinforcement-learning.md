@@ -421,7 +421,136 @@ playing a simplified version of the Atari game Breakout:
 
 [[ breakout-visualization ]]
 
+## Policy gradient/REINFORCE
+
+The RL algorithms we looked at so far were value-based, they tried to approximate V or Q values and
+a policy was derived from those. Another family of algorithms aim at learning a policy directly. One
+fundamental algorithm here is REINFORCE, introduced in 1992 by Ronald J. Williams.
+
+We start with the goal of Reinforcement Learning in general: Maximizing the return (see above). Here
+usually a slightly different notation is used. We speak of state-action sequences, or trajectories,
+that happen in the environment: $\tau = (s_0, a_1, \dots, s_H, a_H)$ (in the finite-horizon case).
+Note that in this formulation the rewards aren't part of the trajectory, but we have a function
+that gives us the observed reward for a state and an action in a given trajectory:
+$r(s_t, a_t) = r_t$ (which again seems to be different from the expected reward
+$r(s,a) = \mathbb{E}[r(s,a,s')]$, RL notation is a bit inconsistent...)
+
+For the observed rewards we overload the r notation a bit:
+$$R(\tau) = \sum_{t=0}^H r_t = \sum_{t=0}^H r(s_t, a_t)$$
+The objective function of RL then becomes
+$$J(\theta)=\mathbb{E}_{\tau \sim p_\theta(\tau)}[R(\tau)] = \sum_\tau p_\theta(\tau) R(\tau)$$
+i.e the expected return over all trajectories under the policy parameterized by $\theta$.
+$p_\theta(\tau)$ is the likelihood of trajectory $\tau$ induced by the policy $\pi_\theta$
+interacting with the environment.
+
+We then want to find the optimal
+$\theta^{*} = \arg \max_\theta J(\theta)$.
+
+We take the gradient w.r.t. $\theta$ ($\nabla$ here means $\nabla_\theta$):
+$$
+\begin{align}
+\nabla J(\theta) &= \nabla \sum_\tau p_\theta(\tau) R(\tau) \\
+&\overset{(1)}{=} \sum_\tau \nabla p_\theta(\tau) R(\tau) \\
+&\overset{(2)}{=} \sum_\tau \frac{p_\theta(\tau)}{p_\theta(\tau)} \nabla p_\theta(\tau) R(\tau) \\
+&= \sum_\tau p_\theta(\tau) \frac{\nabla p_\theta(\tau)}{p_\theta(\tau)} R(\tau) \\
+&\overset{(3)}{=} \sum_\tau p_\theta(\tau) \nabla \log p_\theta(\tau) R(\tau) \\
+\end{align}
+$$
+
+(1): Linearity of gradient operator  
+(2): Multiply by $1 = \frac{p_\theta(\tau)}{p_\theta(\tau)}$  
+(3): $\nabla \log f(x) = \frac{\nabla f(x)}{f(x)}$ (chain rule)
+
+Since this is an expectation (weighted sum) again, we can approximate it through sampling:
+$$\nabla J(\theta) \approx \frac{1}{N}\sum_{i=1}^N \nabla \log p_\theta(\tau^{(i)}) R(\tau^{(i)})$$
+
+Let's look at the first part. The likelihoods of the trajectories depend on the transition
+probabilities. But this turns out to not be a problem:
+
+$$
+\begin{align}
+&\, \nabla \log p_\theta(\tau^{(i)}) \\
+&= \nabla \log \left[
+  \prod_{t=0}^H p(s_{t+1}^{(i)}|a_t^{(i)}|s_t^{(i)}) \pi_\theta(a_t^{(i)}|s_t^{(i)}) \right] \\
+&= \nabla \sum_{t=0}^H \log p(s_{t+1}^{(i)}|a_t^{(i)}|s_t^{(i)}) +
+  \nabla \sum_{t=0}^H \log \pi_\theta(a_t^{(i)}|s_t^{(i)}) \\
+&= \nabla \sum_{t=0}^H \log \pi_\theta(a_t^{(i)}|s_t^{(i)})
+\end{align}
+$$
+
+In the last step we were able to remove the first term since it does not depend on $\theta$, so its
+gradient is zero.
+
+Overall this gives us the following approximation of the gradient of the RL objective:
+
+$$
+\nabla J(\theta) \approx \frac{1}{N}\sum_{i=1}^N \sum_{t=0}^H
+  \nabla_\theta \log \pi_\theta(a_t^{(i)}|s_t^{(i)}) R(\tau^{(i)})
+$$
+
+We can use this in the REINFORCE algorithm, which does these things iteratively:
+
+- Sample trajectories
+- Approximate $\nabla J(\theta)$
+- Update $\theta$ using gradient descent: $\theta \leftarrow \theta + \alpha \nabla J(\theta)$
+
+REINFORCE has notoriously high variance. Learning curves oscillate heavily, and training runs can
+differ vastly depending on the seeds the pseudo-random generators were initialized with. Several
+methods exist to reduce the variance.
+
+One simple improvement is **reward-to-go**: instead of weighting every step's log-probability by the
+total trajectory return $R(\tau)$, we weight each step $t$ by the sum of rewards from that step
+onward:
+
+$$
+\nabla J(\theta) \approx \frac{1}{N}\sum_{i=1}^N \sum_{t=0}^H
+  \nabla_\theta \log \pi_\theta(a_t^{(i)}|s_t^{(i)}) \sum_{k=t}^H r_k^{(i)}
+$$
+
+This makes sense because actions at time $t$ cannot influence rewards that were already collected
+before $t$, and removing those irrelevant terms reduces variance.
+
+Another common technique is subtracting a **baseline** from the return. In
+[this notebook](https://github.com/mariogemoll/reinforcement-learning/blob/main/py/cartpole_pg.ipynb),
+the baseline used is the mean return of the batch of sampled trajectories. Instead of weighting each
+trajectory's log-probabilities by the raw return $R(\tau^{(i)})$, we subtract the batch mean and
+divide by the standard deviation to obtain normalized advantages:
+
+$$
+\hat{A}^{(i)} = \frac{R(\tau^{(i)}) - \bar{R}}{\sigma_R + \epsilon}
+$$
+
+where $\bar{R} = \frac{1}{N}\sum_i R(\tau^{(i)})$ and $\sigma_R$ is the standard deviation of the
+returns in the batch. The gradient estimate then becomes:
+
+$$
+\nabla J(\theta) \approx \frac{1}{N}\sum_{i=1}^N \sum_{t=0}^H
+  \nabla_\theta \log \pi_\theta(a_t^{(i)}|s_t^{(i)}) \hat{A}^{(i)}
+$$
+
+Subtracting the baseline does not change the expected gradient (it is still an unbiased estimate),
+but it reduces the variance: trajectories with above-average returns push the policy toward the
+actions taken, while below-average trajectories push it away, rather than all trajectories pushing
+in the same direction with different magnitudes.
+
+A more powerful approach is a **state-dependent baseline**. Instead of subtracting a single scalar
+(the batch mean), we train a separate neural network $V_\phi(s)$ that estimates the value of each
+state. The advantage at each time step then becomes
+$\hat{A}_t = \sum_{k=t}^H r_k - V_\phi(s_t)$. The value network is trained alongside the policy by
+minimizing the mean squared error between its predictions and the observed returns. In
+[this notebook](https://github.com/mariogemoll/reinforcement-learning/blob/main/py/pendulum_pg.ipynb),
+a state-dependent baseline is used to solve the Pendulum environment.
+
+[[ pendulum-visualization ]]
+
+It's notable that while the final algorithm in this example (with value network and other
+variance-reducing measures applied) does consistently solve the environment, there is still a lot of
+variability depending on the seed for the pseudorandom generator used in training (see also
+[this notebook](https://github.com/mariogemoll/reinforcement-learning/blob/main/py/pendulum_pg_multiseed.ipynb)).
+
 Starting from Markov decision processes, we developed the notion of value, examined prediction and
 control through dynamic programming and Monte Carlo methods, and arrived at temporal-difference
-learning as a bridge between planning and learning from experience. These concepts collectively
-define the foundations of reinforcement learning.
+learning as a bridge between planning and learning from experience. We then introduced
+policy-gradient methods such as REINFORCE, where policies are optimized directly from sampled
+trajectories, and saw how baselines can reduce the high variance of these estimators. Together,
+these ideas form the classical foundations of reinforcement learning.

@@ -24,7 +24,8 @@ export async function generatePage(
     ['value-iteration-q', 1000, 480],
     ['monte-carlo', 1200, 500],
     ['cartpole', 800, 460],
-    ['breakout', 620, 320]
+    ['breakout', 620, 320],
+    ['pendulum', 800, 460]
   ];
 
   mdContent = addVisualizations(mdContent, visualizations);
