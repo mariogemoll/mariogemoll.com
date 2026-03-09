@@ -15,6 +15,19 @@
           ],
           "title": "Asynchronous Methods for Deep Reinforcement Learning",
           "arxivId": "1602.01783"
+        },
+        {
+            "kind": "arxiv",
+            "id": "schulman-et-al-2015",
+            "authors": [
+                "Schulman, J.",
+                "Moritz, P.",
+                "Levine, S.",
+                "Jordan, M.",
+                "Abbeel, P."
+            ],
+            "title": "High-Dimensional Continuous Control Using Generalized Advantage Estimation",
+            "arxivId": "1506.02438"
         }
     ]
 }

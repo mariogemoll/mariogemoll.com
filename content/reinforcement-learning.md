@@ -597,6 +597,78 @@ workers (Asynchronous Advantage Actor-Critic, A3C). Shortly afterwards synchrono
 of the same algorithm became common, this variant is now referred to as Advantage Actor-Critic
 (A2C).
 
+## Generalized Advantage Estimation (GAE)
+
+The n-step formulation above reduces the variance of the gradient estimate compared to Monte-Carlo
+returns, but it introduces a bias through bootstrapping. In practice there is a trade-off:
+
+- Small n: high bias, low variance
+- Large n: low bias, high variance
+
+Instead of choosing a fixed n, we can combine multiple n-step advantages using an exponentially
+weighted average. This leads to Generalized Advantage Estimation (GAE), introduced in
+[[ ref-schulman-et-al-2015 ]] and widely used in modern policy-gradient methods such as PPO.
+
+The n-step advantage can be written as a sum of discounted TD errors
+
+$$
+A_t^{(n)} =
+\delta_t
++ \gamma \delta_{t+1}
++ \gamma^2 \delta_{t+2}
++ \dots
++ \gamma^{n-1} \delta_{t+n-1}.
+$$
+
+GAE forms a weighted combination of these:
+
+$$
+\hat{A}_t^{\text{GAE}(\gamma,\lambda)}
+=
+\sum_{l=0}^{\infty}
+(\gamma \lambda)^l
+\delta_{t+l}.
+$$
+
+In practice, of course, this sum is not infinite. We have a limited number of steps in our rollout,
+after which the sum gets truncated.
+
+The parameter $\lambda \in [0,1]$ controls the bias–variance trade-off:
+
+- $\lambda = 0$: $\hat{A}_t = \delta_t$ (TD(0), very low variance but biased)
+- $\lambda = 1$: approximates the Monte-Carlo advantage
+- $0 < \lambda < 1$: interpolates smoothly between the two
+
+The policy update becomes
+
+$$
+\nabla_\theta J(\theta)
+=
+\mathbb{E}\left[
+\nabla_\theta \log \pi_\theta(a_t|s_t)\,\hat A_t
+\right].
+$$
+
+The value function is typically trained using a regression target for the return
+
+$$
+R_t = \hat{A}_t^{\text{GAE}} + V(s_t),
+$$
+
+with loss
+$$
+\| R_t - V(s_t) \|^2.
+$$
+
+In modern implementations (e.g. PPO), the workflow typically becomes:
+
+1. Run the policy for $T$ steps, collect $(s_t,a_t,r_{t+1},s_{t+1})$.
+2. Compute $\delta_t = r_{t+1} + \gamma V(s_{t+1}) - V(s_t)$.
+3. Compute advantages backwards: $\hat A_t = \delta_t + \gamma\lambda \hat A_{t+1}$.
+4. Compute value targets $R_t = \hat A_t + V(s_t)$.
+5. Update policy using advantages.
+6. Update value function using $R_t$.
+
 Starting from Markov decision processes, we developed the notion of value, examined prediction and
 control through dynamic programming and Monte Carlo methods, and arrived at temporal-difference
 learning as a bridge between planning and learning from experience. We then introduced
