@@ -521,7 +521,8 @@ $$
 $$
 
 where $\bar{R} = \frac{1}{N}\sum_i R(\tau^{(i)})$ and $\sigma_R$ is the standard deviation of the
-returns in the batch. The gradient estimate then becomes:
+returns in the batch ($\epsilon$ is a "fuzz factor" to prevent division by zero). The gradient
+estimate then becomes:
 
 $$
 \nabla J(\theta) \approx \frac{1}{N}\sum_{i=1}^N \sum_{t=0}^H
@@ -548,9 +549,59 @@ variance-reducing measures applied) does consistently solve the environment, the
 variability depending on the seed for the pseudorandom generator used in training (see also
 [this notebook](https://github.com/mariogemoll/reinforcement-learning/blob/main/py/pendulum_pg_multiseed.ipynb)).
 
+## Actor-critic methods
+
+Recall that in REINFORCE with a state-dependent baseline the advantage was
+
+$$
+\hat{A}_t = \sum_{k=t}^H r_k - V_\phi(s_t).
+$$
+
+Moreover, it was a Monte-Carlo method, meaning that we
+had to collect a full episode before making any updates. We can replace the advantage with the TD(0)
+error (like we did in the tabular world before)
+
+$$
+\delta_t = r_{t+1} + \gamma V_\phi(s_{t+1}) - V_\phi(s_t).
+$$
+
+In other words, instead of taking the whole reward(-to-go) as a signal for the gradient, we only
+look at the immediate reward and use an estimate of the value of the next state (bootstrapping).
+This means we can do an update at every time step. In particular, at every time step $t$:
+
+- In state $s_t$, take action $a_t$ according to our policy $\pi$. Receive reward $r_{t+1}$ and land
+  in state $s_{t+1}$.
+- Adjust $V_\phi(s_t)$ so that it gets closer to the target $r_{t+1} + \gamma V_\phi(s_{t+1})$.
+- Adjust the policy $\pi_\theta(a_t|s_t)$ using the TD error $\delta_t$ as the "score."
+
+This can be extended to an n-step version. For example: Run the policy for 3 steps, collect  
+$(s_t, a_t, r_{t+1}),$  
+$(s_{t+1}, a_{t+1}, r_{t+2}),$  
+$(s_{t+2}, a_{t+2}, r_{t+3}), s_{t+3}$
+
+Update $\pi$ and $V$ using  
+$\| r_{t+3} + \gamma V(s_{t+3}) - V(s_{t+2}) \| ^2$ and  
+$\nabla \log \pi_\theta(a_{t+2}|s_{t+2}) (r_{t+3} + \gamma V(s_{t+3}) - V(s_{t+2}))$
+
+Then, update $\pi$ and $V$ using  
+$\| r_{t+2} + \gamma r_{t+3} + \gamma^2 V(s_{t+3}) - V(s_{t+1}) \| ^2$ and  
+$\nabla \log \pi_\theta(a_{t+1}|s_{t+1}) (r_{t+2} + \gamma r_{t+3} + \gamma^2 V(s_{t+3}) - V(s_{t+1}))$
+
+Then, update $\pi$ and $V$ using  
+$\| r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \gamma^3 V(s_{t+3}) - V(s_t) \| ^2$ and  
+$\nabla \log \pi_\theta(a_t|s_t)
+(r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \gamma^3 V(s_{t+3}) - V(s_t))$
+
+This was introduced in [[ ref-mnih-et-al-2016 ]]. The implementation involved several asynchronous
+workers (Asynchronous Advantage Actor-Critic, A3C). Shortly afterwards synchronous implementations
+of the same algorithm became common, this variant is now referred to as Advantage Actor-Critic
+(A2C).
+
 Starting from Markov decision processes, we developed the notion of value, examined prediction and
 control through dynamic programming and Monte Carlo methods, and arrived at temporal-difference
 learning as a bridge between planning and learning from experience. We then introduced
 policy-gradient methods such as REINFORCE, where policies are optimized directly from sampled
 trajectories, and saw how baselines can reduce the high variance of these estimators. Together,
 these ideas form the classical foundations of reinforcement learning.
+
+[[ references ]]

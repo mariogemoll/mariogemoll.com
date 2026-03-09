@@ -4,6 +4,8 @@
 import {
   addVisualizations,
   createMarkdownRenderer,
+  loadPageData,
+  processReferences,
   readMarkdownFile,
   type WidgetTuple } from '../page-helpers.js';
 import { type PageContentParams } from '../types.js';
@@ -15,6 +17,10 @@ export async function generatePage(
   const md = createMarkdownRenderer({ useHighlightJs: true, useAnchor: true });
 
   let mdContent = await readMarkdownFile(contentPath, 'reinforcement-learning.md', pageTitle);
+
+  const pageData = await loadPageData(contentPath, 'reinforcement-learning.json');
+
+  mdContent = processReferences(mdContent, pageData);
 
   const visualizations: WidgetTuple[] = [
     ['gridworld', 640, 480],
