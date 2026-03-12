@@ -669,11 +669,172 @@ In modern implementations (e.g. PPO), the workflow typically becomes:
 5. Update policy using advantages.
 6. Update value function using $R_t$.
 
-Starting from Markov decision processes, we developed the notion of value, examined prediction and
-control through dynamic programming and Monte Carlo methods, and arrived at temporal-difference
-learning as a bridge between planning and learning from experience. We then introduced
-policy-gradient methods such as REINFORCE, where policies are optimized directly from sampled
-trajectories, and saw how baselines can reduce the high variance of these estimators. Together,
-these ideas form the classical foundations of reinforcement learning.
+## Proximal Policy Optimization (PPO)
+
+One issue with policy gradient is that in practice updates can be too aggressive. Because the
+gradient is estimated from sampled trajectories, a single update can change the policy drastically,
+so that it behaves poorly and previously learned behavior gets destroyed. Training becomes instable
+or collapses. To mitigate this, researchers tried to find ways to restrict updates so that they do
+not move the policy too far in one step.
+
+An early solution, Trust Region Policy Optimization (TRPO), addressed this by solving
+
+$$
+\max_\theta \; \mathbb{E}\left[ \frac{\pi_\theta(a|s)}{\pi_{\theta_{old}}(a|s)} A \right]
+$$
+
+subject to a KL constraint
+
+$$
+D_{KL}(\pi_{\theta_{old}} \,\|\, \pi_\theta) \le \delta.
+$$
+
+This prevents the new policy from drifting too far from the previous one. However, TRPO had
+complicated implementations, requiring second-order optimization and conjugate gradients. Proximal
+Policy Optimization (PPO) simplifies this:
+
+We define the probability ratio (like in TRPO)
+
+$$
+r_t(\theta)
+=
+\frac{\pi_\theta(a_t|s_t)}
+{\pi_{\theta_{old}}(a_t|s_t)}
+$$
+
+and then maximize
+
+$$
+L^\text{CLIP}(\theta) = \mathbb{E}\Big[
+\min \left(
+r_t(\theta)\hat A_t
+\, ,\,
+\text{clip}(r_t(\theta),1-\epsilon,1+\epsilon)\hat A_t
+\right )
+\Big].
+$$
+
+This clipping also prevents the policy from steering too far off, but is much easier to work with.
+
+- When $\hat{A}_t > 0$: The action was better than average. We
+want to increase its probability, but the clip caps the gain at $1+\epsilon$ to prevent
+over-optimism.
+- When $\hat{A}_t < 0$: The action was worse than average. We decrease its probability,
+but the clip prevents us from "over-punishing" the policy if the ratio drops below $1-\epsilon$.
+
+In practice, PPO is implemented as an actor-critic method. The total loss function minimized during
+training usually combines three distinct terms:
+
+$$
+L_t^{PPO}(\theta) =
+\mathbb{E}_t \left[ L_t^{CLIP}(\theta) - c_1 L_t^{VF}(\theta) + c_2 S[\pi_\theta](s_t) \right]
+$$
+
+- $L_t^{CLIP}$ (clipped surrogate objective): As just described.
+- $L_t^{VF}$ (value function loss): A squared-error loss $(V_\theta(s_t) - V^{target}_t)^2$
+that ensures the Critic accurately predicts the expected return.
+- $S[\pi_\theta]$ (entropy bonus): This rewards the policy for maintaining a degree of randomness.
+It prevents premature convergence by ensuring the agent continues to explore different actions.
+
+PPO's success relies on several specific implementation "tricks" that ensure stable and
+efficient learning:
+
+Synchronous parallel rollouts: PPO typically runs $N$ environments in parallel.
+It collects a fixed window of $T$ steps from each environment before performing an update. This
+"batch" of $N \times T$ samples provides a more stable gradient than a single trajectory.
+
+Advantage normalization: Before updating, the GAE advantages $\hat{A}_t$ are often normalized
+(subtracting the mean and dividing by the standard deviation) across the entire batch. This keeps
+the scale of the gradients consistent regardless of the environment's reward magnitude.
+
+Multiple Epochs per Batch:
+Unlike vanilla Policy Gradient (which discards data after one update), PPO's clipping allows us to
+perform multiple epochs of SGD on the same batch of data. This significantly improves sample
+efficiency without risking the "policy collapse" seen in older methods.
+
+GAE Integration: PPO uses Generalized Advantage Estimation (GAE) to calculate $\hat{A}_t$, allowing
+the user to tune the $\lambda$ parameter to find the sweet spot between bias (from bootstrapping)
+and variance (from Monte-Carlo returns).
+
+The full algorithm is as follows (note that we also collect d_t, which is 1 when the rollout is
+done, and that we use log probabilities for numerical stability):
+
+$$
+\begin{aligned}
+&\textbf{Initialize policy parameters } \theta,\ \textbf{value parameters } \phi \\[4pt]
+&\textbf{Choose hyperparameters } N,T,K,M,\gamma,\lambda,\epsilon,c_1,c_2 \\[8pt]
+
+&\textbf{repeat} \\[4pt]
+
+&\quad \textbf{Collect rollout data using the current policy } \pi_\theta \\[2pt]
+&\quad \textbf{for each environment step } t=0,\dots,T-1 \textbf{ and each of } N
+  \text{ environments do} \\[2pt]
+&\qquad a_t \sim \pi_\theta(\cdot \mid s_t) \\
+&\qquad \ell_t \leftarrow \log \pi_\theta(a_t \mid s_t) \\
+&\qquad v_t \leftarrow V_\phi(s_t) \\
+&\qquad \text{Execute } a_t,\ \text{observe } r_t,\ s_{t+1},\ d_t \\
+&\qquad \text{Store } (s_t,a_t,r_t,s_{t+1},d_t,\ell_t,v_t) \\[2pt]
+&\quad \textbf{end for} \\[8pt]
+
+&\quad \textbf{Bootstrap the final value} \\
+&\quad v_T \leftarrow V_\phi(s_T) \\[8pt]
+
+&\quad \textbf{Compute GAE advantages backwards} \\
+&\quad \hat A_T \leftarrow 0 \\[2pt]
+&\quad \textbf{for } t=T-1,\dots,0 \textbf{ do} \\
+&\qquad \delta_t \leftarrow r_t + \gamma (1-d_t)\, v_{t+1} - v_t \\
+&\qquad \hat A_t \leftarrow \delta_t + \gamma\lambda(1-d_t)\hat A_{t+1} \\
+&\qquad \hat V_t \leftarrow \hat A_t + v_t \\
+&\quad \textbf{end for} \\[8pt]
+
+&\quad \textbf{Normalize advantages over the whole batch} \\
+&\quad \hat A_t \leftarrow \frac{\hat A_t - \mu_A}{\sigma_A + \varepsilon_{\text{norm}}} \\[8pt]
+
+&\quad \textbf{Flatten the } N \times T \textbf{ rollout into one batch} \\[2pt]
+&\quad \text{with stored old log-probabilities } \ell_t^{\text{old}} \leftarrow \ell_t \\[8pt]
+
+&\quad \textbf{for } k=1,\dots,K \textbf{ epochs do} \\[2pt]
+&\qquad \text{Shuffle the batch and split it into minibatches of size } M \\[4pt]
+
+&\qquad \textbf{for each minibatch } \mathcal{B} \textbf{ do} \\[2pt]
+
+&\qquad\quad \ell_t \leftarrow \log \pi_\theta(a_t \mid s_t), \qquad t \in \mathcal{B} \\
+&\qquad\quad v_\theta(s_t) \leftarrow V_\phi(s_t), \qquad t \in \mathcal{B} \\
+&\qquad\quad r_t(\theta) \leftarrow \exp\!\big(\ell_t - \ell_t^{\text{old}}\big) \\[8pt]
+
+&\qquad\quad L_t^{\text{CLIP}}(\theta) \leftarrow
+\min\!\left(
+r_t(\theta)\hat A_t,\;
+\mathrm{clip}\!\big(r_t(\theta),1-\epsilon,1+\epsilon\big)\hat A_t
+\right) \\[10pt]
+
+&\qquad\quad L_t^{VF}(\phi) \leftarrow \big(v_\theta(s_t)-\hat V_t\big)^2 \\[8pt]
+
+&\qquad\quad S_t \leftarrow S[\pi_\theta](s_t) \\[8pt]
+
+&\qquad\quad J(\theta,\phi) \leftarrow
+\frac{1}{|\mathcal{B}|}\sum_{t \in \mathcal{B}}
+\left[ L_t^{\text{CLIP}}(\theta) - c_1 L_t^{VF}(\phi) + c_2 S_t \right] \\[10pt]
+
+&\qquad\quad \text{Update } \theta,\phi \text{ by ascending } \nabla J(\theta,\phi) \\
+&\qquad\quad \text{(equivalently, minimize } -J(\theta,\phi)\text{)} \\[4pt]
+
+&\qquad \textbf{end for} \\[4pt]
+&\quad \textbf{end for} \\[8pt]
+
+&\textbf{until training converges}
+\end{aligned}
+$$
+
+PPO has struck a balance between ease of implementation, sample efficiency, and ease of tuning that
+has made it the starting point for almost any RL project today.
+
+Starting from the formalism of Markov decision processes, we built up the basic vocabulary of
+reinforcement learning: policies, returns, value functions, and the Bellman equations. We then
+examined both planning in model-known settings through dynamic programming and learning in
+model-free settings through Monte Carlo and temporal-difference methods, including SARSA,
+Q-learning, and function approximation. Finally, we discussed policy-gradient and actor-critic
+methods, culminating in GAE and PPO, which play a central role in contemporary reinforcement
+learning practice.
 
 [[ references ]]
