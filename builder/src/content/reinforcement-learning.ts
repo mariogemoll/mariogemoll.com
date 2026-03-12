@@ -9,7 +9,11 @@ import {
   readMarkdownFile,
   type WidgetTuple } from '../page-helpers.js';
 import { type PageContentParams } from '../types.js';
-import { highlightJsCssUrl } from './urls.js';
+import {
+  highlightJsCssUrl,
+  threeOrbitControlsUrl,
+  threeUrl
+} from './urls.js';
 
 export async function generatePage(
   contentPath: string, pageTitle: string
@@ -31,7 +35,8 @@ export async function generatePage(
     ['monte-carlo', 1200, 500],
     ['cartpole', 800, 460],
     ['breakout', 620, 320],
-    ['pendulum', 800, 460]
+    ['pendulum', 800, 460],
+    ['hopper', 1048, 466]
   ];
 
   mdContent = addVisualizations(mdContent, visualizations);
@@ -49,5 +54,10 @@ export async function generatePage(
 
   const jsModuleUrls = ['/reinforcement-learning/reinforcement-learning.js'];
 
-  return [html, cssFiles, [], jsModuleUrls];
+  const importMap: Record<string, string> = {
+    'three': threeUrl,
+    'three/examples/jsm/controls/OrbitControls.js': threeOrbitControlsUrl
+  };
+
+  return [html, cssFiles, [], jsModuleUrls, importMap];
 }

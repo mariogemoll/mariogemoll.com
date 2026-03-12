@@ -47,5 +47,6 @@ pnpm exec esbuild src/diffusion/diffusion.ts --bundle --format=esm \
   --source-root=https://github.com/mariogemoll/mariogemoll.com/tree/$COMMIT_HASH/frontend/src/diffusion
 
 pnpm exec esbuild src/reinforcement-learning/reinforcement-learning.ts --bundle --format=esm \
+  --external:three --external:three/examples/jsm/* \
   --outfile=dist/reinforcement-learning/reinforcement-learning.js --minify --sourcemap \
   --source-root=https://github.com/mariogemoll/mariogemoll.com/tree/$COMMIT_HASH/frontend/src/reinforcement-learning

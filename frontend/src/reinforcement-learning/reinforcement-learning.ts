@@ -1,5 +1,6 @@
 import { initCartPoleVisualization } from 'reinforcement-learning/visualizations/cartpole';
 import { initGridworldVisualization } from 'reinforcement-learning/visualizations/gridworld';
+import { initHopperVisualization } from 'reinforcement-learning/visualizations/hopper';
 import {
   initMinAtarBreakoutVisualization
 } from 'reinforcement-learning/visualizations/minatar-breakout';
@@ -59,6 +60,12 @@ function initializeGridWorld(): void {
   if (breakoutContainer) {
     void initMinAtarBreakoutVisualization(
       breakoutContainer, '/reinforcement-learning/minatar-breakout.safetensors'
+    );
+  }
+  const hopperContainer = document.getElementById('hopper-visualization');
+  if (hopperContainer) {
+    void initHopperVisualization(
+      hopperContainer, '/reinforcement-learning/hopper-rollout.mjroll'
     );
   }
 }

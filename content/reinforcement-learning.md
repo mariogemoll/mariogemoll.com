@@ -829,6 +829,11 @@ $$
 PPO has struck a balance between ease of implementation, sample efficiency, and ease of tuning that
 has made it the starting point for almost any RL project today.
 
+Here are some PPO-trained MuJoCo Hopper agents for your enjoyment. Train your own using
+[this notebook](https://github.com/mariogemoll/reinforcement-learning/blob/main/py/hopper_ppo.ipynb)!
+
+[[ hopper-visualization ]]
+
 Starting from the formalism of Markov decision processes, we built up the basic vocabulary of
 reinforcement learning: policies, returns, value functions, and the Bellman equations. We then
 examined both planning in model-known settings through dynamic programming and learning in
