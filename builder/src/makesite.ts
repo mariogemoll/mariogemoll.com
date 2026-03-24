@@ -76,21 +76,49 @@ function copyAssets(): Map<string, string> {
   );
 }
 
+function extractH1Context(html: string, contextLines: number): string {
+  const lines = html.split('\n');
+  const h1LineNumbers: number[] = [];
+  for (let i = 0; i < lines.length; i++) {
+    if (/<h1[\s>]/i.test(lines[i])) {
+      h1LineNumbers.push(i);
+    }
+  }
+  const seen = new Set<number>();
+  const snippet: string[] = [];
+  for (const lineNum of h1LineNumbers) {
+    const start = Math.max(0, lineNum - contextLines);
+    const end = Math.min(lines.length - 1, lineNum + contextLines);
+    for (let i = start; i <= end; i++) {
+      if (!seen.has(i)) {
+        seen.add(i);
+        snippet.push(`  ${i + 1}: ${lines[i]}`);
+      }
+    }
+    if (lineNum < h1LineNumbers[h1LineNumbers.length - 1]) {
+      snippet.push('  ...');
+    }
+  }
+  return snippet.join('\n');
+}
+
 function makePage(
   pageTemplate: pug.compileTemplate,
   htmlContent: string,
   cssUrls: string[],
   jsUrls: string[],
   jsModuleUrls: string[],
+  filename: string,
   importMap?: Record<string, string>
 ): [string, string] {
   const $ = cheerio.load(htmlContent);
   const h1Tags = $('h1');
   if (h1Tags.length > 1) {
-    throw new Error('More than one <h1> found in the content');
+    const context = extractH1Context(htmlContent, 3);
+    throw new Error(`More than one <h1> found in ${filename}:\n${context}`);
   }
   if (h1Tags.length === 0) {
-    throw new Error('No <h1> found in the content');
+    throw new Error(`No <h1> found in ${filename}`);
   }
   const title = h1Tags.first().text().trim();
   const output = pageTemplate(
@@ -170,7 +198,9 @@ async function makePages(
     const secretId = randomString();
     // Add header
     const wrappedHtml = contentTemplate({ content: pageHtmlContent, siteTitle: siteConfig.title });
-    const [output] = makePage(pageTemplate, wrappedHtml, cssUrls, jsUrls, jsModuleUrls, importMap);
+    const [output] = makePage(
+      pageTemplate, wrappedHtml, cssUrls, jsUrls, jsModuleUrls, page.id, importMap
+    );
     fs.writeFileSync(`../build/${secretId}.html`, output);
     generatedPages.set(page.id, [
       secretId,
@@ -215,7 +245,7 @@ function makeHomepage(
     other
   });
   const [output] = makePage(
-    pageTemplate, homeHtml, ['/misc/centered.css', '/misc/home.css'], [], []
+    pageTemplate, homeHtml, ['/misc/centered.css', '/misc/home.css'], [], [], 'home page'
   );
   const randomId = randomString();
   fs.writeFileSync(`../build/${randomId}.html`, output);
