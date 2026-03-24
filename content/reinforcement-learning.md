@@ -359,7 +359,7 @@ So far we have dealt with environments with a finite number of states (e.g. grid
 Let's now consider CartPole, an environment in which at every time step the agent is asked to decide
 to move a cart left or right with the aim of balancing a pole attached on top of it for as long as
 possible. This environment has a four-dimensional continuous state space (cart position, cart
-velocity, pole angle, pole angular velocity). The action space is still descrete (left/right).
+velocity, pole angle, pole angular velocity). The action space is still discrete (left/right).
 
 We could probably solve this environment with some of the techniques discussed so far by
 discretizing the state space with appropriate granularity, however now we'll approximate $Q(s, a)$
@@ -367,7 +367,7 @@ using a neural network.
 
 Recall that in Q-learning we said that ideally $Q(s,a)$ should equal the immediate reward we get from
 taking action a in state s plus the discounted value of the best next action. This was our "target":
-$r + \gamma * \max_{a'} Q(s', a')$.
+$r + \gamma \max_{a'} Q(s', a')$.
 
 We then updated the current value we had for $Q(s,a)$ in our table according to its distance to this
 target based on the observation of $r$ and $s'$ (ie., the TD error):
@@ -571,26 +571,47 @@ This means we can do an update at every time step. In particular, at every time 
 
 - In state $s_t$, take action $a_t$ according to our policy $\pi$. Receive reward $r_{t+1}$ and land
   in state $s_{t+1}$.
-- Adjust $V_\phi(s_t)$ so that it gets closer to the target $r_{t+1} + \gamma V_\phi(s_{t+1})$.
-- Adjust the policy $\pi_\theta(a_t|s_t)$ using the TD error $\delta_t$ as the "score."
+- Compute TD error: $\delta_t = r_{t+1} + \gamma V_\phi(s_{t+1}) - V_\phi(s_t)$
+- Update the critic (value function):
+  $\phi \leftarrow \phi + \alpha_v \, \delta_t \, \nabla_\phi V_\phi(s_t)$
+- Update the actor (policy):
+  $\theta \leftarrow \theta + \alpha_\pi \, \delta_t \, \nabla_\theta \log \pi_\theta(a_t \mid s_t)$
 
-This can be extended to an n-step version. For example: Run the policy for 3 steps, collect  
-$(s_t, a_t, r_{t+1}),$  
-$(s_{t+1}, a_{t+1}, r_{t+2}),$  
-$(s_{t+2}, a_{t+2}, r_{t+3}), s_{t+3}$
+This can be extended to an n-step version. For example, for n=3, run the policy for three
+steps and collect
 
-Update $\pi$ and $V$ using  
-$\| r_{t+3} + \gamma V(s_{t+3}) - V(s_{t+2}) \| ^2$ and  
-$\nabla \log \pi_\theta(a_{t+2}|s_{t+2}) (r_{t+3} + \gamma V(s_{t+3}) - V(s_{t+2}))$
+$$
+(s_t, a_t, r_{t+1}), \qquad
+(s_{t+1}, a_{t+1}, r_{t+2}), \qquad
+(s_{t+2}, a_{t+2}, r_{t+3}), \qquad
+s_{t+3}.
+$$
 
-Then, update $\pi$ and $V$ using  
-$\| r_{t+2} + \gamma r_{t+3} + \gamma^2 V(s_{t+3}) - V(s_{t+1}) \| ^2$ and  
-$\nabla \log \pi_\theta(a_{t+1}|s_{t+1}) (r_{t+2} + \gamma r_{t+3} + \gamma^2 V(s_{t+3}) - V(s_{t+1}))$
+For the most recent state-action pair $(s_{t+2}, a_{t+2})$, use  
+$\delta_{t+2} = r_{t+3} + \gamma V_\phi(s_{t+3}) - V_\phi(s_{t+2})$  
+to update the critic via
+$\phi \leftarrow \phi + \alpha_v \, \delta_{t+2} \, \nabla_\phi V_\phi(s_{t+2})$  
+and the actor via
+$\theta \leftarrow \theta + \alpha_\pi \, \delta_{t+2} \, \nabla_\theta \log \pi_\theta(a_{t+2}\mid s_{t+2})$.
 
-Then, update $\pi$ and $V$ using  
-$\| r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \gamma^3 V(s_{t+3}) - V(s_t) \| ^2$ and  
-$\nabla \log \pi_\theta(a_t|s_t)
-(r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \gamma^3 V(s_{t+3}) - V(s_t))$
+For the previous state-action pair $(s_{t+1}, a_{t+1})$, use  
+$\delta_{t+1} = r_{t+2} + \gamma r_{t+3} + \gamma^2 V_\phi(s_{t+3}) - V_\phi(s_{t+1})$  
+to update the critic via
+$\phi \leftarrow \phi + \alpha_v \, \delta_{t+1} \, \nabla_\phi V_\phi(s_{t+1})$  
+and the actor via
+$\theta \leftarrow \theta + \alpha_\pi \, \delta_{t+1} \, \nabla_\theta \log \pi_\theta(a_{t+1}\mid s_{t+1})$.
+
+Finally, for $(s_t, a_t)$, use  
+$\delta_t = r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \gamma^3 V_\phi(s_{t+3}) - V_\phi(s_t)$  
+to update the critic via $\phi \leftarrow \phi + \alpha_v \, \delta_t \, \nabla_\phi V_\phi(s_t)$  
+and the actor via
+$\theta \leftarrow \theta + \alpha_\pi \, \delta_t \, \nabla_\theta \log \pi_\theta(a_t\mid s_t)$.
+
+In general, the n-step version replaces the one-step TD error
+$r_{t+1} + \gamma V_\phi(s_{t+1}) - V_\phi(s_t)$
+with
+$\delta_t = r_{t+1} + \gamma r_{t+2} + \cdots + \gamma^{n-1} r_{t+n} + \gamma^n V_\phi(s_{t+n}) - V_\phi(s_t)$
+and then uses this quantity for both the critic and the actor updates.
 
 This was introduced in [[ ref-mnih-et-al-2016 ]]. The implementation involved several asynchronous
 workers (Asynchronous Advantage Actor-Critic, A3C). Shortly afterwards synchronous implementations
