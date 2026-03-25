@@ -129,3 +129,34 @@ def bradley_terry_loss(r_chosen, r_rejected):
     # r_* shape: (batch,)
     return -F.logsigmoid(r_chosen - r_rejected).mean()
 ```
+
+## RLHF using PPO
+
+To do full PPO using RLHF, conceptually we need four models:
+
+- A reward model $\text{RM}$
+- A reference model $\pi_\text{ref}$
+- A value model $V$
+- The actual model we want to train $\pi$
+
+The algorithm is then as follows:
+
+In every iteration:
+
+- Sample prompts $x_i$ and generate responses $y_i$. also store the probabilities $\pi(a_t|s_t)$
+  (later referred to as $\pi_\text{old}(a_t|s_t)$).
+- for each (x,y):
+  - Calculate the KL penalty against the reference on the token level:
+    $r_t = - \beta \left(\log \pi_\text{old}(a_t|s_t) - \log \pi_{\text{ref}}(a_t|s_t)\right)$
+  - Calculate the reward model score: $r_{\text{RM}} = r_\theta(x, y)$
+  - Add the reward model score to the last token only
+  - Compute the TD error using the values from the value model:
+    $\delta_t = r_t + \gamma V(s_{t+1}) - V(s_t)$
+  - Calculate advantages using GAE: $A_t = \sum_{l=0}^{\infty} (\gamma \lambda)^l \delta_{t+l}$
+  - Calculate value function targets: $V^\text{target}_t = A_t + V(s_t)$.
+- Then, for each epoch:
+  - Calculate the ratio $ρ_t = \frac{\pi(a_t|s_t)}{\pi_\text{old}(a_t|s_t)}$
+  - Update policy model using
+  $L^{CLIP}(\theta)=\mathbb{E}_t [\min(ρ_t \hat{A}_t,\text{clip}(ρ_t,1-\epsilon,1+\epsilon) \hat{A}_t)]$
+  - Update value model using
+      $L^{VF}(\phi) = \frac{1}{2} (V_\phi(s_t) - V^\text{target}_t)^2$
