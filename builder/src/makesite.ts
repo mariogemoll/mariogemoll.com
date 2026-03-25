@@ -229,6 +229,7 @@ function makeHomepage(
 ): string {
   const mlIds = [
     'reinforcement-learning',
+    'rlhf',
     'flow-matching',
     'diffusion',
     'normalizing-flows',
