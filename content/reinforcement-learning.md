@@ -526,7 +526,7 @@ estimate then becomes:
 
 $$
 \nabla J(\theta) \approx \frac{1}{N}\sum_{i=1}^N \sum_{t=0}^H
-  \nabla_\theta \log \pi_\theta(a_t^{(i)}|s_t^{(i)}) \hat{A}^{(i)}
+  \nabla_\theta \log \pi_\theta(a_t^{(i)}|s_t^{(i)}) \hat{A}_t^{(i)}
 $$
 
 Subtracting the baseline does not change the expected gradient (it is still an unbiased estimate),
@@ -567,7 +567,15 @@ $$
 
 In other words, instead of taking the whole reward(-to-go) as a signal for the gradient, we only
 look at the immediate reward and use an estimate of the value of the next state (bootstrapping).
-This means we can do an update at every time step. In particular, at every time step $t$:
+This means we can do an update at every time step, and we use the TD error $\delta_t$ to update the
+weights of both the policy (the "actor") and the value function (the "critic"). The policy gets
+updated by $\nabla \log \pi(a_t|s_t) \delta_t$.
+For the value function, we use the mean squared error:
+$\mathcal{L}_V(\phi) = \frac{1}{2} \left(V_\phi(s_t) - (r_{t+1} + \gamma V_\phi(s_{t+1}))\right)^2$.
+Taking a gradient step on this loss yields:
+$\phi \leftarrow \phi + \alpha_v \, \delta_t \, \nabla_\phi V_\phi(s_t)$.
+
+To put it all in a nutshell, at every time step $t$:
 
 - In state $s_t$, take action $a_t$ according to our policy $\pi$. Receive reward $r_{t+1}$ and land
   in state $s_{t+1}$.
@@ -747,15 +755,20 @@ In practice, PPO is implemented as an actor-critic method. The total loss functi
 training usually combines three distinct terms:
 
 $$
-L_t^{PPO}(\theta) =
-\mathbb{E}_t \left[ L_t^{CLIP}(\theta) - c_1 L_t^{VF}(\theta) + c_2 S[\pi_\theta](s_t) \right]
+L_t^{\text{PPO}}(\theta, \phi) =
+\mathbb{E}_t \left[
+  L_t^{\text{CLIP}}(\theta) - c_1 L_t^{\text{VF}}(\phi) + c_2 S[\pi_\theta](s_t)
+\right]
 $$
 
-- $L_t^{CLIP}$ (clipped surrogate objective): As just described.
-- $L_t^{VF}$ (value function loss): A squared-error loss $(V_\theta(s_t) - V^{target}_t)^2$
+- $L_t^{\text{CLIP}}$ (clipped surrogate objective): As just described.
+- $L_t^{\text{VF}}$ (value function loss): A squared-error loss $(V_\phi(s_t) - V^{\text{target}}_t)^2$
 that ensures the Critic accurately predicts the expected return.
-- $S[\pi_\theta]$ (entropy bonus): This rewards the policy for maintaining a degree of randomness.
-It prevents premature convergence by ensuring the agent continues to explore different actions.
+- $S[\pi_\theta] = \mathcal{H}(\pi_\theta(\cdot \mid s))$ (entropy bonus): This rewards the policy
+for maintaining a degree of randomness.  It prevents premature convergence by ensuring the agent
+continues to explore different actions.
+
+$c_1$ and $c_2$ are hyperparameters that balance policy learning, value fitting, and exploration.
 
 PPO's success relies on several specific implementation "tricks" that ensure stable and
 efficient learning:
