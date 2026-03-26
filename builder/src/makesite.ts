@@ -4,21 +4,17 @@
 import * as cheerio from 'cheerio';
 import * as fs from 'fs';
 import fsExtra from 'fs-extra';
-import MarkdownIt from 'markdown-it';
-import mathjax3 from 'markdown-it-mathjax3';
 import * as path from 'path';
 import pug from 'pug';
 import { fileURLToPath, pathToFileURL } from 'url';
 
 import { PAGE_TITLE_PLACEHOLDER_PATTERN } from './constants.js';
 import { makeAtomFeed, makeRssFeed, makeSitemap } from './feeds.js';
+import { createMarkdownRenderer } from './page-helpers.js';
 import type { PageContentParams, SiteConfig } from './types.js';
 import { omit, pick } from './util.js';
 
-const markdown = new MarkdownIt({
-  html: true,
-  linkify: true
-}).use(mathjax3);
+const markdown = createMarkdownRenderer();
 
 function randomString(length = 12): string {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';

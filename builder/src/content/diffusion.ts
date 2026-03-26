@@ -11,7 +11,7 @@ import {
   type WidgetTuple } from '../page-helpers.js';
 import { type PageContentParams } from '../types.js';
 import {
-  fileSaverUrl, highlightJsCssUrl, jszipUrl, reactDomUrl, reactUrl, tfJsUrl
+  fileSaverUrl, highlightJsCssUrl, jszipUrl, mathJaxUrl, reactDomUrl, reactUrl, tfJsUrl
 } from './urls.js';
 
 
@@ -55,7 +55,7 @@ export async function generatePage(
     '/diffusion/diffusion.css'
   ];
 
-  const jsUrls: string[] = [tfJsUrl];
+  const jsUrls: string[] = [mathJaxUrl, tfJsUrl];
 
   const jsModuleUrls = ['/diffusion/diffusion.js'];
 

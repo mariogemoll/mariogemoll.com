@@ -4,13 +4,125 @@
 import fsExtra from 'fs-extra';
 import hljs from 'highlight.js';
 import MarkdownIt from 'markdown-it';
+import type StateBlock from 'markdown-it/lib/rules_block/state_block.mjs';
+import type StateInline from 'markdown-it/lib/rules_inline/state_inline.mjs';
 import markdownItAnchor from 'markdown-it-anchor';
-import mathjax3 from 'markdown-it-mathjax3';
 import path from 'path';
 
 import { PAGE_TITLE_PLACEHOLDER_PATTERN } from './constants.js';
 import { renderReferencesSection, replaceCitations } from './references.js';
 import { PageData, type PageDataT } from './types.js';
+
+function isValidDelim(
+  state: StateInline, pos: number
+): { can_open: boolean; can_close: boolean } {
+  const max = state.posMax;
+  let can_open = true;
+  let can_close = true;
+  const prevChar = pos > 0 ? state.src.charCodeAt(pos - 1) : -1;
+  const nextChar = pos + 1 <= max ? state.src.charCodeAt(pos + 1) : -1;
+  if (prevChar === 0x20 || prevChar === 0x09 ||
+      (nextChar >= 0x30 && nextChar <= 0x39)) {
+    can_close = false;
+  }
+  if (nextChar === 0x20 || nextChar === 0x09) {
+    can_open = false;
+  }
+  return { can_open, can_close };
+}
+
+function mathInlineRule(state: StateInline, silent: boolean): boolean {
+  if (state.src[state.pos] !== '$') {return false;}
+  let res = isValidDelim(state, state.pos);
+  if (!res.can_open) {
+    if (!silent) {state.pending += '$';}
+    state.pos += 1;
+    return true;
+  }
+  const start = state.pos + 1;
+  let match = start;
+  while ((match = state.src.indexOf('$', match)) !== -1) {
+    let pos = match - 1;
+    while (state.src[pos] === '\\') {pos -= 1;}
+    if ((match - pos) % 2 === 1) {break;}
+    match += 1;
+  }
+  if (match === -1) {
+    if (!silent) {state.pending += '$';}
+    state.pos = start;
+    return true;
+  }
+  if (match - start === 0) {
+    if (!silent) {state.pending += '$$';}
+    state.pos = start + 1;
+    return true;
+  }
+  res = isValidDelim(state, match);
+  if (!res.can_close) {
+    if (!silent) {state.pending += '$';}
+    state.pos = start;
+    return true;
+  }
+  if (!silent) {
+    const token = state.push('math_inline', 'math', 0);
+    token.markup = '$';
+    token.content = state.src.slice(start, match);
+  }
+  state.pos = match + 1;
+  return true;
+}
+
+function mathBlockRule(
+  state: StateBlock, start: number, end: number, silent: boolean
+): boolean {
+  let pos = state.bMarks[start] + state.tShift[start];
+  let max = state.eMarks[start];
+  if (pos + 2 > max) {return false;}
+  if (state.src.slice(pos, pos + 2) !== '$$') {return false;}
+  pos += 2;
+  let firstLine = state.src.slice(pos, max);
+  if (silent) {return true;}
+  let found = false;
+  let lastLine = '';
+  if (firstLine.trim().endsWith('$$')) {
+    firstLine = firstLine.trim().slice(0, -2);
+    found = true;
+  }
+  let next = start;
+  for (; !found;) {
+    next++;
+    if (next >= end) {break;}
+    pos = state.bMarks[next] + state.tShift[next];
+    max = state.eMarks[next];
+    if (pos < max && state.tShift[next] < state.blkIndent) {break;}
+    if (state.src.slice(pos, max).trim().endsWith('$$')) {
+      const lastPos = state.src.slice(0, max).lastIndexOf('$$');
+      lastLine = state.src.slice(pos, lastPos);
+      found = true;
+    }
+  }
+  state.line = next + 1;
+  const token = state.push('math_block', 'math', 0);
+  token.block = true;
+  token.content =
+    (firstLine.trim() ? firstLine + '\n' : '') +
+    state.getLines(start + 1, next, state.tShift[start], true) +
+    (lastLine.trim() ? lastLine : '');
+  token.map = [start, state.line];
+  token.markup = '$$';
+  return true;
+}
+
+function mathPassthrough(md: MarkdownIt): void {
+  md.inline.ruler.after('escape', 'math_inline', mathInlineRule);
+  md.block.ruler.after('blockquote', 'math_block', mathBlockRule, {
+    alt: ['paragraph', 'reference', 'blockquote', 'list']
+  });
+  md.renderer.rules.math_inline = (tokens, idx): string =>
+    `\\(${tokens[idx].content}\\)`;
+  md.renderer.rules.math_block = (tokens, idx): string =>
+    `\\[${tokens[idx].content}\\]`;
+}
 
 export interface MarkdownRendererOptions {
   useHighlightJs?: boolean;
@@ -43,7 +155,7 @@ export function createMarkdownRenderer(options: MarkdownRendererOptions = {}): M
     md = md.use(markdownItAnchor);
   }
 
-  md = md.use(mathjax3);
+  md.use(mathPassthrough);
 
   return md;
 }

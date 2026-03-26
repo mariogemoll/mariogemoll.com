@@ -5,7 +5,7 @@ import {
   createMarkdownRenderer, readMarkdownFile, replaceWidgetPlaceholders
 } from '../page-helpers.js';
 import type { PageContentParams } from '../types.js';
-import { highlightJsCssUrl, onnxRuntimeWebJsUrl, picaJsUrl } from './urls.js';
+import { highlightJsCssUrl, mathJaxUrl, onnxRuntimeWebJsUrl, picaJsUrl } from './urls.js';
 
 export async function generatePage(
   contentPath: string,
@@ -35,6 +35,7 @@ export async function generatePage(
     '/vae/vae.css'
   ];
   const jsUrls = [
+    mathJaxUrl,
     picaJsUrl,
     onnxRuntimeWebJsUrl
   ];

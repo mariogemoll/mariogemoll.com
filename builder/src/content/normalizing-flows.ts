@@ -8,7 +8,7 @@ import {
   readMarkdownFile,
   replaceWidgetPlaceholders } from '../page-helpers.js';
 import { type PageContentParams } from '../types.js';
-import { highlightJsCssUrl, tfJsUrl, tfJsWebGpuBackendUrl } from './urls.js';
+import { highlightJsCssUrl, mathJaxUrl, tfJsUrl, tfJsWebGpuBackendUrl } from './urls.js';
 
 
 export async function generatePage(
@@ -43,6 +43,7 @@ export async function generatePage(
   ];
 
   const jsUrls: string[] = [
+    mathJaxUrl,
     tfJsUrl,
     tfJsWebGpuBackendUrl
   ];

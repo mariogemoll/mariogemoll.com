@@ -15,5 +15,7 @@ export const threeUrl = 'https://cdn.jsdelivr.net/npm/three@0.183.2/build/three.
 export const threeOrbitControlsUrl =
   'https://cdn.jsdelivr.net/npm/three@0.183.2/examples/jsm/controls/OrbitControls.js';
 
+export const mathJaxUrl = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js';
+
 export const fileSaverUrl = 'https://esm.sh/file-saver@2.0.5';
 export const jszipUrl = 'https://esm.sh/jszip@3.10.1';

@@ -12,7 +12,7 @@ import {
 } from '../page-helpers.js';
 import { type PageContentParams } from '../types.js';
 import {
-  fileSaverUrl, highlightJsCssUrl, jszipUrl, reactDomUrl, reactUrl, tfJsUrl
+  fileSaverUrl, highlightJsCssUrl, jszipUrl, mathJaxUrl, reactDomUrl, reactUrl, tfJsUrl
 } from './urls.js';
 
 
@@ -55,7 +55,7 @@ export async function generatePage(
     '/flow-matching/flow-matching.css'
   ];
 
-  const jsUrls: string[] = [tfJsUrl];
+  const jsUrls: string[] = [mathJaxUrl, tfJsUrl];
 
   const jsModuleUrls = ['/flow-matching/flow-matching.js'];
 

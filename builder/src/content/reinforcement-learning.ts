@@ -11,6 +11,7 @@ import {
 import { type PageContentParams } from '../types.js';
 import {
   highlightJsCssUrl,
+  mathJaxUrl,
   threeOrbitControlsUrl,
   threeUrl
 } from './urls.js';
@@ -59,5 +60,5 @@ export async function generatePage(
     'three/examples/jsm/controls/OrbitControls.js': threeOrbitControlsUrl
   };
 
-  return [html, cssFiles, [], jsModuleUrls, importMap];
+  return [html, cssFiles, [mathJaxUrl], jsModuleUrls, importMap];
 }
