@@ -160,3 +160,136 @@ In every iteration:
   $L^{CLIP}(\theta)=\mathbb{E}_t [\min(ρ_t \hat{A}_t,\text{clip}(ρ_t,1-\epsilon,1+\epsilon) \hat{A}_t)]$
   - Update value model using
       $L^{VF}(\phi) = \frac{1}{2} (V_\phi(s_t) - V^\text{target}_t)^2$
+
+## DPO
+
+It turns out that there is an analytical best policy solution to the RLHF objective, which will make
+things much easier, if we assume the human preferences follow the Bradley-Terry model:
+
+The RLHF objective is:
+
+$$
+\max_{\pi} \mathbb{E}_{y \sim \pi(y|x)} [r(x,y)] - \beta, \mathbb{D}_{KL}(\pi(y|x) || \pi_{\text{ref}}(y|x))
+$$
+
+This is a constrained optimization problem. There is an exact solution for the optimal policy
+$\pi^*$ for this objective which can be derived using some optimization math (Lagrangian):
+
+$$
+\pi^*(y|x) = \frac{1}{Z(x)} \pi_{\text{ref}}(y|x) \exp\left( \frac{1}{\beta} r(x,y) \right)
+$$
+
+The Z(x) here is an inconvenient normalization constant which we can't compute. However, it will
+turn out to not be a problem, so just think of it as some constant for now.
+
+Let's rearrange the formula:
+
+$$\exp\left( \frac{1}{\beta} r(x,y) \right) = Z(x) \frac{\pi^*(y|x)}{\pi_{\text{ref}}(y|x)}$$
+
+Taking the logarithm, we can express the reward using just the policy ratios:
+
+$$r(x,y) = \beta \log \frac{\pi^*(y|x)}{\pi_{\text{ref}}(y|x)} + \beta \log Z(x)$$
+
+Let’s take a minute to think about what that means: We assume we know human preferences and can
+express them using a reward function. We then define the objective of finding a policy that
+maximizes this reward while staying close to the reference policy (via a KL penalty). The resulting
+optimal policy increases the probability of high-reward completions and decreases the probability of
+low-reward ones relative to the reference model.  Because of this, the reward of a completion can be
+expressed (up to a prompt-dependent constant) as the log of the ratio between how likely the optimal
+policy is to produce that completion and how likely the reference model is to produce it.
+
+Let's plug this into the Bradley-Terry formula:
+
+$$
+\begin{align}
+P(y_{\text{chosen}} \succ y_{\text{rejected}})
+&= \sigma\big(r_\theta(x, y_{\text{chosen}}) - r_\theta(x, y_{\text{rejected}})\big) \\
+&= \sigma \left(
+    \left[ \beta \log \frac{\pi^*(y_\text{chosen}|x)}{\pi_{\text{ref}}(y_\text{chosen}|x)} +
+        \beta \log Z(x) \right] -
+    \left[ \beta \log \frac{\pi^*(y_\text{rejected}|x)}{\pi_{\text{ref}}(y_\text{rejected}|x)} +
+        \beta \log Z(x) \right]
+\right) \\
+&= \sigma \left(
+    \beta \log \frac{\pi^*(y_\text{chosen}|x)}{\pi_{\text{ref}}(y_\text{chosen}|x)} -
+    \beta \log \frac{\pi^*(y_\text{rejected}|x)}{\pi_{\text{ref}}(y_\text{rejected}|x)}
+\right)
+\end{align}
+$$
+
+In the last step the hairy Z(x) canceled out nicely.
+
+Now, the optimal policy is the one that would maximize the probability
+$P(y_{\text{chosen}} \succ y_{\text{rejected}})$.
+We don't know the optimal policy, but we have training data, and we can train our model so that it
+optimizes the probability (or rather, minimizes the negative log probability):
+
+$$
+\mathcal{L}_{DPO}(\pi_\theta; \pi_{\text{ref}}) =
+-\mathbb{E}_{(x, y_w, y_l) \sim D} \left[ \log \sigma \left(
+    \beta \log \frac{\pi_\theta(y_\text{chosen}|x)}{\pi_{\text{ref}}(y_\text{chosen}|x)} -
+    \beta \log \frac{\pi_\theta(y_\text{rejected}|x)}{\pi_{\text{ref}}(y_\text{rejected}|x)}
+\right) \right]
+$$
+
+This means we've turned an RL problem into a much simpler binary classification problem!
+
+Here is a sketch of an implementation of the algorithm in PyTorch:
+
+```python
+beta = 0.1 # KL-penalty coefficient
+optimizer = torch.optim.AdamW(policy.parameters(), lr=5e-7)
+
+def get_batch_logps(logits, labels, mask):
+    """
+    Sum the log-probabilities of the tokens in the completion.
+    logits: [batch, seq_len, vocab_size]
+    labels: [batch, seq_len] (Token IDs)
+    mask:   [batch, seq_len] (1 for completion tokens, 0 for prompt/padding)
+    """
+    # Standard log_softmax over the vocabulary dimension
+    log_probs = F.log_softmax(logits, dim=-1)
+
+    # Pick the log-prob for the actual token at each position
+    per_token_logps = torch.gather(log_probs, dim=-1, index=labels.unsqueeze(-1)).squeeze(-1)
+
+    # Sum across the sequence length, ignoring the prompt via the mask
+    return (per_token_logps * mask).sum(-1)
+
+for batch in dataloader:
+    # Concatenate chosen and rejected to process in one GPU pass
+    all_responses = torch.cat([batch.chosen, batch.rejected], dim=0)
+    all_masks = torch.cat([batch.chosen_mask, batch.rejected_mask], dim=0)
+
+    # Forward passes
+    policy_logits = policy(all_responses).logits
+    with torch.no_grad():
+        ref_logits = ref_model(all_responses).logits
+
+    # Calculate sequence-level log-probabilities: log pi(y|x)
+    all_logps = get_batch_logps(policy_logits, all_responses, all_masks)
+    all_ref_logps = get_batch_logps(ref_logits, all_responses, all_masks)
+
+    # Split back into chosen (w) and rejected (l)
+    logp_w, logp_l = all_logps.chunk(2)
+    ref_logp_w, ref_logp_l = all_ref_logps.chunk(2)
+
+    # reward_difference = [beta * log(pi/ref)_w] - [beta * log(pi/ref)_l]
+    # Note: log(a/b) = log(a) - log(b)
+    implicit_reward_w = beta * (logp_w - ref_logp_w)
+    implicit_reward_l = beta * (logp_l - ref_logp_l)
+
+    # Loss = -E [ log sigma ( reward_w - reward_l ) ]
+    loss = -F.logsigmoid(implicit_reward_w - implicit_reward_l).mean()
+
+    # Backprop
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+```
+
+Because of its simplicity and stability, DPO has effectively replaced PPO as the industry's default
+alignment algorithm. While some labs still use RL for its exploration capabilities, DPO is now the
+standard "workhorse" for turning a base model into a chat-aligned assistant. However, DPO only
+learns from the data in the training set, no new text is generated, there is no exploration. That's
+why PPO can still lead to better outcomes in certain situations.
