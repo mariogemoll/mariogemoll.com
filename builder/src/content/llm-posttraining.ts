@@ -10,7 +10,7 @@ export async function generatePage(
 ): Promise<PageContentParams> {
   const md = createMarkdownRenderer({ useHighlightJs: true, useAnchor: true });
 
-  const mdContent = await readMarkdownFile(contentPath, 'rlhf.md', pageTitle);
+  const mdContent = await readMarkdownFile(contentPath, 'llm-posttraining.md', pageTitle);
 
   const html = md.render(mdContent);
 
