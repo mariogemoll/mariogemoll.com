@@ -169,7 +169,7 @@ things much easier, if we assume the human preferences follow the Bradley-Terry 
 The RLHF objective is:
 
 $$
-\max_{\pi} \mathbb{E}_{y \sim \pi(y|x)} [r(x,y)] - \beta, \mathbb{D}_{KL}(\pi(y|x) || \pi_{\text{ref}}(y|x))
+\max_{\pi} \mathbb{E}_{y \sim \pi(y|x)} [r(x,y)] - \beta\, \mathbb{D}_{KL}(\pi(y|x) || \pi_{\text{ref}}(y|x))
 $$
 
 This is a constrained optimization problem. There is an exact solution for the optimal policy
