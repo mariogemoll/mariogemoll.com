@@ -3,6 +3,13 @@
 
 # [[ page-title ]]
 
+After a language model is trained on a large corpus of text, it becomes effective at modeling and
+continuing text sequences. This stage is commonly referred to as *pretraining*. In practice,
+however, pretrained models are typically not yet well-suited for downstream use. A series of
+additional training steps, often grouped under the term *posttraining*, are therefore applied to
+make the model more useful for specific applications. The distinction between pretraining and
+posttraining (and sometimes *"midtraining"*) is not always sharp and can vary across workflows.
+
 ## Reinforcement Learning from Human Feedback
 
 In traditional reinforcement learning we try to iteratively make a policy better, ie. learn a policy
