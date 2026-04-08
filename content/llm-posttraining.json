@@ -1,0 +1,23 @@
+{
+  "references": [
+    {
+      "kind": "arxiv",
+      "id": "shao-et-al-2024",
+      "authors": [
+        "Shao, Z.",
+        "Wang, P.",
+        "Zhu, Q.",
+        "Xu, R.",
+        "Song, J.",
+        "Bi, X.",
+        "Zhang, H.",
+        "Zhang, M.",
+        "Li, Y.K.",
+        "Wu, Y.",
+        "Guo, D."
+      ],
+      "title": "DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models",
+      "arxivId": "2402.03300"
+    }
+  ]
+}

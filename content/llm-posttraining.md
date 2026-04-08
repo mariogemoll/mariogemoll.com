@@ -293,3 +293,62 @@ alignment algorithm. While some labs still use RL for its exploration capabiliti
 standard "workhorse" for turning a base model into a chat-aligned assistant. However, DPO only
 learns from the data in the training set, no new text is generated, there is no exploration. That's
 why PPO can still lead to better outcomes in certain situations.
+
+## Reinforcement Learning from Verifiable Rewards
+
+RLHF uses preference data (good vs. bad examples) to nudge a model toward desired behaviors, often
+related to style, helpfulness, or safety. In Reinforcement Learning from Verifiable Rewards (RLVR),
+the reward model is replaced by a verifier capable of assigning rewards based on objective,
+deterministic metrics. For example, we might ask the model to solve a math problem and score the
+output based on whether the answer is correct.  By sampling multiple outputs and using these reward
+signals, we can directly improve the model's task performance. This goes beyond shaping style: it
+can increase reliability and, in some cases, help elicit latent capabilities already present in the
+model.
+
+While RLVR can be done using PPO, often a modified algorithm called Group Relative Policy
+Optimization (GRPO) is used, introduced in 2024 in the DeepSeekMath paper
+([[ ref-shao-et-al-2024 ]]).
+
+We typically take a prompt (think: a textual math problem) and let the model generate a "group" of
+several completions for the prompt, which all get scored by the verifier. We can then calculate the
+advantage of each response by simply measuring how much "better" it is than the average of the
+group (similar to a basic average baseline in REINFORCE), scaled by the standard deviation over the
+group.
+
+$$
+\hat A_i = \frac{r_i - \mu}{\sigma}
+$$
+
+Note that there is no critic/value function like in PPO, also no TD error, GAE, or per-token KL
+divergence calculation. We only look at sequence-level scores.
+
+Similar to PPO, once we've calculated the advantages, we run several epochs of maximizing the
+following objective:
+
+$$
+\mathcal J_\text{GRPO}(\theta) =
+\mathbb E_{x \sim P(Q), \{y_i\}_{i=1}^G \sim \pi_{\theta_\text{old}}} \left [
+    \frac{1}{G} \sum_{i=1}^G \frac{1}{|y_i|} \sum_{t=1}^{|y_i|} \left (
+        \mathcal C_\epsilon \left(
+            \frac
+                {\pi_\theta(y_{t+1}^{(i)}|x,y_{1:t}^{(i)})}
+                {\pi_{\theta_\text{old}}(y_{t+1}^{(i)}|x,y_{1:t}^{(i)})},
+            \hat A_i
+        \right) -
+        \beta D_\text{KL}(\pi_\theta, || \pi_\text{ref})
+    \right )
+\right ]
+$$
+
+$\hat A_i$ is as described above, $\mathcal C_\epsilon$ is the clipped deviation from the previous
+iteration model like in PPO, and the KL divergence is estimated like this:
+
+$$
+D_\text{KL}(\pi_\theta, || \pi_\text{ref}) \approx
+\frac{\pi_\text{ref}(y_{t+1}^{(i)}|x,y_{1:t}^{(i)})}{\pi_\theta(y_{t+1}^{(i)}|x,y_{1:t}^{(i)})}
+- \log
+    \frac{\pi_\text{ref}(y_{t+1}^{(i)}|x,y_{1:t}^{(i)})}{\pi_\theta(y_{t+1}^{(i)}|x,y_{1:t}^{(i)})}
+- 1
+$$
+
+[[ references ]]

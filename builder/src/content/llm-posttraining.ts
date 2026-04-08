@@ -1,7 +1,9 @@
 // SPDX-FileCopyrightText: 2026 Mario Gemoll
 // SPDX-License-Identifier: 0BSD
 
-import { createMarkdownRenderer, readMarkdownFile } from '../page-helpers.js';
+import {
+  createMarkdownRenderer, loadPageData, processReferences, readMarkdownFile
+} from '../page-helpers.js';
 import { type PageContentParams } from '../types.js';
 import { highlightJsCssUrl } from './urls.js';
 
@@ -10,7 +12,11 @@ export async function generatePage(
 ): Promise<PageContentParams> {
   const md = createMarkdownRenderer({ useHighlightJs: true, useAnchor: true });
 
-  const mdContent = await readMarkdownFile(contentPath, 'llm-posttraining.md', pageTitle);
+  let mdContent = await readMarkdownFile(contentPath, 'llm-posttraining.md', pageTitle);
+
+  const pageData = await loadPageData(contentPath, 'llm-posttraining.json');
+
+  mdContent = processReferences(mdContent, pageData);
 
   const html = md.render(mdContent);
 
