@@ -63,6 +63,16 @@ representing a different task. After training, the update can be merged into the
 allowing standard inference without additional overhead. If desired, this merge can be reversed
 later by keeping track of the original weights.
 
+## Supervised Fine-Tuning
+
+The first posttraining step is usually supervised fine-tuning (SFT). The goal is to adapt the
+pretrained model to follow instructions and produce outputs in a desired interaction format (e.g.,
+chat-based dialogue). This is achieved by training on curated prompt-response pairs using the same
+next-token prediction objective as in pretraining, typically with a cross-entropy loss.
+
+The result of SFT is an "instruct" model, which serves as the foundation for further posttraining
+steps.
+
 ## Reinforcement Learning from Human Feedback
 
 In traditional reinforcement learning we try to iteratively make a policy better, ie. learn a policy
