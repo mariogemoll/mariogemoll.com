@@ -10,6 +10,59 @@ additional training steps, often grouped under the term *posttraining*, are ther
 make the model more useful for specific applications. The distinction between pretraining and
 posttraining (and sometimes *"midtraining"*) is not always sharp and can vary across workflows.
 
+## LoRA
+
+One tool that is frequently used in posttraining (although it can also be used more broadly in
+machine learning) is low-rank adaptation (LoRA, [[ ref-hu-et-al-2021 ]]). It allows making updates
+to a matrix in a low-dimensional subspace using far fewer parameters than updating each entry
+individually, thus greatly reducing memory and compute requirements.
+
+Assume we apply changes $\Delta W$ to a weight matrix $W \in \mathbb{R}^{d \times k}$:
+$$
+W' = W + \Delta W
+$$
+
+In LoRA, the update is parameterized using two low-rank matrices $A \in \mathbb{R}^{r \times k}$ and
+$B \in \mathbb{R}^{d \times r}$ with $r \ll \min(d,k)$ such that
+
+$$
+W' = W + BA.
+$$
+
+<img src="/llm-posttraining/lora.svg"
+    alt="A figure showing the dot product of a 10x3 and a 3x10 matrix resulting in a 10x10 matrix">
+
+By construction, the update satisfies $\operatorname{rank}(\Delta W) \le r$, meaning we restrict
+updates to a low-dimensional subspace. This leads to a significant reduction in parameters, from
+$d \cdot k$ for a full update to $r(d + k)$ with LoRA, which is much smaller when $r \ll \min(d,k)$.
+
+A concrete example illustrates the scale of this reduction. Consider a typical transformer
+projection matrix with size 4096 × 4096, which contains about 16.8 million parameters. A full
+update would require modifying all of them. In contrast, using LoRA with a small rank such as r = 8
+introduces only 8(4096 + 4096) = 65,536 trainable parameters, 256 times fewer. Despite this
+drastic compression, such low-rank updates are often sufficient to adapt large models effectively,
+which is what makes LoRA so practical for fine-tuning.
+
+In practice, a scaling factor $\alpha$ (not the learning rate) is applied:
+$$
+W' = W + \frac{\alpha}{r} BA,
+$$
+which keeps the magnitude of the update roughly invariant as $r$ changes.
+
+During training, the base weights $W$ are typically frozen, and only $A$ and $B$ are updated. This
+makes LoRA particularly efficient for fine-tuning large models.
+
+From a forward-pass perspective, instead of computing $Wx$, we have
+$$
+Wx \;\to\; Wx + \frac{\alpha}{r}\, B(Ax).
+$$
+i.e., the input is first projected down to $\mathbb{R}^r$ and then lifted back to $\mathbb{R}^d$.
+
+Since the update is additive, a single base model can be shared across many LoRA adapters, each
+representing a different task. After training, the update can be merged into the base weights,
+allowing standard inference without additional overhead. If desired, this merge can be reversed
+later by keeping track of the original weights.
+
 ## Reinforcement Learning from Human Feedback
 
 In traditional reinforcement learning we try to iteratively make a policy better, ie. learn a policy

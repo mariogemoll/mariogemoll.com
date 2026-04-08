@@ -2,6 +2,22 @@
   "references": [
     {
       "kind": "arxiv",
+      "id": "hu-et-al-2021",
+      "authors": [
+        "Hu, E. J.",
+        "Shen, Y.",
+        "Wallis, P.",
+        "Allen-Zhu, Z.",
+        "Li, Y.",
+        "Wang, S.",
+        "Wang, L.",
+        "Chen, W."
+      ],
+      "title": "LoRA: Low-Rank Adaptation of Large Language Models",
+      "arxivId": "2106.09685"
+    },
+    {
+      "kind": "arxiv",
       "id": "shao-et-al-2024",
       "authors": [
         "Shao, Z.",
