@@ -75,21 +75,40 @@ steps.
 
 ## Reinforcement Learning from Human Feedback
 
-In traditional reinforcement learning we try to iteratively make a policy better, ie. learn a policy
-that maximizes the reward we get from the environment. In LLM posttraining we don't really have an
-environment, but we want to make our "policy" (the LLM) better as in more aligned with certain
-preferences while not losing previously learned capabilities. Since the preference data we train on
-comes from humans, we call this reinforcement learning from human feedback.
+The remainder of this page will be about reinforcement learning in the context of LLMs/transformers.
+First we'll look at reinforcement learning from human feedback, in which preference data generated
+by humans ("this answer is better than that one") is used to influence the model's behaviour in a
+certain way (e.g. to make it answer in a polite way). Later we'll also discuss reinforcement
+learning from verifiable rewards, where we'll use an objective scoring function to model better at
+certain tasks (e.g. make it better at solving math by checking results).
 
-In this context, states are (partially) generated sequences of text, i.e., the prompt tokens and all
-response tokens generated so far. An action is then simply the next token to add to that sequence.
+As usual with RL, we need to define some MDP. In the context of RLHF/RLVR, a state is a sequence of
+text (ie. all the tokens generated so far). Often we denote the prompt by $x$ and the completion by
+$y$: $s_t = (x, y_{<t})$
+
+An action is simply the next token from the vocabulary to add. Therefore, there is no stochasticity
+in state transitions. For a given policy (ie. language model), the result of choosing an action in a
+state, ie. adding a token to an existing sequence, is simply the sequence with the token added.
+
+Note that we can use a transformer to give the probability of a certain action in a certain state
+(ie., the policy), by looking at the output probabilities:
+$\pi_\theta(a_t \mid s_t) = \text{softmax}(\text{logits}_\theta(s_t))$.
+
+We can also give the probability for a whole sequence as the product of the individual token
+probablities:
+
+$$
+\pi(y|x) = \prod_{t} \pi(y_t \mid x, y_{<t})
+$$
 
 ## Value model
 
-In some RL algorithms we need state value functions. In a typical LLM transformer the last layer is
-an unembedding layer that turns the hidden states into vocabulary logits (hidden dims -> vocab size)
-. We can simply replace this with one that maps each token to a single value (hidden dims -> 1),
-for example like this in PyTorch:
+In some RL algorithms we need state value functions. As stated above, states are sequences of text
+up to a certain token, so value here means "how good is the text so far". We can construct a machine
+learning model for a state value function by altering and finetuning an existing LLM. In a typical
+LLM transformer the last layer is an unembedding layer that turns the hidden states into vocabulary
+logits (hidden dims -> vocab size) . We can simply replace this with one that maps each token to a
+single value (hidden dims -> 1), for example like this in PyTorch:
 
 ```python
 import torch
@@ -121,19 +140,17 @@ class ValueModel(nn.Module):
         return values
 ```
 
-Usually the value model is trained by finetuning an existing language model (the one we want to do
-RLHF on). In practice, the policy model and value model are often implemented as one model with two
-heads.
-
 ## Reward model
 
-What we'll also need for our reward is a reward model. The idea is that we use a dataset of human
-preference data to train a model that can score how good a given response is, i.e. for a given
-prompt x and response y we get a scalar score. We will then later use this model to estimate rewards
-for responses from the LLM. So in RLHF the human feedback typically isn't directly on the model
+One fundamental piece of RL we haven't talked about so far: The reward. In traditional RL, the agent
+chooses an action, or a sequence of actions and gets a reward. In RLHF (and also later in RLVR),
+we'll get a reward for a completed sequence. The idea is that we use a dataset of human preference
+data to train a model that can score how good a given response is, i.e. for a given prompt x and
+response y we get a scalar score. We will then later use this model to estimate rewards for
+responses from the LLM. So in RLHF the human feedback typically isn't directly on the model
 responses, but on data that is used to train a reward model that will then evaluate model responses.
 To build such a model we can adapt an existing LLM as we did above for the value model, however here
-we only to the end-of-sequence token:
+we only look at the end-of-sequence token:
 
 ```python
 class RewardModel(nn.Module):
@@ -200,13 +217,48 @@ def bradley_terry_loss(r_chosen, r_rejected):
     return -F.logsigmoid(r_chosen - r_rejected).mean()
 ```
 
+After training we have a model that can estimate a score a human evaluator would give for a certain
+text (i.e., prompt + answer) generated by the model.
+
+## KL divergence and the RLHF objective
+
+Overall the objective of RLHF, as in regular RL, is to find the policy that maximizes the reward we
+get for our actions (i.e. generations). However we also want to make sure the model doesn't deviate
+too much from the base model, so we add a penalty for the KL divergence:
+
+$$
+\max_\pi \;\mathbb{E}_{x \sim \mathcal{D},\, y \sim \pi(\cdot|x)} \big[ r(x,y) \big]
+\;-\;
+\beta \, D_{\mathrm{KL}}\!\left(\pi(\cdot|x)\,\|\,\pi_{\text{ref}}(\cdot|x)\right)
+$$
+
+$\beta$ is a hyperparameter that controls the strength of the KL regularization term.
+
+The KL divergence term is defined over full sequences:
+
+$$
+D_{\mathrm{KL}}\!\left(\pi(\cdot|x)\,\|\,\pi_{\mathrm{ref}}(\cdot|x)\right)
+=
+\mathbb{E}_{y\sim\pi}\!\left[
+\log\frac{\pi(y|x)}{\pi_{\mathrm{ref}}(y|x)}
+\right]
+=
+\mathbb{E}_{y\sim\pi}\!\left[
+\log\pi(y|x) - \log \pi_{\mathrm{ref}}(y|x)
+\right]
+$$
+
+However as we'll see we usually only calculate it on the token level
+$(\log \pi(y_t\mid s_t)-\log \pi_{\mathrm{ref}}(y_t\mid s_t))$.
+
 ## RLHF using PPO
 
-To do full PPO using RLHF, conceptually we need four models:
+As in many areas, [PPO](/reinforcement-learning#ppo) is a good standard algorithm that can be used
+for RLHF. Conceptually we need four models:
 
-- A reward model $\text{RM}$
-- A reference model $\pi_\text{ref}$
-- A value model $V$
+- A reward model $\text{RM}$ (described above)
+- A value model $V$ (described above)
+- A reference model $\pi_\text{ref}$ (the base model)
 - The actual model we want to train $\pi$
 
 The algorithm is then as follows:
@@ -225,7 +277,7 @@ In every iteration:
   - Calculate advantages using GAE: $A_t = \sum_{l=0}^{\infty} (\gamma \lambda)^l \delta_{t+l}$
   - Calculate value function targets: $V^\text{target}_t = A_t + V(s_t)$.
 - Then, for each epoch:
-  - Calculate the ratio $ρ_t = \frac{\pi(a_t|s_t)}{\pi_\text{old}(a_t|s_t)}$
+  - Calculate the ratio $\rho_t = \frac{\pi(a_t|s_t)}{\pi_\text{old}(a_t|s_t)}$
   - Update policy model using
   $L^{CLIP}(\theta)=\mathbb{E}_t [\min(ρ_t \hat{A}_t,\text{clip}(ρ_t,1-\epsilon,1+\epsilon) \hat{A}_t)]$
   - Update value model using
@@ -414,7 +466,7 @@ $\hat A_i$ is as described above, $\mathcal C_\epsilon$ is the clipped deviation
 iteration model like in PPO, and the KL divergence is estimated like this:
 
 $$
-D_\text{KL}(\pi_\theta, || \pi_\text{ref}) \approx
+D_\text{KL}(\pi_\theta || \pi_\text{ref}) \approx
 \frac{\pi_\text{ref}(y_{t+1}^{(i)}|x,y_{1:t}^{(i)})}{\pi_\theta(y_{t+1}^{(i)}|x,y_{1:t}^{(i)})}
 - \log
     \frac{\pi_\text{ref}(y_{t+1}^{(i)}|x,y_{1:t}^{(i)})}{\pi_\theta(y_{t+1}^{(i)}|x,y_{1:t}^{(i)})}
