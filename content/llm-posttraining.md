@@ -473,4 +473,17 @@ D_\text{KL}(\pi_\theta || \pi_\text{ref}) \approx
 - 1
 $$
 
+## A practical example: Getting better at GSM8K
+
+This text is accompanied by a [GitHub repo](https://github.com/mariogemoll/llm-posttraining) showing
+an example of a posttraining pipeline consting of SFT and RLVR. GSM8K is a relatively simple
+benchmark consisting of school math word problems (1.32k in the testset, 7.47k rows in the training
+set, of which we take 0.5k for the validation set).
+[Qwen2.5-Math-1.5B](https://huggingface.co/Qwen/Qwen2.5-Math-1.5B) achieves a zero-shot accuracy of
+51.20% on the validation set "out of the box". After one epoch of SFT (mostly to improve adherence
+to the desired output format) we reach an accuracy of 63.60%, after one epoch of RLVR 83.60%. On the
+test set we get values of 41.93% for the base model, 51.18% after SFT, and 73.69% after RLVR. Note
+that the Qwen2.5-Math paper gives 76.8% for the base model, however they use 8-shot and a different
+format, so the results are not directly comparable.
+
 [[ references ]]
