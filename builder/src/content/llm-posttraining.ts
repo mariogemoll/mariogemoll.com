@@ -5,7 +5,7 @@ import {
   createMarkdownRenderer, loadPageData, processReferences, readMarkdownFile
 } from '../page-helpers.js';
 import { type PageContentParams } from '../types.js';
-import { highlightJsCssUrl } from './urls.js';
+import { highlightJsCssUrl, mathJaxUrl } from './urls.js';
 
 export async function generatePage(
   contentPath: string, pageTitle: string
@@ -31,5 +31,5 @@ export async function generatePage(
   const importMap: Record<string, string> = {
   };
 
-  return [html, cssFiles, [], jsModuleUrls, importMap];
+  return [html, cssFiles, [mathJaxUrl], jsModuleUrls, importMap];
 }
