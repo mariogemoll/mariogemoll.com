@@ -698,7 +698,7 @@ In modern implementations (e.g. PPO), the workflow typically becomes:
 5. Update policy using advantages.
 6. Update value function using $R_t$.
 
-## Proximal Policy Optimization (PPO)
+<h2 id="ppo">Proximal Policy Optimization (PPO)</h2>
 
 One issue with policy gradient is that in practice updates can be too aggressive. Because the
 gradient is estimated from sampled trajectories, a single update can change the policy drastically,

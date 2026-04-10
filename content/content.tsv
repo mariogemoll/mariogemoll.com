@@ -6,3 +6,4 @@ attention-is-all-you-need	Attention Is All You Need	Describing the training of a
 flow-matching	Flow Matching	An overview of flow matching techniques for generative modeling.	2025-11-25T10:00:00Z	2026-01-14T21:00:00Z
 diffusion	Diffusion	Extending the flow matching framework to diffusion models.	2026-01-14T22:00:00Z	2026-01-14T22:00:00Z
 reinforcement-learning	Reinforcement Learning	Foundations of reinforcement learning, from Markov decision processes and value functions to dynamic programming, Monte Carlo methods, temporal-difference learning, and policy gradients.	2026-02-10T14:30:00Z	2026-03-25T10:00:00Z
+llm-posttraining	LLM Posttraining	A guide to LLM posttraining basics: LoRA, SFT, RLHF, RLVR.	2026-04-10T15:00:00Z	2026-04-10T15:00:00Z
