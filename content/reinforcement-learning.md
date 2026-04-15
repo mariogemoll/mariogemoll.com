@@ -3,9 +3,19 @@
 
 # [[ page-title ]]
 
-Reinforcement learning formalizes the problem of an agent learning to act in an environment by
-maximizing cumulative reward. This page covers the foundations: Markov decision processes, policies,
-value functions, and the Bellman equations.
+This page provides a structured introduction to reinforcement learning (RL), moving from core
+definitions to modern deep RL methods. We begin by formalizing the Markov decision process (MDP) and
+defining policies, returns, and value functions. We then derive the Bellman expectation and
+optimality equations, which form the foundation for dynamic programming methods such as policy
+iteration and value iteration. Building on this, we cover Monte Carlo methods and
+temporal-difference learning (including TD(0), SARSA, and Q-learning), highlighting their respective
+update rules and trade-offs. We then introduce function approximation with neural networks, leading
+to Deep Q-Networks (DQN) and their key stabilizing techniques such as replay buffers and target
+networks. Finally, we outline the transition to policy gradient methods and actor–critic approaches,
+connecting Monte Carlo and bootstrapped updates and setting the stage for modern algorithms such as
+PPO and related methods.
+
+Applications of RL in modern LLM posttraining are described on a [separate page](llm-posttraining).
 
 ## Markov Decision Process
 
