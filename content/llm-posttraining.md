@@ -10,6 +10,15 @@ additional training steps, often grouped under the term *posttraining*, are ther
 make the model more useful for specific applications. The distinction between pretraining and
 posttraining (and sometimes *"midtraining"*) is not always sharp and can vary across workflows.
 
+This page provides an overview of the main techniques used in LLM posttraining. It begins with
+parameter-efficient fine-tuning methods such as LoRA, explaining how large models can be adapted
+with minimal additional parameters. It then covers supervised fine-tuning (SFT) as a way to align
+models with desired behaviors using curated datasets. Building on this, the page introduces
+reinforcement learning–based approaches, including reinforcement learning from human feedback (RLHF)
+and reinforcement learning from verifiable rewards (RLVR), detailing how preference data or
+objective signals can further shape model outputs. Throughout, the focus is on the underlying
+objectives, model components, and practical training setups used in modern posttraining pipelines.
+
 ## LoRA
 
 One tool that is frequently used in posttraining (although it can also be used more broadly in
