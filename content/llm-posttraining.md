@@ -84,7 +84,7 @@ certain tasks (e.g. make it better at solving math by checking results).
 
 As usual with RL, we need to define some MDP. In the context of RLHF/RLVR, a state is a sequence of
 text (ie. all the tokens generated so far). Often we denote the prompt by $x$ and the completion by
-$y$: $s_t = (x, y_{<t})$
+$y$: $s_t = (x, y_{\lt t})$
 
 An action is simply the next token from the vocabulary to add. Therefore, there is no stochasticity
 in state transitions. For a given policy (ie. language model), the result of choosing an action in a
@@ -98,7 +98,7 @@ We can also give the probability for a whole sequence as the product of the indi
 probablities:
 
 $$
-\pi(y|x) = \prod_{t} \pi(y_t \mid x, y_{<t})
+\pi(y|x) = \prod_{t} \pi(y_t \mid x, y_{\lt t})
 $$
 
 ### Value model
