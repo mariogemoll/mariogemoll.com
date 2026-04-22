@@ -8,6 +8,9 @@ import {
   initConditionalPathOdeVisualization
 } from 'flow-matching-and-diffusion/visualizations/conditional/path-ode';
 import {
+  initFlowMatchingVisualizationEnsemble
+} from 'flow-matching-and-diffusion/visualizations/ensembles/flow-matching';
+import {
   initEulerMethodVisualization
 } from 'flow-matching-and-diffusion/visualizations/euler-method';
 import {
@@ -16,9 +19,6 @@ import {
 import {
   initVectorFieldVisualization
 } from 'flow-matching-and-diffusion/visualizations/vector-field';
-import {
-  initFlowMatchingPipeline
-} from 'flow-matching-and-diffusion-deprecated/flow-matching-pipeline';
 import { el } from 'web-ui-common/dom';
 
 function initViz(fn: (el: HTMLElement) => () => void, selector: string): void {
@@ -36,21 +36,25 @@ async function page(): Promise<void> {
   initViz(initConditionalPathOdeVisualization, '#conditional-probability-path-ode-visualization');
   initViz(initMarginalPathOdeVisualization, '#marginal-probability-path-ode-visualization');
 
-  const moonsDatasetWidget = el(document, '#moons-dataset-widget') as HTMLDivElement;
-  const trainingWidget = el(document, '#training-widget') as HTMLDivElement;
-  const flowVisualizationWidget = el(document, '#flow-visualization-widget') as HTMLDivElement;
+  const moonsDatasetVisualization = el(document, '#moons-dataset-visualization') as HTMLDivElement;
+  const trainingVisualization = el(
+    document, '#flow-matching-training-visualization'
+  ) as HTMLDivElement;
+  const flowVisualization = el(
+    document, '#flow-matching-inference-visualization'
+  ) as HTMLDivElement;
 
   await tf.ready();
 
-  await initFlowMatchingPipeline(
-    moonsDatasetWidget,
-    trainingWidget,
-    flowVisualizationWidget,
-    '/flow-matching/flow-matching-model.json',
-    '/flow-matching/flow-matching-loss-history.bin',
-    1000 // epochs
+  initFlowMatchingVisualizationEnsemble(
+    moonsDatasetVisualization,
+    trainingVisualization,
+    flowVisualization,
+    {
+      weightsUrl: '/flow-matching/flow-matching-model.json',
+      lossHistoryUrl: '/flow-matching/flow-matching-loss-history.bin'
+    }
   );
-  await Promise.resolve();
 }
 
 window.addEventListener('load', () => {

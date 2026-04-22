@@ -8,14 +8,14 @@ import {
   initConditionalPathOdeSdeVisualization
 } from 'flow-matching-and-diffusion/visualizations/conditional/path-ode-sde';
 import {
+  initDiffusionVisualizationEnsemble
+} from 'flow-matching-and-diffusion/visualizations/ensembles/diffusion';
+import {
   initEulerMaruyamaMethodVisualization
 } from 'flow-matching-and-diffusion/visualizations/euler-maruyama-method';
 import {
   initMarginalPathOdeSdeVisualization
 } from 'flow-matching-and-diffusion/visualizations/marginal/path-ode-sde';
-import {
-  initFlowAndScoreMatchingPipeline
-} from 'flow-matching-and-diffusion-deprecated/flow-and-score-matching-pipeline';
 import { el } from 'web-ui-common/dom';
 
 function initViz(fn: (el: HTMLElement) => () => void, selector: string): void {
@@ -35,25 +35,27 @@ async function run(): Promise<void> {
   initViz(initMarginalPathOdeSdeVisualization, '#marginal-probability-path-ode-sde-visualization');
 
   const moonsDatasetContainer = el(
-    document, '#moons-dataset-widget') as HTMLDivElement;
+    document, '#moons-dataset-visualization') as HTMLDivElement;
   const flowMatchingTrainingContainer = el(
-    document, '#flow-matching-training-widget') as HTMLDivElement;
+    document, '#flow-matching-training-visualization') as HTMLDivElement;
   const scoreMatchingTrainingContainer = el(
-    document, '#score-matching-training-widget') as HTMLDivElement;
+    document, '#score-matching-training-visualization') as HTMLDivElement;
   const diffusionVisualizationContainer = el(
-    document, '#diffusion-visualization-widget') as HTMLDivElement;
+    document, '#diffusion-inference-visualization') as HTMLDivElement;
 
   await tf.ready();
 
-  await initFlowAndScoreMatchingPipeline(
+  initDiffusionVisualizationEnsemble(
     moonsDatasetContainer,
     flowMatchingTrainingContainer,
     scoreMatchingTrainingContainer,
     diffusionVisualizationContainer,
-    '/flow-matching/flow-matching-model.json',
-    '/flow-matching/flow-matching-loss-history.bin',
-    '/diffusion/score-matching-model.json',
-    '/diffusion/score-matching-loss-history.bin'
+    {
+      flowMatchingWeightsUrl: '/flow-matching/flow-matching-model.json',
+      flowMatchingLossHistoryUrl: '/flow-matching/flow-matching-loss-history.bin',
+      scoreMatchingWeightsUrl: '/diffusion/score-matching-model.json',
+      scoreMatchingLossHistoryUrl: '/diffusion/score-matching-loss-history.bin'
+    }
   );
 }
 

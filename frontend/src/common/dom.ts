@@ -43,9 +43,17 @@ export const addDiv: HTMLElementAdder<HTMLDivElement> = (parent, attrs, style = 
   addEl(parent, 'div', attrs, style) as HTMLDivElement
 );
 
-export const addSpan: HTMLElementAdder<HTMLSpanElement> = (parent, attrs, style = {}) => (
-  addEl(parent, 'span', attrs, style) as HTMLSpanElement
-);
+export const addSpan: HTMLElementAdder<HTMLSpanElement> = (
+  parent, attrs, style = {}
+): HTMLSpanElement => {
+  const el = document.createElement('span');
+  for (const [key, value] of Object.entries(attrs)) {
+    el.setAttribute(key, value);
+  }
+  Object.assign(el.style, style);
+  parent.appendChild(el);
+  return el;
+};
 
 export const makeCanvas: HTMLElementGenerator<HTMLCanvasElement> = (attrs, style = {}) => (
   makeEl('canvas', attrs, style) as HTMLCanvasElement

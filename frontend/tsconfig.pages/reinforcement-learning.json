@@ -1,0 +1,8 @@
+{
+  "extends": "../tsconfig.json",
+  "include": [],
+  "files": [
+    "../src/glsl.d.ts",
+    "../src/reinforcement-learning/reinforcement-learning.ts"
+  ]
+}

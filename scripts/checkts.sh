@@ -15,7 +15,7 @@ cd $SCRIPT_DIR/../frontend
 
 npx eslint -c basic.eslint.config.js basic.eslint.config.js eslint.config.js
 npx eslint src
-npx tsc --noEmit
+./scripts/checkts.sh
 
 cd $SCRIPT_DIR/../builder
 

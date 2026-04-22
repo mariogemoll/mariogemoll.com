@@ -127,20 +127,20 @@ $$
 
 Let's see this in action and learn a distribution to generate the moons dataset:
 
-[[ moons-dataset-widget ]]
+[[ moons-dataset-visualization ]]
 
 First, let's train a model to learn the ODE. The model is already preloaded (in fact, it's exactly
 the same as on the [flow matching page](/flow-matching)), but you can train it again in the browser:
 
-[[ flow-matching-training-widget ]]
+[[ flow-matching-training-visualization ]]
 
 Next we'll learn the score field. Again, a trained model is provided for your convenience.
 
-[[ score-matching-training-widget ]]
+[[ score-matching-training-visualization ]]
 
 We can now combine the two to simulate the SDE and use it to generate new samples:
 
-[[ diffusion-visualization-widget ]]
+[[ diffusion-inference-visualization ]]
 
 ## Credits & License
 

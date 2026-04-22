@@ -29,7 +29,7 @@ jobs:
           pnpm exec eslint src
       - name: "Frontend: Type check"
         working-directory: frontend
-        run: pnpm exec tsc --noEmit
+        run: ./scripts/checkts.sh
       - name: "Site builder: Run ESLint"
         working-directory: builder
         run: |

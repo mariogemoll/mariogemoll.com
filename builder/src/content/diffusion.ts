@@ -7,8 +7,8 @@ import {
   loadPageData,
   processReferences,
   readMarkdownFile,
-  replaceWidgetPlaceholders,
-  type WidgetTuple } from '../page-helpers.js';
+  type WidgetTuple
+} from '../page-helpers.js';
 import { type PageContentParams } from '../types.js';
 import {
   fileSaverUrl, highlightJsCssUrl, jszipUrl, mathJaxUrl, reactDomUrl, reactUrl, tfJsUrl
@@ -31,19 +31,14 @@ export async function generatePage(
     ['brownian-motion', 480, 420],
     ['euler-maruyama-method', 480, 420],
     ['conditional-probability-path-ode-sde', 768, 420],
-    ['marginal-probability-path-ode-sde', 768, 420]
-  ];
-
-  mdContent = addVisualizations(mdContent, visualizations);
-
-  const widgets: WidgetTuple[] = [
+    ['marginal-probability-path-ode-sde', 768, 420],
     ['moons-dataset', 400, 450],
     ['flow-matching-training', 600, 450],
     ['score-matching-training', 600, 450],
-    ['diffusion-visualization', 400, 450]
+    ['diffusion-inference', 400, 450]
   ];
 
-  mdContent = replaceWidgetPlaceholders(mdContent, widgets);
+  mdContent = addVisualizations(mdContent, visualizations);
 
   const html = md.render(mdContent);
 

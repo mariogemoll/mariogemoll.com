@@ -374,18 +374,18 @@ function generate(batchSize, numSteps = 100) {
 
 ## Learning "moons"
 
-Let's learn an in-browser model that can approximate the moons toy dataset:
+Let's use an in-browser model that can approximate the moons toy dataset:
 
-[[ moons-dataset-widget ]]
+[[ moons-dataset-visualization ]]
 
-A pretrained model has already been loaded. The training loss curve is shown below. If you want,
-you can train a model from scratch by clicking on "Reset model" and then "Train model":
+The model has already been trained, the loss curve is shown below. If you want, you can train a
+model from scratch by clicking on "Train":
 
-[[ training-widget ]]
+[[ flow-matching-training-visualization ]]
 
 We can see how the model transforms a normal Gaussian distribution into the data distribution:
 
-[[ flow-visualization-widget ]]
+[[ flow-matching-inference-visualization ]]
 
 ## Credits & License
 

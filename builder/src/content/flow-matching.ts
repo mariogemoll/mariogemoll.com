@@ -7,7 +7,6 @@ import {
   loadPageData,
   processReferences,
   readMarkdownFile,
-  replaceWidgetPlaceholders,
   type WidgetTuple
 } from '../page-helpers.js';
 import { type PageContentParams } from '../types.js';
@@ -32,18 +31,13 @@ export async function generatePage(
     ['euler-method', 768, 390],
     ['conditional-probability-path', 768, 420],
     ['conditional-probability-path-ode', 768, 420],
-    ['marginal-probability-path-ode', 768, 420]
+    ['marginal-probability-path-ode', 768, 420],
+    ['moons-dataset', 400, 450],
+    ['flow-matching-training', 600, 450],
+    ['flow-matching-inference', 400, 450]
   ];
 
   mdContent = addVisualizations(mdContent, visualizations);
-
-  const widgets: WidgetTuple[] = [
-    ['moons-dataset', 400, 450],
-    ['training', 600, 450],
-    ['flow-visualization', 400, 450]
-  ];
-
-  mdContent = replaceWidgetPlaceholders(mdContent, widgets);
 
   const html = md.render(mdContent);
 
