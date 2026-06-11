@@ -16,6 +16,9 @@ jobs:
       - name: "Frontend: Install dependencies"
         working-directory: frontend
         run: pnpm i
+      - name: "Pick-and-place: Install TS dependencies"
+        working-directory: pick-and-place/ts
+        run: pnpm i
       - name: "Site builder: Install dependencies"
         working-directory: builder
         run: npm i

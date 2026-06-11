@@ -7,6 +7,38 @@ flow-matching/flow-matching-model.weights.bin	2113544	6c4c060175aa2a0ad05a40f629
 normalizing-flows/loss-history.bin	1008	0e80d25fc190a129cce7b0e26be3ab290ab7537d798ac05e4e23cb6a0e1e58ce	Binary file containing the training loss history
 normalizing-flows/model.json	26569	8a91524b9865394eaaa97ec7a3e503e70719e8d9ea74ddd7e18286beaeb6a6bd	Model JSON file containing the architecture and weights manifest
 normalizing-flows/model.weights.bin	43072	74c8b0f8c7945496bb464cca822d7be99b586adb8ea6b3ccd1698054f418d562	Binary file containing the model weights
+pick-and-place/so101.json	36067	1bb7ab167ec7a0e78de93a2bee891281c33eaca92e5a82de460c6aa88e72791d	SO-101 web model JSON manifest
+pick-and-place/ur5e.json	42024	4539782d0afaf5720a89d0b8689c2d42d108f85e8fe5e7648aa77a1ced3619cf	UR5e web model JSON manifest
+pick-and-place/panda.json	46719	8765584eb8528d2ebd0fe28f48991b0f52a3faa9e0e219726e6f57edd43f2461	Panda web model JSON manifest
+pick-and-place/arm.glb	222180	8ab3821d03cceec8d7b7dbb032f468a07077b9748e66c26399d823b1a156b7e7	SO-101 arm packed GLB mesh set
+pick-and-place/gripper.glb	38960	376eda88a923d4d6e71c96d257444a35d1e0856af2cb4df6a4ca9177840f5277	SO-101 gripper packed GLB mesh set
+pick-and-place/ur5e.glb	305300	bcd981d64730b1854a839da6f714dcd37984e137b6358a948544a66d4d7efb78	UR5e packed GLB mesh set
+pick-and-place/panda.glb	306184	f189d804dfb784cc2b09ea74c114be0de85e736204d953eeeebcd36755c9fa14	Panda packed GLB mesh set
+pick-and-place/environment.json	34562	5c4f76f94abc0ff4383af9537c94f6e8b1ef495849b577fb0894c584613645ab	Standard-scene environment web model JSON manifest
+pick-and-place/environment.glb	20984	7d6ce5b094453ebef75e62de53771f8972998e242c860f1e0ea4e294ebd4d508	Standard-scene environment packed GLB mesh set
+pick-and-place/episode_00.bin	30292	f7ca7496049a1f97b71c5b4eeee6efdc177a3f07247d22f7450034a7f7a055b1	Standard-scene replay episode binary
+pick-and-place/episode_01.bin	29772	ce68dbfed5673dc2001b7dad5868cbacc5f87621478e83293ce3a4680cee64bd	Standard-scene replay episode binary
+pick-and-place/episode_02.bin	29460	5d03c1af743243a90f24310b8ed4634946f060a25329b230805cf2f3f17cd158	Standard-scene replay episode binary
+pick-and-place/episode_03.bin	29720	ff6aec9fa59af2b4b2747d568f9ea39986c5a8accbac0e8c9be8119601073bbd	Standard-scene replay episode binary
+pick-and-place/episode_04.bin	32580	c97d1bf3b6d16ca124a1c53680cedc0ec58b1830cdadcc8fc441c087679fd4de	Standard-scene replay episode binary
+pick-and-place/loop_episode_00.bin	29876	7c123b8d8fa820cc933d26bceff6cca99a7695bceed4b4e8ce61d0c145a73d9e	Looped pick-and-place replay episode binary
+pick-and-place/loop_episode_01.bin	28836	19bbd96c8c6760a0ae73a5eca02f475234faab00f1a8642df669d775584d6828	Looped pick-and-place replay episode binary
+pick-and-place/loop_episode_02.bin	29980	3f0c3eea3de9ac7e58526f850d5882c014bb450424e5d959226403881419bdf2	Looped pick-and-place replay episode binary
+pick-and-place/loop_episode_03.bin	29980	53ffc7b7ed6cab4cfc99724306464164a1e38cf795e9500256912edc27959375	Looped pick-and-place replay episode binary
+pick-and-place/loop_episode_04.bin	30136	c058a37226df6b5c637856140462844055abee97f44f793ae9dd09cb1816ae66	Looped pick-and-place replay episode binary
+pick-and-place/episode_grid.mp4	704813	1ec93867352e15ee471f8446009fdc5717d39ad79322b135e7b86c36bc8cad1e	Grid video of collected pick-and-place episode recordings
+pick-and-place/episode_grid.jpg	79843	f4a0f566b3bc90d71c58598bca59f1bda38c8d24d20a5be277437871e9065323	Poster image for the episode recordings grid video
+pick-and-place/act.mp4	1569368	3fc1f7eb11dbacf64ac19390e79fd2cc48d3417a7c9a953bdd35e436a64e0fc2	Video of the ACT pick-and-place policy
+pick-and-place/act_poster_lo.jpg	75946	ee35710315501ff00f1251d057d57e78feaa2b8e99e67be9c8be3a3e86a85b25	Poster image for the ACT policy video (standard resolution)
+pick-and-place/act_poster_hi.jpg	161585	4e26147b71d6d0c4e367ec76ec51aa0de06ccdcaa8478cbb9960cc19070524f1	Poster image for the ACT policy video (retina resolution)
+pick-and-place/scripted.mp4	1697474	49876224ff1183d8f5d827792069d25a03fc0496bb1e6216a2172b7c63f4b9dc	Video of the scripted pick-and-place solution
+pick-and-place/scripted_poster_lo.jpg	119862	94909013ce62807ce2e367e673e1a0f94182a5a6c9d86a2b50667c0260ead834	Poster image for the scripted solution video (standard resolution)
+pick-and-place/scripted_poster_hi.jpg	192070	9ea3770c2710a0c938a1b4fd8b39c8f14b838391ef40c8edfc8f967b5c975b4a	Poster image for the scripted solution video (retina resolution)
+pick-and-place/setup_lo.jpg	74225	8094bdd1a6d29a5b4e299c9ce87d50720ab8d335e53f28408f0048a0f55fba22	Photo of the real-world setup (standard resolution)
+pick-and-place/setup_hi.jpg	236454	3e3cdb5b3b21f319160c9e31f6a00319e053ce978f8a86bda1eca2242808986d	Photo of the real-world setup (retina resolution)
+pick-and-place/setup_3d_lo.png	64844	3304353c45900503a48d194ccaf1c8ab6bbd02e06fdf3fd457162c3e42fe4fa7	3D rendering of the standard scene (standard resolution)
+pick-and-place/setup_3d_hi.png	153653	f2c4b85e546c89eff81d7fc15585e72bb4b4d21b04a1eeb3112788017e26936d	3D rendering of the standard scene (retina resolution)
+pick-and-place/architecture.svg	75588	d712490190f1a197e891613b2dcb58e86334b022b022142be286c3f1d1512006	Diagram of the ACT transformer encoder and decoder architecture
 parallel-corpus-viewer/commoncrawl.de-en.annidx	9596492	de5ffe5a8147a4f573b7a62c54f3b20421998a0700214434a1482d6a442beded	Index file containing the index (32bit le uint) of the annotation for each sentence pair
 parallel-corpus-viewer/commoncrawl.de-en.annotation	35544656	5908507404e2ec5a20eacefd8d43077a020725c82da736c122d448ee89a41fe5	Annotation TSV file from training-parallel-commoncrawl.tgz (in WMT14 dataset)
 parallel-corpus-viewer/commoncrawl.de-en.annotation.idx	1170136	ceb026a2f504f778a4b864aef817ae609509353b6de21a47f15d33b57351d600	Index file containing the end position (32bit le uint) of each line in commoncrawl.de-en.annotation

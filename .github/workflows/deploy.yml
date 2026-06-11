@@ -31,6 +31,9 @@ jobs:
       - name: "Site builder: Install dependencies"
         working-directory: builder
         run: npm i
+      - name: "Pick-and-place: Install TS dependencies"
+        working-directory: pick-and-place/ts
+        run: pnpm i
       - name: Build the website
         run: scripts/makesite.sh
         env:

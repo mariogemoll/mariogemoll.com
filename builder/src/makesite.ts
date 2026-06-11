@@ -224,6 +224,7 @@ function makeHomepage(
   siteConfig: SiteConfig
 ): string {
   const mlIds = [
+    'pick-and-place',
     'reinforcement-learning',
     'llm-posttraining',
     'flow-matching',

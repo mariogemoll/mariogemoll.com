@@ -8,6 +8,7 @@
     "es-arraybuffer-base64": "^1.1.2",
     "flow-matching-and-diffusion": "mariogemoll/flow-matching-and-diffusion#500aeb4b196fbab0057d10fb0db8037ba3bae21d",
     "normalizing-flows": "mariogemoll/normalizing-flows#61dd4df2e4c48c84a867647a8608a50bc013b9d3&path:ts",
+    "pick-and-place": "link:../pick-and-place/ts",
     "reinforcement-learning": "mariogemoll/reinforcement-learning#edf8c5fbc564eb1d782854d08b827f29468d30a4&path:ts",
     "web-ui-common": "mariogemoll/web-ui-common#84a60ad7b7fe4b7e1162d6fff86533a982f5b117"
   },

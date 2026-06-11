@@ -14,6 +14,10 @@ export const reactDomUrl = 'https://esm.sh/react-dom@19.2.3';
 export const threeUrl = 'https://cdn.jsdelivr.net/npm/three@0.183.2/build/three.module.js';
 export const threeOrbitControlsUrl =
   'https://cdn.jsdelivr.net/npm/three@0.183.2/examples/jsm/controls/OrbitControls.js';
+export const threeGltfLoaderUrl =
+  'https://cdn.jsdelivr.net/npm/three@0.183.2/examples/jsm/loaders/GLTFLoader.js';
+export const threeStlLoaderUrl =
+  'https://cdn.jsdelivr.net/npm/three@0.183.2/examples/jsm/loaders/STLLoader.js';
 
 export const mathJaxUrl = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js';
 

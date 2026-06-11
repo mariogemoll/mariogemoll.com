@@ -1,0 +1,7 @@
+{
+  "extends": "../tsconfig.json",
+  "include": [],
+  "files": [
+    "../src/pick-and-place/pick-and-place.ts"
+  ]
+}

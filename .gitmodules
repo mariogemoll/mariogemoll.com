@@ -4,3 +4,6 @@
 [submodule "attention-is-all-you-need"]
 	path = attention-is-all-you-need
 	url = https://github.com/mariogemoll/attention-is-all-you-need.git
+[submodule "pick-and-place"]
+	path = pick-and-place
+	url = https://github.com/mariogemoll/pick-and-place.git

@@ -1,0 +1,68 @@
+/* The pick-and-place demo's own CSS defines a `.visualization-container` rule (max-width: 800px;
+   aspect-ratio: 16/9) that's unused in the demo itself but collides with the generic wrapper class
+   our page builder assigns to every widget. Override it here with ID selectors so visualizations
+   with their own viewport sizing render the same way they do on the demo page. */
+#robot-visualization.visualization-container {
+  max-width: 1100px;
+  aspect-ratio: auto;
+}
+
+#grasp-visualization.visualization-container {
+  max-width: 480px;
+  aspect-ratio: auto;
+}
+
+/* The generic page CSS also gives every h3 a fixed 700px width with auto margins (for prose
+   headings), which collides with the robot viewer panel titles: each title ends up centered in a
+   700px box instead of the ~420px panel above its robot. Reset it so the title centers over its
+   own panel instead. */
+.robot-viewer-title {
+  width: auto;
+  margin: 0;
+}
+
+.image-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 1em 0;
+}
+
+.image-row img {
+  max-width: 100%;
+  height: auto;
+}
+
+.architecture-figure {
+  display: flex;
+  justify-content: center;
+  margin: 1em 0;
+}
+
+.architecture-figure img {
+  max-width: 100%;
+  height: auto;
+}
+
+#scripted-video-visualization.visualization-container,
+#episode-grid-video-visualization.visualization-container {
+  aspect-ratio: 4 / 3;
+}
+
+#act-video-visualization.visualization-container {
+  aspect-ratio: 2 / 1;
+}
+
+#act-video-visualization .description {
+  font-size: 12px;
+  line-height: 14px;
+  margin-top: 4px;
+}
+
+#scripted-video-visualization video,
+#episode-grid-video-visualization video,
+#act-video-visualization video {
+  max-width: 100%;
+  height: auto;
+}

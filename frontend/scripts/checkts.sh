@@ -33,6 +33,7 @@ configs=(
   tsconfig.pages/flow-matching.json
   tsconfig.pages/diffusion.json
   tsconfig.pages/reinforcement-learning.json
+  tsconfig.pages/pick-and-place.json
 )
 
 printf '%s\n' "${configs[@]}" | xargs -n 1 -P "$max_jobs" sh -c '

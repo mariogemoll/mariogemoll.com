@@ -50,3 +50,8 @@ pnpm exec esbuild src/reinforcement-learning/reinforcement-learning.ts --bundle 
   --external:three --external:three/examples/jsm/* \
   --outfile=dist/reinforcement-learning/reinforcement-learning.js --minify --sourcemap \
   --source-root=https://github.com/mariogemoll/mariogemoll.com/tree/$COMMIT_HASH/frontend/src/reinforcement-learning
+
+pnpm exec esbuild src/pick-and-place/pick-and-place.ts --bundle --format=esm \
+  --external:three --external:three/examples/jsm/* \
+  --outfile=dist/pick-and-place/pick-and-place.js --minify --sourcemap \
+  --source-root=https://github.com/mariogemoll/mariogemoll.com/tree/$COMMIT_HASH/frontend/src/pick-and-place

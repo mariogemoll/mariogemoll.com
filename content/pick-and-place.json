@@ -1,0 +1,16 @@
+{
+  "references": [
+    {
+      "kind": "arxiv",
+      "id": "zhao-et-al-2023",
+      "authors": [
+        "Zhao, T. Z.",
+        "Kumar, V.",
+        "Levine, S.",
+        "Finn, C."
+      ],
+      "title": "Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware",
+      "arxivId": "2304.13705"
+    }
+  ]
+}
