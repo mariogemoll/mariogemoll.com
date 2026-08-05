@@ -37,7 +37,7 @@ $$
 
 For the details about the $\mathrm{d}X$ notation, see [[ ref-holderrieth-and-erives-2025 ]].
 
-The $sigma_t$ in the above equation is called the diffusion coefficient and controls the amount of
+The $\sigma_t$ in the above equation is called the diffusion coefficient and controls the amount of
 randomness (the ODE term $u_t(X_t)$ is also called the drift coefficient).
 
 Such an SDE can be approximated by the Euler-Maruyama method (basically the Euler method with some
@@ -66,6 +66,11 @@ X_0 ∼p_\mathrm{init} \\
     + \sigma_t \mathrm{d} W_t
 \end{gathered}
 $$
+
+Intuitively, adding Brownian motion spreads out probability mass, while the score function points
+toward regions of higher probability density and pushes the mass back. This cancellation can be
+derived using the Fokker–Planck equation, which describes how the probability density of an SDE
+evolves over time.  For details, again, see [[ ref-holderrieth-and-erives-2025 ]].
 
 In the Gaussian case the score field is again rather simple:
 
@@ -104,9 +109,9 @@ $$
 A marginal SDE (or an approximation thereof) gives us a diffusion model: We can sample a point from
 $p_\mathrm{init}$, then apply Euler-Maruyama using the SDE, and at $t=1$ we will arrive at a point
 from $p_\mathrm{data}$. As we've seen above, for the SDE we need the ODE and the score field.
-With [flow matching](/flow-matching) we have a method to get $\hat{u}_t(x)$, an approximation ODE.
-For the SDE, as in flow matching, we can try to learn a neural network $\hat{s}_t(x)$ that minimizes
-the mean squared error, ie. the **score matching loss**:
+With [flow matching](/flow-matching) we have a method to get $\hat{u}_t(x)$, an approximation of the
+ODE. For the SDE, as in flow matching, we can try to learn a neural network $\hat{s}_t(x)$ that
+minimizes the mean squared error, ie. the **score matching loss**:
 
 $$
 \mathcal{L}_{\text{SM}}
