@@ -265,6 +265,19 @@ miscalibrations and camera poses.
 
 [[ randomized-episode-grid-video-visualization ]]
 
+##Diffusion policy / flow policy
+
+Let's now look at the promised other approach to imitation learning: using a [diffusion
+model](/diffusion) or [flow matching model](flow-matching) to generate the action chunks. This
+technique was introduced in the Diffusion Policy paper. As the name suggests, a diffusion model was
+used there, however for simplicity we'll use a flow matching model. We learn the vector field that
+converts noise into an action chunk (16 timesteps for 6 joints, ie.  96 dimensions). In addition to
+the flow time step between 0 and 1, the vector field is conditioned on the camera frames and joint
+angles at the last two timesteps. The model is a 1-dimensional convolutional UNet.
+
+During inference, we actually only execute 8 of the generated 16 timestamps of the action chunk
+before we generate the next one:
+
 ## Summary
 
 We’ve explored two approaches to solving a pick-and-place task with the SO-101. First, we developed
