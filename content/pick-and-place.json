@@ -2,6 +2,100 @@
   "references": [
     {
       "kind": "arxiv",
+      "id": "carion-et-al-2020",
+      "authors": [
+        "Carion, N.",
+        "Massa, F.",
+        "Synnaeve, G.",
+        "Usunier, N.",
+        "Kirillov, A.",
+        "Zagoruyko, S."
+      ],
+      "title": "End-to-End Object Detection with Transformers",
+      "arxivId": "2005.12872"
+    },
+    {
+      "kind": "arxiv",
+      "id": "chi-et-al-2023",
+      "authors": [
+        "Chi, C.",
+        "Xu, Z.",
+        "Feng, S.",
+        "Cousineau, E.",
+        "Du, Y.",
+        "Burchfiel, B.",
+        "Tedrake, R.",
+        "Song, S."
+      ],
+      "title": "Diffusion Policy: Visuomotor Policy Learning via Action Diffusion",
+      "arxivId": "2303.04137"
+    },
+    {
+      "kind": "arxiv",
+      "id": "devlin-et-al-2018",
+      "authors": [
+        "Devlin, J.",
+        "Chang, M.-W.",
+        "Lee, K.",
+        "Toutanova, K."
+      ],
+      "title": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+      "arxivId": "1810.04805"
+    },
+    {
+      "kind": "arxiv",
+      "id": "he-et-al-2015",
+      "authors": [
+        "He, K.",
+        "Zhang, X.",
+        "Ren, S.",
+        "Sun, J."
+      ],
+      "title": "Deep Residual Learning for Image Recognition",
+      "arxivId": "1512.03385"
+    },
+    {
+      "kind": "arxiv",
+      "id": "kingma-and-welling-2013",
+      "authors": [
+        "Kingma, D. P.",
+        "Welling, M."
+      ],
+      "title": "Auto-Encoding Variational Bayes",
+      "arxivId": "1312.6114"
+    },
+    {
+      "kind": "arxiv",
+      "id": "tobin-et-al-2017",
+      "authors": [
+        "Tobin, J.",
+        "Fong, R.",
+        "Ray, A.",
+        "Schneider, J.",
+        "Zaremba, W.",
+        "Abbeel, P."
+      ],
+      "title": "Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World",
+      "arxivId": "1703.06907"
+    },
+    {
+      "kind": "arxiv",
+      "id": "vaswani-et-al-2017",
+      "authors": [
+        "Vaswani, A.",
+        "Shazeer, N.",
+        "Parmar, N.",
+        "Uszkoreit, J.",
+        "Jones, L.",
+        "Gomez, A. N.",
+        "Kaiser, L.",
+        "Polosukhin, I."
+      ],
+      "title": "Attention Is All You Need",
+      "arxivId": "1706.03762"
+    },
+    {
+      "kind": "arxiv",
       "id": "zhao-et-al-2023",
       "authors": [
         "Zhao, T. Z.",

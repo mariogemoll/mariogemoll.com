@@ -168,8 +168,8 @@ During 4 sessions, around 500 episodes were generated.
 ## Imitation learning using ACT
 
 Action Chunking with Transformers (ACT, [[ ref-zhao-et-al-2023 ]]) is essentially a
-Transformer-based Conditional Variational Autoencoder (CVAE), so let’s first revisit autoencoders
-and variational autoencoders.
+Transformer ([[ ref-vaswani-et-al-2017 ]]) based Conditional Variational Autoencoder (CVAE), so
+let’s first revisit autoencoders and variational autoencoders.
 
 An autoencoder consists of an encoder and a decoder. The encoder compresses an input (e.g. an image)
 into a latent representation $z$, while the decoder reconstructs the original input from $z$.
@@ -181,8 +181,8 @@ z \rightarrow \text{data}
 \end{gather}
 $$
 
-A Variational Autoencoder (VAE) modifies the encoder so that it predicts the parameters of a
-probability distribution rather than a single latent vector:
+A Variational Autoencoder (VAE, [[ ref-kingma-and-welling-2013 ]]) modifies the encoder so that it
+predicts the parameters of a probability distribution rather than a single latent vector:
 
 $$
 \begin{gather}
@@ -228,12 +228,13 @@ z \sim \mathcal{N}(\mu, \sigma^2) \\
 $$
 
 The encoder is implemented as a transformer encoder with full attention across all input embeddings.
-The output of the initial BERT-style CLS token gets fed into a linear layer which outputs the mean
-and standard deviation from which z is sampled.
+The output of the initial BERT-style ([[ ref-devlin-et-al-2018 ]]) CLS token gets fed into a linear
+layer which outputs the mean and standard deviation from which z is sampled.
 
-The decoder is a transformer as well, however an encoder-decoder transformer. A ResNet converts the
-camera picture inputs before they enter the encoder. The decoder gets fed fixed, learned position
-embeddings and uses cross attention over the encoder outputs.
+The decoder is a transformer as well, however an encoder-decoder transformer, following the DETR
+object detection architecture ([[ ref-carion-et-al-2020 ]]). A ResNet ([[ ref-he-et-al-2015 ]])
+converts the camera picture inputs before they enter the encoder. The decoder gets fed fixed,
+learned position embeddings and uses cross attention over the encoder outputs.
 
 <div class="architecture-figure">
   <img src="/pick-and-place/architecture.svg"
@@ -259,9 +260,9 @@ continuously adapt to new observations.
 In the next section, we'll discuss another imitation learning method, however there we'll try
 starting from a completely synthetic sim dataset, training a model from that, and then use it in sim
 _and_ on the real robot. To make this work we'll need a model that is robust against all sorts of
-sim2real issues. We'll try to produce such a model by applying domain randomization, ie. by
-generating a dataset with a wide variety of materials, colors, lighting situations, robot joint
-miscalibrations and camera poses.
+sim2real issues. We'll try to produce such a model by applying domain randomization
+([[ ref-tobin-et-al-2017 ]]), ie. by generating a dataset with a wide variety of materials, colors,
+lighting situations, robot joint miscalibrations and camera poses.
 
 [[ randomized-episode-grid-video-visualization ]]
 
@@ -269,11 +270,12 @@ miscalibrations and camera poses.
 
 Let's now look at the promised other approach to imitation learning: using a [diffusion
 model](/diffusion) or [flow matching model](flow-matching) to generate the action chunks. This
-technique was introduced in the Diffusion Policy paper. As the name suggests, a diffusion model was
-used there, however for simplicity we'll use a flow matching model. We learn the vector field that
-converts noise into an action chunk (16 timesteps for 6 joints, ie.  96 dimensions). In addition to
-the flow time step between 0 and 1, the vector field is conditioned on the camera frames and joint
-angles at the last two timesteps. The model is a 1-dimensional convolutional UNet.
+technique was introduced in the Diffusion Policy paper ([[ ref-chi-et-al-2023 ]]). As the name
+suggests, a diffusion model was used there, however for simplicity we'll use a flow matching model.
+We learn the vector field that converts noise into an action chunk (16 timesteps for 6 joints, ie.
+96 dimensions). In addition to the flow time step between 0 and 1, the vector field is conditioned
+on the camera frames and joint angles at the last two timesteps. The model is a 1-dimensional
+convolutional UNet.
 
 During inference, we actually only execute 8 of the generated 16 timestamps of the action chunk
 before we generate the next one:
