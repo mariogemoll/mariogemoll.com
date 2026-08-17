@@ -15,7 +15,7 @@ networks. Finally, we outline the transition to policy gradient methods and acto
 connecting Monte Carlo and bootstrapped updates and setting the stage for modern algorithms such as
 PPO and related methods.
 
-Applications of RL in modern LLM posttraining are described on a [separate page](llm-posttraining).
+Applications of RL in modern LLM posttraining are described on a [separate page](/llm-posttraining).
 
 ## Markov Decision Process
 
