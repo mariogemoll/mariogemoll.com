@@ -39,7 +39,8 @@ export async function generatePage(
     ['scripted-episode-replay', 720, 540],
     ['episode-grid-video', 800, 600],
     ['randomized-episode-grid-video', 800, 600],
-    ['act-video', 720, 360, 'ACT in action']
+    ['act-video', 720, 360, 'ACT in action'],
+    ['flow-policy', 760, 420]
   ];
 
   mdContent = addVisualizations(mdContent, visualizations);

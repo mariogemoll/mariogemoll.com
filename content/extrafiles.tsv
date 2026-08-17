@@ -7,15 +7,15 @@ flow-matching/flow-matching-model.weights.bin	2113544	6c4c060175aa2a0ad05a40f629
 normalizing-flows/loss-history.bin	1008	0e80d25fc190a129cce7b0e26be3ab290ab7537d798ac05e4e23cb6a0e1e58ce	Binary file containing the training loss history
 normalizing-flows/model.json	26569	8a91524b9865394eaaa97ec7a3e503e70719e8d9ea74ddd7e18286beaeb6a6bd	Model JSON file containing the architecture and weights manifest
 normalizing-flows/model.weights.bin	43072	74c8b0f8c7945496bb464cca822d7be99b586adb8ea6b3ccd1698054f418d562	Binary file containing the model weights
-pick-and-place/so101.json	36067	1bb7ab167ec7a0e78de93a2bee891281c33eaca92e5a82de460c6aa88e72791d	SO-101 web model JSON manifest
+pick-and-place/so101.json	36106	887d1c60f6170b7e23aa33426f1c59447c0d2a1e65646dcbb60aee4716ec1461	SO-101 web model JSON manifest
 pick-and-place/ur5e.json	42024	4539782d0afaf5720a89d0b8689c2d42d108f85e8fe5e7648aa77a1ced3619cf	UR5e web model JSON manifest
 pick-and-place/panda.json	46719	8765584eb8528d2ebd0fe28f48991b0f52a3faa9e0e219726e6f57edd43f2461	Panda web model JSON manifest
-pick-and-place/arm.glb	222180	8ab3821d03cceec8d7b7dbb032f468a07077b9748e66c26399d823b1a156b7e7	SO-101 arm packed GLB mesh set
-pick-and-place/gripper.glb	38960	376eda88a923d4d6e71c96d257444a35d1e0856af2cb4df6a4ca9177840f5277	SO-101 gripper packed GLB mesh set
+pick-and-place/arm.glb	230660	dcde99b882d3944422cfdb51650aa3358c849162e1e269e4bdcdb46e0a4ea13a	SO-101 arm packed GLB mesh set
+pick-and-place/gripper.glb	43148	ac18c7481b83019510ce6489d5fbeddb0ab119b1bdbb364f50783a8122c83962	SO-101 gripper packed GLB mesh set
 pick-and-place/ur5e.glb	305300	bcd981d64730b1854a839da6f714dcd37984e137b6358a948544a66d4d7efb78	UR5e packed GLB mesh set
 pick-and-place/panda.glb	306184	f189d804dfb784cc2b09ea74c114be0de85e736204d953eeeebcd36755c9fa14	Panda packed GLB mesh set
-pick-and-place/environment.json	34562	5c4f76f94abc0ff4383af9537c94f6e8b1ef495849b577fb0894c584613645ab	Standard-scene environment web model JSON manifest
-pick-and-place/environment.glb	20984	7d6ce5b094453ebef75e62de53771f8972998e242c860f1e0ea4e294ebd4d508	Standard-scene environment packed GLB mesh set
+pick-and-place/environment.json	36871	0c22fe26da0635aceadfe797892c8ff9b2232f7f4dbf3f2ac4c9e12ad26d80ec	Standard-scene environment web model JSON manifest
+pick-and-place/environment.glb	20952	afc726baabd81e2e7d099a8c51f9d69bef8b52c2932b93179aaa087805350f74	Standard-scene environment packed GLB mesh set
 pick-and-place/episode_00.bin	30292	f7ca7496049a1f97b71c5b4eeee6efdc177a3f07247d22f7450034a7f7a055b1	Standard-scene replay episode binary
 pick-and-place/episode_01.bin	29772	ce68dbfed5673dc2001b7dad5868cbacc5f87621478e83293ce3a4680cee64bd	Standard-scene replay episode binary
 pick-and-place/episode_02.bin	29460	5d03c1af743243a90f24310b8ed4634946f060a25329b230805cf2f3f17cd158	Standard-scene replay episode binary
@@ -26,6 +26,9 @@ pick-and-place/loop_episode_01.bin	28836	19bbd96c8c6760a0ae73a5eca02f475234faab0
 pick-and-place/loop_episode_02.bin	29980	3f0c3eea3de9ac7e58526f850d5882c014bb450424e5d959226403881419bdf2	Looped pick-and-place replay episode binary
 pick-and-place/loop_episode_03.bin	29980	53ffc7b7ed6cab4cfc99724306464164a1e38cf795e9500256912edc27959375	Looped pick-and-place replay episode binary
 pick-and-place/loop_episode_04.bin	30136	c058a37226df6b5c637856140462844055abee97f44f793ae9dd09cb1816ae66	Looped pick-and-place replay episode binary
+pick-and-place/flow_trace_00.bin	50016	a87230b1c5ce8d52c2a0563b3edfdb4fa7969b49deb4c058a384ecbe808c9442	Recorded flow policy rollout binary
+pick-and-place/flow_trace_01.bin	50120	7f1107339b21d2dd2a2124e2871aa4c0c2e43808e4a21c107bea33cec377b24c	Recorded flow policy rollout binary
+pick-and-place/flow_trace_02.bin	60124	b95d8a4984e82bf558e67d3defe4647d5d0f9aec73946c35a2d44046025eee82	Recorded flow policy rollout binary
 pick-and-place/episode_grid.mp4	704813	1ec93867352e15ee471f8446009fdc5717d39ad79322b135e7b86c36bc8cad1e	Grid video of collected pick-and-place episode recordings
 pick-and-place/episode_grid.jpg	79843	f4a0f566b3bc90d71c58598bca59f1bda38c8d24d20a5be277437871e9065323	Poster image for the episode recordings grid video
 pick-and-place/randomized_episode_grid.mp4	989894	762834dc50d6dc937a6f66f686702441283f203d232d264afb46ccdb738daf5d	Grid video of domain-randomized simulated pick-and-place episodes

@@ -3,6 +3,7 @@
 
 import { initCanonicalGraspVisualization } from 'pick-and-place/src/visualizations/canonical-grasp';
 import { initEpisodeReplayVisualization } from 'pick-and-place/src/visualizations/episode-replay';
+import { initFlowPolicyVisualization } from 'pick-and-place/src/visualizations/flow-policy';
 import { initGraspAndLiftVisualization } from 'pick-and-place/src/visualizations/grasp-and-lift';
 import { initRobotVisualization } from 'pick-and-place/src/visualizations/robot';
 import {
@@ -20,6 +21,11 @@ const modelOptions = {
 const loopEpisodeUrls = Array.from(
   { length: 5 },
   (_, index) => `/pick-and-place/loop_episode_${String(index).padStart(2, '0')}.bin`
+);
+
+const flowTraceUrls = Array.from(
+  { length: 3 },
+  (_, index) => `/pick-and-place/flow_trace_${String(index).padStart(2, '0')}.bin`
 );
 
 const robotViewerConfigs: RobotViewerConfig[] = [
@@ -135,6 +141,14 @@ function initialize(): void {
   void initEpisodeReplayVisualization(
     el(document, '#scripted-episode-replay-visualization') as HTMLDivElement,
     { ...modelOptions, episodeUrls: loopEpisodeUrls }
+  );
+  void initFlowPolicyVisualization(
+    el(document, '#flow-policy-visualization') as HTMLDivElement,
+    {
+      ...modelOptions,
+      environmentModelUrl: '/pick-and-place/environment.json',
+      traceUrls: flowTraceUrls
+    }
   );
 }
 

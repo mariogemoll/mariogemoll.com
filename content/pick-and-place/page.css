@@ -12,6 +12,11 @@
   aspect-ratio: auto;
 }
 
+#flow-policy-visualization.visualization-container {
+  max-width: 760px;
+  aspect-ratio: auto;
+}
+
 /* The generic page CSS also gives every h3 a fixed 700px width with auto margins (for prose
    headings), which collides with the robot viewer panel titles: each title ends up centered in a
    700px box instead of the ~420px panel above its robot. Reset it so the title centers over its

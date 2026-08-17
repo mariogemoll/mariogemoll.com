@@ -265,7 +265,7 @@ miscalibrations and camera poses.
 
 [[ randomized-episode-grid-video-visualization ]]
 
-##Diffusion policy / flow policy
+## Diffusion policy / flow policy
 
 Let's now look at the promised other approach to imitation learning: using a [diffusion
 model](/diffusion) or [flow matching model](flow-matching) to generate the action chunks. This
@@ -278,12 +278,14 @@ angles at the last two timesteps. The model is a 1-dimensional convolutional UNe
 During inference, we actually only execute 8 of the generated 16 timestamps of the action chunk
 before we generate the next one:
 
+[[ flow-policy-visualization ]]
+
 ## Summary
 
-We’ve explored two approaches to solving a pick-and-place task with the SO-101. First, we developed
-a fully scripted solution and transferred it from simulation to the real robot using computer
-vision. This enabled us to collect real-world demonstrations, which we then used to train an ACT
-imitation learning policy. Additional avenues for future work include Diffusion Policy and
-Vision-Language-Action (VLA) models.
+We’ve explored three approaches to solving a pick-and-place task with the SO-101. First, we
+developed a fully scripted solution and transferred it from simulation to the real robot using
+computer vision. This enabled us to collect real-world demonstrations, which we then used to train
+an ACT imitation learning policy. Using our scripted solution, we also created a sim-only dataset,
+which we augmented with domain randomization and then trained a flow matching based policy on it.
 
 [[ references ]]
