@@ -168,8 +168,8 @@ During 4 sessions, around 500 episodes were generated.
 ## Imitation learning using ACT
 
 Action Chunking with Transformers (ACT, [[ ref-zhao-et-al-2023 ]]) is essentially a
-Transformer ([[ ref-vaswani-et-al-2017 ]]) based Conditional Variational Autoencoder (CVAE), so
-let’s first revisit autoencoders and variational autoencoders.
+[Transformer](/attention-is-all-you-need) ([[ ref-vaswani-et-al-2017 ]]) based Conditional
+Variational Autoencoder (CVAE), so let’s first revisit autoencoders and variational autoencoders.
 
 An autoencoder consists of an encoder and a decoder. The encoder compresses an input (e.g. an image)
 into a latent representation $z$, while the decoder reconstructs the original input from $z$.
@@ -181,8 +181,8 @@ z \rightarrow \text{data}
 \end{gather}
 $$
 
-A Variational Autoencoder (VAE, [[ ref-kingma-and-welling-2013 ]]) modifies the encoder so that it
-predicts the parameters of a probability distribution rather than a single latent vector:
+A [Variational Autoencoder](/vae) (VAE, [[ ref-kingma-and-welling-2013 ]]) modifies the encoder so
+that it predicts the parameters of a probability distribution rather than a single latent vector:
 
 $$
 \begin{gather}
@@ -269,7 +269,7 @@ lighting situations, robot joint miscalibrations and camera poses.
 ## Diffusion policy / flow policy
 
 Let's now look at the promised other approach to imitation learning: using a [diffusion
-model](/diffusion) or [flow matching model](flow-matching) to generate the action chunks. This
+model](/diffusion) or [flow matching model](/flow-matching) to generate the action chunks. This
 technique was introduced in the Diffusion Policy paper ([[ ref-chi-et-al-2023 ]]). As the name
 suggests, a diffusion model was used there, however for simplicity we'll use a flow matching model.
 We learn the vector field that converts noise into an action chunk (16 timesteps for 6 joints, ie.
