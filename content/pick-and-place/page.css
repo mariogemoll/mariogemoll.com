@@ -46,7 +46,8 @@
 }
 
 #scripted-video-visualization.visualization-container,
-#episode-grid-video-visualization.visualization-container {
+#episode-grid-video-visualization.visualization-container,
+#randomized-episode-grid-video-visualization.visualization-container {
   aspect-ratio: 4 / 3;
 }
 
@@ -62,6 +63,7 @@
 
 #scripted-video-visualization video,
 #episode-grid-video-visualization video,
+#randomized-episode-grid-video-visualization video,
 #act-video-visualization video {
   max-width: 100%;
   height: auto;

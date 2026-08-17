@@ -28,6 +28,9 @@ pick-and-place/loop_episode_03.bin	29980	53ffc7b7ed6cab4cfc99724306464164a1e38cf
 pick-and-place/loop_episode_04.bin	30136	c058a37226df6b5c637856140462844055abee97f44f793ae9dd09cb1816ae66	Looped pick-and-place replay episode binary
 pick-and-place/episode_grid.mp4	704813	1ec93867352e15ee471f8446009fdc5717d39ad79322b135e7b86c36bc8cad1e	Grid video of collected pick-and-place episode recordings
 pick-and-place/episode_grid.jpg	79843	f4a0f566b3bc90d71c58598bca59f1bda38c8d24d20a5be277437871e9065323	Poster image for the episode recordings grid video
+pick-and-place/randomized_episode_grid.mp4	989894	762834dc50d6dc937a6f66f686702441283f203d232d264afb46ccdb738daf5d	Grid video of domain-randomized simulated pick-and-place episodes
+pick-and-place/randomized_episode_grid_poster_lo.jpg	88263	0b9fdffaea3feb8dbc38f6a4c1d860c254c854bfe4e52763e41785ccb5509ba9	Poster image for the randomized simulation grid video (standard resolution)
+pick-and-place/randomized_episode_grid_poster_hi.jpg	156689	21a1b8dbfe87027ada0a670674c2d881a3418ebaedbbfcb54a1f94fbe9df6cad	Poster image for the randomized simulation grid video (retina resolution)
 pick-and-place/act.mp4	1569368	3fc1f7eb11dbacf64ac19390e79fd2cc48d3417a7c9a953bdd35e436a64e0fc2	Video of the ACT pick-and-place policy
 pick-and-place/act_poster_lo.jpg	75946	ee35710315501ff00f1251d057d57e78feaa2b8e99e67be9c8be3a3e86a85b25	Poster image for the ACT policy video (standard resolution)
 pick-and-place/act_poster_hi.jpg	161585	4e26147b71d6d0c4e367ec76ec51aa0de06ccdcaa8478cbb9960cc19070524f1	Poster image for the ACT policy video (retina resolution)

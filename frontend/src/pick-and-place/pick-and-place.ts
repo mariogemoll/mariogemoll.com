@@ -79,6 +79,13 @@ const videoConfigs: Record<string, VideoConfig> = {
     width: 800,
     height: 600
   },
+  '#randomized-episode-grid-video-visualization': {
+    src: '/pick-and-place/randomized_episode_grid.mp4',
+    poster: '/pick-and-place/randomized_episode_grid_poster_lo.jpg',
+    posterHi: '/pick-and-place/randomized_episode_grid_poster_hi.jpg',
+    width: 800,
+    height: 600
+  },
   '#act-video-visualization': {
     src: '/pick-and-place/act.mp4',
     poster: '/pick-and-place/act_poster_lo.jpg',

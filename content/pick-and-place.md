@@ -254,6 +254,17 @@ continuously adapt to new observations.
 
 [[ act-video-visualization ]]
 
+## Domain randomization
+
+In the next section, we'll discuss another imitation learning method, however there we'll try
+starting from a completely synthetic sim dataset, training a model from that, and then use it in sim
+_and_ on the real robot. To make this work we'll need a model that is robust against all sorts of
+sim2real issues. We'll try to produce such a model by applying domain randomization, ie. by
+generating a dataset with a wide variety of materials, colors, lighting situations, robot joint
+miscalibrations and camera poses.
+
+[[ randomized-episode-grid-video-visualization ]]
+
 ## Summary
 
 We’ve explored two approaches to solving a pick-and-place task with the SO-101. First, we developed
