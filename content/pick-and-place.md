@@ -282,6 +282,10 @@ before we generate the next one:
 
 [[ flow-policy-visualization ]]
 
+Trained purely on the domain-randomized sim dataset, the policy also transfers to the real robot:
+
+[[ flow-policy-real-video-visualization ]]
+
 ## Summary
 
 We’ve explored three approaches to solving a pick-and-place task with the SO-101. First, we

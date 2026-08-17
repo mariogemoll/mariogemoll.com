@@ -33,17 +33,20 @@ pick-and-place/episode_grid.mp4	704813	1ec93867352e15ee471f8446009fdc5717d39ad79
 pick-and-place/episode_grid.jpg	79843	f4a0f566b3bc90d71c58598bca59f1bda38c8d24d20a5be277437871e9065323	Poster image for the episode recordings grid video
 pick-and-place/randomized_episode_grid.mp4	989894	762834dc50d6dc937a6f66f686702441283f203d232d264afb46ccdb738daf5d	Grid video of domain-randomized simulated pick-and-place episodes
 pick-and-place/randomized_episode_grid_poster_lo.jpg	88263	0b9fdffaea3feb8dbc38f6a4c1d860c254c854bfe4e52763e41785ccb5509ba9	Poster image for the randomized simulation grid video (standard resolution)
-pick-and-place/randomized_episode_grid_poster_hi.jpg	156689	21a1b8dbfe87027ada0a670674c2d881a3418ebaedbbfcb54a1f94fbe9df6cad	Poster image for the randomized simulation grid video (retina resolution)
+pick-and-place/randomized_episode_grid_poster_hi.jpg	156689	21a1b8dbfe87027ada0a670674c2d881a3418ebaedbbfcb54a1f94fbe9df6cad	Poster image for the randomized simulation grid video (high resolution)
 pick-and-place/act.mp4	1569368	3fc1f7eb11dbacf64ac19390e79fd2cc48d3417a7c9a953bdd35e436a64e0fc2	Video of the ACT pick-and-place policy
 pick-and-place/act_poster_lo.jpg	75946	ee35710315501ff00f1251d057d57e78feaa2b8e99e67be9c8be3a3e86a85b25	Poster image for the ACT policy video (standard resolution)
-pick-and-place/act_poster_hi.jpg	161585	4e26147b71d6d0c4e367ec76ec51aa0de06ccdcaa8478cbb9960cc19070524f1	Poster image for the ACT policy video (retina resolution)
+pick-and-place/act_poster_hi.jpg	161585	4e26147b71d6d0c4e367ec76ec51aa0de06ccdcaa8478cbb9960cc19070524f1	Poster image for the ACT policy video (high resolution)
 pick-and-place/scripted.mp4	1697474	49876224ff1183d8f5d827792069d25a03fc0496bb1e6216a2172b7c63f4b9dc	Video of the scripted pick-and-place solution
 pick-and-place/scripted_poster_lo.jpg	119862	94909013ce62807ce2e367e673e1a0f94182a5a6c9d86a2b50667c0260ead834	Poster image for the scripted solution video (standard resolution)
-pick-and-place/scripted_poster_hi.jpg	192070	9ea3770c2710a0c938a1b4fd8b39c8f14b838391ef40c8edfc8f967b5c975b4a	Poster image for the scripted solution video (retina resolution)
+pick-and-place/scripted_poster_hi.jpg	192070	9ea3770c2710a0c938a1b4fd8b39c8f14b838391ef40c8edfc8f967b5c975b4a	Poster image for the scripted solution video (high resolution)
+pick-and-place/flow_policy_real.mp4	1485746	4170c23543fb0ec8456fd89bf37762972b0f7421f95110e614cf860ba6d73b72	Video of the flow policy running on the real robot
+pick-and-place/flow_policy_real_poster_lo.jpg	44342	a8b45d30eb0cd66f84392d3148228f7ba787283cfe10da65f97573aed2f4d26a	Poster image for the real-robot flow policy video (standard resolution)
+pick-and-place/flow_policy_real_poster_hi.jpg	114025	6b8c4ef416b73a70d262bf2aacc71f72bc2daf17a11b7ccf458c5484c3a32ee0	Poster image for the real-robot flow policy video (high resolution)
 pick-and-place/setup_lo.jpg	74225	8094bdd1a6d29a5b4e299c9ce87d50720ab8d335e53f28408f0048a0f55fba22	Photo of the real-world setup (standard resolution)
-pick-and-place/setup_hi.jpg	236454	3e3cdb5b3b21f319160c9e31f6a00319e053ce978f8a86bda1eca2242808986d	Photo of the real-world setup (retina resolution)
+pick-and-place/setup_hi.jpg	236454	3e3cdb5b3b21f319160c9e31f6a00319e053ce978f8a86bda1eca2242808986d	Photo of the real-world setup (high resolution)
 pick-and-place/setup_3d_lo.png	64844	3304353c45900503a48d194ccaf1c8ab6bbd02e06fdf3fd457162c3e42fe4fa7	3D rendering of the standard scene (standard resolution)
-pick-and-place/setup_3d_hi.png	153653	f2c4b85e546c89eff81d7fc15585e72bb4b4d21b04a1eeb3112788017e26936d	3D rendering of the standard scene (retina resolution)
+pick-and-place/setup_3d_hi.png	153653	f2c4b85e546c89eff81d7fc15585e72bb4b4d21b04a1eeb3112788017e26936d	3D rendering of the standard scene (high resolution)
 pick-and-place/architecture.svg	75588	d712490190f1a197e891613b2dcb58e86334b022b022142be286c3f1d1512006	Diagram of the ACT transformer encoder and decoder architecture
 parallel-corpus-viewer/commoncrawl.de-en.annidx	9596492	de5ffe5a8147a4f573b7a62c54f3b20421998a0700214434a1482d6a442beded	Index file containing the index (32bit le uint) of the annotation for each sentence pair
 parallel-corpus-viewer/commoncrawl.de-en.annotation	35544656	5908507404e2ec5a20eacefd8d43077a020725c82da736c122d448ee89a41fe5	Annotation TSV file from training-parallel-commoncrawl.tgz (in WMT14 dataset)

@@ -98,6 +98,13 @@ const videoConfigs: Record<string, VideoConfig> = {
     posterHi: '/pick-and-place/act_poster_hi.jpg',
     width: 720,
     height: 360
+  },
+  '#flow-policy-real-video-visualization': {
+    src: '/pick-and-place/flow_policy_real.mp4',
+    poster: '/pick-and-place/flow_policy_real_poster_lo.jpg',
+    posterHi: '/pick-and-place/flow_policy_real_poster_hi.jpg',
+    width: 640,
+    height: 480
   }
 };
 
