@@ -4,7 +4,7 @@
 # [[ page-title ]]
 
 The [Standard Open Arm 101](https://github.com/TheRobotStudio/SO-ARM100), also called SO-101 or
-SO-ARM100, is a fully open source robot arm by [The Robot Studio](https://www.therobotstudio.com/).
+SO-ARM101, is a fully open source robot arm by [The Robot Studio](https://www.therobotstudio.com/).
 It consists of 3D printed plastic parts and hobby servo motors and is particularly popular as the
 reference platform for [LeRobot](https://github.com/huggingface/lerobot), a robotics library and
 toolkit by Hugging Face. On this page we will explore several approaches to make it solve the task
