@@ -4,14 +4,15 @@
 import fsExtra from 'fs-extra';
 import hljs from 'highlight.js';
 import MarkdownIt from 'markdown-it';
-import type StateBlock from 'markdown-it/lib/rules_block/state_block.mjs';
-import type StateInline from 'markdown-it/lib/rules_inline/state_inline.mjs';
 import markdownItAnchor from 'markdown-it-anchor';
 import path from 'path';
 
 import { PAGE_TITLE_PLACEHOLDER_PATTERN } from './constants.js';
 import { renderReferencesSection, replaceCitations } from './references.js';
 import { PageData, type PageDataT } from './types.js';
+
+type StateBlock = MarkdownIt.StateBlock;
+type StateInline = MarkdownIt.StateInline;
 
 function isValidDelim(
   state: StateInline, pos: number

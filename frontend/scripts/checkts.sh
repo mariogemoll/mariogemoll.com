@@ -26,6 +26,7 @@ if [ "$max_jobs" -lt 1 ]; then
 fi
 
 configs=(
+  tsconfig.pages/toc.json
   tsconfig.pages/vae.json
   tsconfig.pages/parallel-corpus-viewer.json
   tsconfig.pages/normalizing-flows.json

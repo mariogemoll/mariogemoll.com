@@ -9,6 +9,7 @@ import {
   readMarkdownFile,
   type WidgetTuple
 } from '../page-helpers.js';
+import { addToc } from '../toc.js';
 import { type PageContentParams } from '../types.js';
 import {
   fileSaverUrl, highlightJsCssUrl, jszipUrl, mathJaxUrl, reactDomUrl, reactUrl, tfJsUrl
@@ -40,19 +41,20 @@ export async function generatePage(
 
   mdContent = addVisualizations(mdContent, visualizations);
 
-  const html = md.render(mdContent);
+  const html = addToc(md.render(mdContent));
 
   const cssFiles = [
     highlightJsCssUrl,
     '/misc/centered.css',
     '/misc/widgets.css',
     '/flow-matching/visualization.css',
-    '/diffusion/diffusion.css'
+    '/diffusion/diffusion.css',
+    '/misc/toc.css'
   ];
 
   const jsUrls: string[] = [mathJaxUrl, tfJsUrl];
 
-  const jsModuleUrls = ['/diffusion/diffusion.js'];
+  const jsModuleUrls = ['/diffusion/diffusion.js', '/toc/toc.js'];
 
   const importMap: Record<string, string> = {
     'react': reactUrl,

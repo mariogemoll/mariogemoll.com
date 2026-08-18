@@ -8,6 +8,7 @@ import {
   processReferences,
   readMarkdownFile,
   type WidgetTuple } from '../page-helpers.js';
+import { addToc } from '../toc.js';
 import { type PageContentParams } from '../types.js';
 import {
   highlightJsCssUrl,
@@ -42,7 +43,7 @@ export async function generatePage(
 
   mdContent = addVisualizations(mdContent, visualizations);
 
-  const html = md.render(mdContent);
+  const html = addToc(md.render(mdContent));
 
   const cssFiles = [
     highlightJsCssUrl,
@@ -50,10 +51,11 @@ export async function generatePage(
     '/misc/widgets.css',
     '/reinforcement-learning/page.css',
     '/reinforcement-learning/ui.css',
-    '/reinforcement-learning/reinforcement-learning.css'
+    '/reinforcement-learning/reinforcement-learning.css',
+    '/misc/toc.css'
   ];
 
-  const jsModuleUrls = ['/reinforcement-learning/reinforcement-learning.js'];
+  const jsModuleUrls = ['/reinforcement-learning/reinforcement-learning.js', '/toc/toc.js'];
 
   const importMap: Record<string, string> = {
     'three': threeUrl,

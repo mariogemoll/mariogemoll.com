@@ -4,6 +4,7 @@
 import {
   createMarkdownRenderer, readMarkdownFile, replaceWidgetPlaceholders
 } from '../page-helpers.js';
+import { addToc } from '../toc.js';
 import type { PageContentParams } from '../types.js';
 
 const nonBilingualSentencePairs = [
@@ -100,7 +101,7 @@ export async function generatePage(
   pageTitle: string
 ): Promise<PageContentParams> {
 
-  const md = createMarkdownRenderer();
+  const md = createMarkdownRenderer({ useAnchor: true });
 
   let mdContent = await readMarkdownFile(contentPath, 'attention-is-all-you-need.md', pageTitle);
 
@@ -144,13 +145,14 @@ export async function generatePage(
 
   mdContent = mdContent.replace('[[ not-bilingual-table ]]', notBilingualTableHtml);
 
-  const html = md.render(mdContent);
+  const html = addToc(md.render(mdContent));
   const cssFiles: string[] = [
     '/misc/centered.css',
     '/misc/widgets.css',
-    '/attention-is-all-you-need/attention-is-all-you-need.css'
+    '/attention-is-all-you-need/attention-is-all-you-need.css',
+    '/misc/toc.css'
   ];
   const jsUrls: string[] = [];
-  const jsModuleUrls = ['/attention-is-all-you-need/attention-is-all-you-need.js'];
+  const jsModuleUrls = ['/attention-is-all-you-need/attention-is-all-you-need.js', '/toc/toc.js'];
   return [html, cssFiles, jsUrls, jsModuleUrls];
 }

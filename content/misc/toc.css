@@ -1,0 +1,279 @@
+/* Table of contents.
+
+   Two desktop states, switched by the reader with the chevron button and remembered across pages:
+   open (the default) and collapsed, where only a bar per row remains in the rail. The rows sit in
+   exactly the same place in both states — collapsing hides the labels and nothing else. Below the
+   desktop breakpoint, or without a pointer, the whole thing lives behind a hamburger button.
+
+   The panel overlays the page rather than displacing it; its width is capped so that it always
+   stays clear of the 700px text column. Only the rail's width is reserved, by the padding on body
+   below, so switching states never moves the content. */
+
+:root {
+  --toc-rail-width: 44px;
+  --toc-panel-width: min(340px, calc((100vw - 700px) / 2 - 28px));
+  --toc-top: 80px;
+  --toc-row-height: 22px;
+  --toc-bar-height: 14px;
+  --toc-line: #ccc;
+  --toc-faint: #e6e6e6;
+  --toc-text: #888;
+  --toc-text-active: #111;
+}
+
+.toc {
+  position: fixed;
+  z-index: 50;
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+}
+
+.toc-list {
+  width: auto;
+  margin: 0;
+  padding-left: 14px;
+  line-height: 1;
+  list-style: none;
+  text-align: left;
+}
+
+.toc-panel::-webkit-scrollbar {
+  display: none;
+}
+
+/* The left padding lines the title up with the labels below it */
+.toc-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 20px;
+  padding-left: 26px;
+  margin-bottom: 10px;
+}
+
+.toc-title {
+  font-weight: 500;
+  color: var(--toc-text-active);
+}
+
+.toc-item {
+  margin: 0;
+}
+
+.toc-item + .toc-item {
+  margin-top: 3px;
+}
+
+.toc-link {
+  display: block;
+  position: relative;
+  height: var(--toc-row-height);
+  padding-left: 12px;
+  overflow: hidden;
+  color: var(--toc-text);
+  line-height: var(--toc-row-height);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+/* The row's bar. Centred on the row and shorter than it, so the rows themselves keep their
+   positions whatever the bar does. Only the active one shows while the panel is open. */
+.toc-link::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 3px;
+  height: var(--toc-bar-height);
+  border-radius: 1px;
+  background: transparent;
+  transform: translateY(-50%);
+  transition: background-color 0.15s ease;
+}
+
+/* Indent the label only: the bar is positioned against the padding box, so it stays in line */
+.toc-item-h3 .toc-link {
+  padding-left: 22px;
+}
+
+.toc-link:hover {
+  color: var(--toc-text-active);
+}
+
+.toc-item.is-active > .toc-link {
+  color: var(--toc-text-active);
+}
+
+/* The active bar keeps the full height of its row */
+.toc-item.is-active > .toc-link::before {
+  height: var(--toc-row-height);
+  background: var(--toc-text-active);
+}
+
+/* Buttons: hamburger/close on narrow screens, chevrons on the desktop. Their `display` and `color`
+   are set per button rather than here, so that the single-class rules below can override them. */
+.toc button {
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.toc button:hover {
+  color: var(--toc-text-active);
+}
+
+.toc button svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.toc-toggle {
+  display: flex;
+  position: fixed;
+  top: 14px;
+  left: 10px;
+  width: 24px;
+  height: 24px;
+  color: var(--toc-text);
+}
+
+/* Sits after the title, barely there, pointing back at the rail it collapses into */
+.toc-collapse {
+  display: none;
+  order: 2;
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: var(--toc-faint);
+}
+
+/* ==========================================================================
+   Hamburger mode (narrow screens and touch devices)
+   ========================================================================== */
+
+.toc-panel {
+  position: fixed;
+  inset: 0;
+  padding: 60px 24px 24px;
+  background: #fff;
+  overflow-y: auto;
+  scrollbar-width: none;
+  text-align: left;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+}
+
+.toc.is-open .toc-panel {
+  visibility: visible;
+  opacity: 1;
+}
+
+.toc.is-open .toc-toggle .toc-icon-open,
+.toc-toggle .toc-icon-close {
+  display: none;
+}
+
+.toc.is-open .toc-toggle .toc-icon-close {
+  display: block;
+}
+
+/* ==========================================================================
+   Desktop
+   ========================================================================== */
+
+@media (width >= 1200px) and (hover: hover) and (pointer: fine) {
+  body {
+    padding-inline: var(--toc-rail-width);
+  }
+
+  .toc {
+    inset: var(--toc-top) auto 0 0;
+    width: var(--toc-panel-width);
+    pointer-events: none;
+  }
+
+  .toc-toggle {
+    display: none;
+  }
+
+  .toc-collapse {
+    display: flex;
+  }
+
+  .toc-panel {
+    position: static;
+    max-height: 100%;
+    padding: 0 20px 12px 0;
+    background: none;
+    pointer-events: auto;
+    visibility: visible;
+    opacity: 1;
+    transition: none;
+  }
+
+  html.toc-collapsed .toc {
+    width: var(--toc-rail-width);
+  }
+
+  html.toc-collapsed .toc-header {
+    padding-left: 7px;
+  }
+
+  html.toc-collapsed .toc-title,
+  html.toc-collapsed .toc-label {
+    display: none;
+  }
+
+  /* Alone in the rail, the button is the only affordance left, so it stops being a hint */
+  html.toc-collapsed .toc-collapse {
+    color: var(--toc-text);
+    transform: translate(3px, 3px);
+  }
+
+  html.toc-collapsed .toc-chevrons {
+    transform: rotate(180deg);
+  }
+
+  /* Collapsed, the bars are the only thing left to show where the sections are, and they all
+     shorten — the active one included */
+  html.toc-collapsed .toc-link::before {
+    background: var(--toc-line);
+  }
+
+  html.toc-collapsed .toc-item.is-active > .toc-link::before {
+    height: var(--toc-bar-height);
+  }
+}
+
+/* ==========================================================================
+   Section targets
+   ========================================================================== */
+
+h2, h3 {
+  scroll-margin-top: 30px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toc-panel,
+  .toc-link,
+  .toc-link::before {
+    transition: none;
+  }
+}
+
+@media print {
+  .toc {
+    display: none;
+  }
+}

@@ -9,6 +9,7 @@ import {
   readMarkdownFile,
   type WidgetTuple
 } from '../page-helpers.js';
+import { addToc } from '../toc.js';
 import { type PageContentParams } from '../types.js';
 import {
   highlightJsCssUrl,
@@ -46,17 +47,18 @@ export async function generatePage(
 
   mdContent = addVisualizations(mdContent, visualizations);
 
-  const html = md.render(mdContent);
+  const html = addToc(md.render(mdContent));
 
   const cssFiles = [
     highlightJsCssUrl,
     '/misc/centered.css',
     '/misc/widgets.css',
     '/pick-and-place/pick-and-place.css',
-    '/pick-and-place/page.css'
+    '/pick-and-place/page.css',
+    '/misc/toc.css'
   ];
 
-  const jsModuleUrls: string[] = ['/pick-and-place/pick-and-place.js'];
+  const jsModuleUrls: string[] = ['/pick-and-place/pick-and-place.js', '/toc/toc.js'];
 
   const importMap: Record<string, string> = {
     'three': threeUrl,

@@ -11,6 +11,9 @@ html
     link(rel="stylesheet", href="/misc/style.css")
     each url in cssUrls
       link(rel="stylesheet", href=url)
+    //- Apply the reader's table of contents state before the first paint
+    script.
+      try { if (localStorage.getItem('toc-mode') === 'collapsed') { document.documentElement.classList.add('toc-collapsed'); } } catch (e) { /* ignore */ }
     if importMap
       script(type="importmap")
         != JSON.stringify({ imports: importMap }, null, 2)

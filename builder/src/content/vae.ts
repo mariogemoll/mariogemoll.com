@@ -4,6 +4,7 @@
 import {
   createMarkdownRenderer, readMarkdownFile, replaceWidgetPlaceholders
 } from '../page-helpers.js';
+import { addToc } from '../toc.js';
 import type { PageContentParams } from '../types.js';
 import { highlightJsCssUrl, mathJaxUrl, onnxRuntimeWebJsUrl, picaJsUrl } from './urls.js';
 
@@ -11,7 +12,7 @@ export async function generatePage(
   contentPath: string,
   pageTitle: string
 ): Promise<PageContentParams> {
-  const md = createMarkdownRenderer({ useHighlightJs: true });
+  const md = createMarkdownRenderer({ useHighlightJs: true, useAnchor: true });
 
   let mdContent = await readMarkdownFile(contentPath, 'vae.md', pageTitle);
 
@@ -27,18 +28,19 @@ export async function generatePage(
 
   mdContent = replaceWidgetPlaceholders(mdContent, widgets);
 
-  const html = md.render(mdContent);
+  const html = addToc(md.render(mdContent));
   const cssFiles = [
     highlightJsCssUrl,
     '/misc/centered.css',
     '/misc/widgets.css',
-    '/vae/vae.css'
+    '/vae/vae.css',
+    '/misc/toc.css'
   ];
   const jsUrls = [
     mathJaxUrl,
     picaJsUrl,
     onnxRuntimeWebJsUrl
   ];
-  const jsModuleUrls = ['/vae/vae.js'];
+  const jsModuleUrls = ['/vae/vae.js', '/toc/toc.js'];
   return [html, cssFiles, jsUrls, jsModuleUrls];
 }

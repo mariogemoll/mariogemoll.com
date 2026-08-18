@@ -7,6 +7,7 @@ import {
   processReferences,
   readMarkdownFile,
   replaceWidgetPlaceholders } from '../page-helpers.js';
+import { addToc } from '../toc.js';
 import { type PageContentParams } from '../types.js';
 import { highlightJsCssUrl, mathJaxUrl, tfJsUrl, tfJsWebGpuBackendUrl } from './urls.js';
 
@@ -32,14 +33,15 @@ export async function generatePage(
 
   mdContent = replaceWidgetPlaceholders(mdContent, widgets);
 
-  const html = md.render(mdContent);
+  const html = addToc(md.render(mdContent));
 
   const cssFiles = [
     highlightJsCssUrl,
     '/misc/centered.css',
     '/misc/widgets.css',
     '/normalizing-flows/normalizing-flows.css',
-    '/normalizing-flows/linear-transform-widget.css'
+    '/normalizing-flows/linear-transform-widget.css',
+    '/misc/toc.css'
   ];
 
   const jsUrls: string[] = [
@@ -48,7 +50,7 @@ export async function generatePage(
     tfJsWebGpuBackendUrl
   ];
 
-  const jsModuleUrls = ['/normalizing-flows/normalizing-flows.js'];
+  const jsModuleUrls = ['/normalizing-flows/normalizing-flows.js', '/toc/toc.js'];
 
   return [html, cssFiles, jsUrls, jsModuleUrls];
 }

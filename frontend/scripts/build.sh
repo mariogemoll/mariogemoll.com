@@ -16,6 +16,9 @@ cd $SCRIPT_DIR/..
 # Get the current commit hash
 COMMIT_HASH=$(git rev-parse HEAD)
 
+pnpm exec esbuild src/toc/toc.ts --bundle --format=esm --outfile=dist/toc/toc.js --minify --sourcemap \
+  --source-root=https://github.com/mariogemoll/mariogemoll.com/tree/$COMMIT_HASH/frontend/src/toc
+
 pnpm exec esbuild src/vae/vae.ts --bundle --format=esm --outfile=dist/vae/vae.js --minify --sourcemap \
   --source-root=https://github.com/mariogemoll/mariogemoll.com/tree/$COMMIT_HASH/frontend/src/vae \
 

@@ -4,6 +4,7 @@
 import {
   createMarkdownRenderer, loadPageData, processReferences, readMarkdownFile
 } from '../page-helpers.js';
+import { addToc } from '../toc.js';
 import { type PageContentParams } from '../types.js';
 import { highlightJsCssUrl, mathJaxUrl } from './urls.js';
 
@@ -18,15 +19,16 @@ export async function generatePage(
 
   mdContent = processReferences(mdContent, pageData);
 
-  const html = md.render(mdContent);
+  const html = addToc(md.render(mdContent));
 
   const cssFiles = [
     highlightJsCssUrl,
     '/misc/centered.css',
-    '/misc/widgets.css'
+    '/misc/widgets.css',
+    '/misc/toc.css'
   ];
 
-  const jsModuleUrls: string[] = [];
+  const jsModuleUrls: string[] = ['/toc/toc.js'];
 
   const importMap: Record<string, string> = {
   };
