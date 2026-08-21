@@ -28,3 +28,35 @@ h1 {
 .references-list li {
   margin-bottom: 1.5em;
 }
+
+.page-resources {
+  width: 700px;
+  margin: 40px auto 60px;
+  border-collapse: collapse;
+  text-align: left;
+  line-height: 1.5rem;
+}
+
+.page-resources caption {
+  margin-bottom: 8px;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  text-align: left;
+}
+
+.page-resources th,
+.page-resources td {
+  padding: 10px 12px;
+  border-top: 1px solid #d7d7d7;
+  vertical-align: top;
+}
+
+.page-resources th {
+  width: 35%;
+  padding-left: 0;
+  font-weight: 500;
+}
+
+.page-resources td {
+  padding-right: 0;
+}

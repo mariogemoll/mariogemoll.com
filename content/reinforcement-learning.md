@@ -17,6 +17,8 @@ PPO and related methods.
 
 Applications of RL in modern LLM posttraining are described on a [separate page](/llm-posttraining).
 
+[[ resources ]]
+
 ## Markov Decision Process
 
 The mathematical model for reinforcement learning is the **Markov Decision Process (MDP)**. An MDP

@@ -1,4 +1,11 @@
 {
+  "resources": [
+    {
+      "label": "GitHub repository",
+      "description": "A practical SFT and RLVR posttraining pipeline for GSM8K.",
+      "url": "https://github.com/mariogemoll/llm-posttraining"
+    }
+  ],
   "references": [
     {
       "kind": "arxiv",

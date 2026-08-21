@@ -10,6 +10,8 @@ reference platform for [LeRobot](https://github.com/huggingface/lerobot), a robo
 toolkit by Hugging Face. On this page we will explore several approaches to make it solve the task
 of picking up a small cube and placing it at a target.
 
+[[ resources ]]
+
 ## SO-101 anatomy
 
 The SO-101 has 5 degrees of freedom (DOF) from its five main joints (shoulder pan, shoulder lift,

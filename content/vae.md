@@ -8,6 +8,8 @@ it, balancing reconstruction quality against a structured prior. This page walks
 from the ELBO derivation to the reparameterization trick, then trains a VAE on a synthetic dataset
 with interactive visualizations for sampling, latent space exploration, and decoding.
 
+[[ resources ]]
+
 ## Theory
 
 To train a VAE, we try to maximize the log likelihood of all the training examples:

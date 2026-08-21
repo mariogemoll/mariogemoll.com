@@ -11,10 +11,13 @@ import { fileURLToPath, pathToFileURL } from 'url';
 import { PAGE_TITLE_PLACEHOLDER_PATTERN } from './constants.js';
 import { makeAtomFeed, makeRssFeed, makeSitemap } from './feeds.js';
 import { createMarkdownRenderer } from './page-helpers.js';
-import type { PageContentParams, SiteConfig } from './types.js';
+import {
+  type PageContentParams,   PageData, type PageResourceT, type SiteConfig
+} from './types.js';
 import { omit, pick } from './util.js';
 
 const markdown = createMarkdownRenderer();
+const RESOURCES_PLACEHOLDER = '[[ resources ]]';
 
 function randomString(length = 12): string {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -126,6 +129,7 @@ function makePage(
 
 async function makePages(
   contentTemplate: pug.compileTemplate,
+  resourcesTemplate: pug.compileTemplate,
   pageTemplate: pug.compileTemplate,
   siteConfig: SiteConfig
 ): Promise<Map<string, [string, string, string, string, string]>> {
@@ -191,6 +195,29 @@ async function makePages(
       mdContent = mdContent.replace(PAGE_TITLE_PLACEHOLDER_PATTERN, page.title);
       pageHtmlContent = markdown.render(mdContent);
     }
+    const $ = cheerio.load(pageHtmlContent, null, false);
+    const resourcesPlaceholders = $('p').filter(
+      (_index, element) => $(element).text().trim() === RESOURCES_PLACEHOLDER
+    );
+    const pageDataPath = path.join(contentPath, `${page.id}.json`);
+    let resources: PageResourceT[] | undefined;
+    if (fs.existsSync(pageDataPath)) {
+      const pageData: unknown = JSON.parse(fs.readFileSync(pageDataPath, 'utf-8'));
+      resources = PageData.parse(pageData).resources;
+    }
+    if (resources === undefined && resourcesPlaceholders.length > 0) {
+      throw new Error(`Resources placeholder found without resources for page ${page.id}`);
+    }
+    if (resources !== undefined) {
+      if (resourcesPlaceholders.length !== 1) {
+        throw new Error(
+          `Expected one resources placeholder for page ${page.id}, ` +
+          `found ${resourcesPlaceholders.length.toString()}`
+        );
+      }
+      resourcesPlaceholders.replaceWith(resourcesTemplate({ resources }));
+    }
+    pageHtmlContent = $.html();
     const secretId = randomString();
     // Add header
     const wrappedHtml = contentTemplate({ content: pageHtmlContent, siteTitle: siteConfig.title });
@@ -327,9 +354,12 @@ export async function run(): Promise<void> {
   const baseUrl = validateBaseUrl(process.env.BASE_URL);
 
   const contentTemplate = pug.compileFile('../templates/content.pug');
+  const resourcesTemplate = pug.compileFile('../templates/resources.pug');
   const pageTemplate = pug.compileFile('../templates/page.pug');
   const homeTemplate = pug.compileFile('../templates/home.pug');
-  const generatedPages = await makePages(contentTemplate, pageTemplate, siteConfig);
+  const generatedPages = await makePages(
+    contentTemplate, resourcesTemplate, pageTemplate, siteConfig
+  );
   const homepageId = makeHomepage(homeTemplate, pageTemplate, generatedPages, siteConfig);
   const copiedDirs = copyAssets();
   makeHtaccess(generatedPages, copiedDirs, homepageId);

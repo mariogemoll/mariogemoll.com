@@ -1,4 +1,11 @@
 {
+  "resources": [
+    {
+      "label": "GitHub repository",
+      "description": "Source code for the PyTorch notebook and browser visualizations.",
+      "url": "https://github.com/mariogemoll/normalizing-flows"
+    }
+  ],
   "references": [
     {
       "kind": "youtube",

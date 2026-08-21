@@ -1,0 +1,10 @@
+{
+  "references": [],
+  "resources": [
+    {
+      "label": "GitHub repository",
+      "description": "Complete source code for data preparation, training, evaluation, and inference.",
+      "url": "https://github.com/mariogemoll/attention-is-all-you-need"
+    }
+  ]
+}

@@ -10,6 +10,8 @@ Jacobians) but omits architectural extensions (such as multiscale structure and 
 layers) that appear in full-sized flow models. For a broader overview, plase refer to the
 [further reading](#further-reading) section at the end.
 
+[[ resources ]]
+
 Applying a function to a random variable turns it into another random variable. For example, think
 about applying a simple "scale and shift" linear transformation to a 1D random variable $Z$ to
 create a random variable $X$:

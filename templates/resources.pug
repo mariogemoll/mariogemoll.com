@@ -1,0 +1,8 @@
+table.page-resources
+  caption Resources
+  tbody
+    each resource in resources
+      tr
+        th(scope='row')
+          a(href=resource.url)= resource.label
+        td= resource.description

@@ -18,6 +18,8 @@ encoder-decoder sequence-to-sequence model used primarily for machine translatio
 it was a translation machine. The following describes the process of building such a machine for
 English-German translation (in the paper they did this for English-German and English-French).
 
+[[ resources ]]
+
 ## Dataset
 
 Attention Is All You Need was a contribution to the

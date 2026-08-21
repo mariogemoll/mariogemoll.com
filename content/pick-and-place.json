@@ -1,4 +1,11 @@
 {
+  "resources": [
+    {
+      "label": "GitHub repository",
+      "description": "Simulation, perception, control, training, and robot deployment code.",
+      "url": "https://github.com/mariogemoll/pick-and-place"
+    }
+  ],
   "references": [
     {
       "kind": "arxiv",

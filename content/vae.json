@@ -1,0 +1,10 @@
+{
+  "references": [],
+  "resources": [
+    {
+      "label": "GitHub repository",
+      "description": "Notebook, model, export, and interactive visualization source code.",
+      "url": "https://github.com/mariogemoll/vae"
+    }
+  ]
+}

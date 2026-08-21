@@ -105,5 +105,15 @@ export const RefsArraySorted = z.array(Ref).superRefine((arr, ctx) => {
 
 export type RefsArraySortedT = z.infer<typeof RefsArraySorted>;
 
-export const PageData = z.object({ references: RefsArraySorted }).strict();
+export const PageResource = z.object({
+  label: z.string().min(1),
+  description: z.string().min(1),
+  url: z.url()
+}).strict();
+export type PageResourceT = z.infer<typeof PageResource>;
+
+export const PageData = z.object({
+  references: RefsArraySorted,
+  resources: z.array(PageResource).min(1).optional()
+}).strict();
 export type PageDataT = z.infer<typeof PageData>;

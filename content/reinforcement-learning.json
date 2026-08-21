@@ -1,4 +1,11 @@
 {
+  "resources": [
+    {
+      "label": "GitHub repository",
+      "description": "Training code and notebooks for the examples on this page.",
+      "url": "https://github.com/mariogemoll/reinforcement-learning"
+    }
+  ],
     "references": [
         {
           "kind": "arxiv",

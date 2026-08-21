@@ -19,6 +19,8 @@ and reinforcement learning from verifiable rewards (RLVR), detailing how prefere
 objective signals can further shape model outputs. Throughout, the focus is on the underlying
 objectives, model components, and practical training setups used in modern posttraining pipelines.
 
+[[ resources ]]
+
 ## LoRA
 
 One tool that is frequently used in posttraining (although it can also be used more broadly in
