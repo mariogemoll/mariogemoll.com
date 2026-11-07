@@ -271,7 +271,8 @@ function makeHomepage(
     other
   });
   const [output] = makePage(
-    pageTemplate, homeHtml, ['/misc/centered.css', '/misc/home.css'], [], [], 'home page', siteConfig.title
+    pageTemplate, homeHtml, ['/misc/centered.css', '/misc/home.css'], [], [],
+    'home page', siteConfig.title
   );
   const randomId = randomString();
   fs.writeFileSync(`../build/${randomId}.html`, output);
