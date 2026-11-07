@@ -108,6 +108,7 @@ function makePage(
   jsUrls: string[],
   jsModuleUrls: string[],
   filename: string,
+  siteTitle: string,
   importMap?: Record<string, string>
 ): [string, string] {
   const $ = cheerio.load(htmlContent);
@@ -121,7 +122,7 @@ function makePage(
   }
   const title = h1Tags.first().text().trim();
   const output = pageTemplate(
-    { title, content: htmlContent, cssUrls, jsUrls, jsModuleUrls, importMap }
+    { title, siteTitle, content: htmlContent, cssUrls, jsUrls, jsModuleUrls, importMap }
   );
 
   return [output, title];
@@ -222,7 +223,7 @@ async function makePages(
     // Add header
     const wrappedHtml = contentTemplate({ content: pageHtmlContent, siteTitle: siteConfig.title });
     const [output] = makePage(
-      pageTemplate, wrappedHtml, cssUrls, jsUrls, jsModuleUrls, page.id, importMap
+      pageTemplate, wrappedHtml, cssUrls, jsUrls, jsModuleUrls, page.id, siteConfig.title, importMap
     );
     fs.writeFileSync(`../build/${secretId}.html`, output);
     generatedPages.set(page.id, [
@@ -270,7 +271,8 @@ function makeHomepage(
     other
   });
   const [output] = makePage(
-    pageTemplate, homeHtml, ['/misc/centered.css', '/misc/home.css'], [], [], 'home page'
+    pageTemplate, homeHtml, ['/misc/centered.css', '/misc/home.css'], [], [],
+    'home page', siteConfig.title
   );
   const randomId = randomString();
   fs.writeFileSync(`../build/${randomId}.html`, output);
